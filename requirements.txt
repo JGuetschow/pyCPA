@@ -1,3 +1,2 @@
-pyCPA
 scmdata>=0.4
 pyam-iamc>=0.4.1
