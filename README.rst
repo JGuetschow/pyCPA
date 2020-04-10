@@ -22,6 +22,8 @@ SCMData
 
 .. sec-begin-index
 
-Python-based tool for Climate Policy Analysis
+Python-based tool for Climate Policy Analysis.
+
+This is early alpha status and not currently intended for wider use but only a few special tasks.
 
 .. sec-end-index
