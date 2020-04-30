@@ -3,7 +3,7 @@
 Installation
 ============
 
-ToDo:
+ToDo: expand
 
 This package is still in early alpha status and not indented for general use in this version.
 

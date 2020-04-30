@@ -14,7 +14,8 @@ from pyCPA.core import combine_rows
 def map_data(input_DF, mapping_file, folder, conversion, add_fields, cols_to_remove: list = [], 
              verbose: bool = False) -> scmdata.dataframe.ScmDataFrame:
     """
-    Map data from one metadata column to another one including summing and subtraction
+    Map data from one metadata column to another one including summing and subtraction. This function can be used e.g. 
+    to map data from one categoriyation into another one, or for data preprocessing.
     
     Parameters
     ----------
@@ -22,7 +23,7 @@ def map_data(input_DF, mapping_file, folder, conversion, add_fields, cols_to_rem
     input\_DF
         ScmDataFrame with data to be mapped
     mapping\_file
-        csv file that contains the mapping rules
+        csv file that contains the mapping rules. 
     folder
         the folder the mapping file resides in
     conversion

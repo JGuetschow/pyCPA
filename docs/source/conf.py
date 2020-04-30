@@ -38,7 +38,7 @@ extensions = ["sphinx.ext.autodoc",
     "sphinx.ext.coverage",
 #    "sphinx.ext.ifconfig",
     "sphinx.ext.viewcode",
-#    "sphinx.ext.napoleon",
+    "sphinx.ext.napoleon",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -63,7 +63,7 @@ html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 
 html_context = {
-    "display_github": False,
+    "display_github": True,
     "github_user": "JGuetschow",
     "github_repo": "pyCPA",
     "github_version": "master",

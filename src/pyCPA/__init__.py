@@ -6,7 +6,7 @@ Created on Fri Apr  3 21:58:30 2020
 @author: Johannes Gütschow, mail@johannes-guetschow.de
 """
 
-
+# import submodules from subfolder
 from . import core
 from . import readData
 from . import tools

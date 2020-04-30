@@ -16,8 +16,34 @@ import re
 #### function to convert given PRIMAP IPCC 1996 / 2006 / CRF code to pyCPA format
 ########    
 def convert_IPCC_code_PRIMAP_to_pyCPA(code) -> str:
-    # this function converts IPCC emissions category codes from the PRIMAP-format to
-    # the pyCPA format which is closer to the original (without all the dots)
+    """
+    This function converts IPCC emissions category codes from the PRIMAP-format to
+    the pyCPA format which is closer to the original (but without all the dots)
+    
+    Codes that are not part of the official hierarchy (starting with IPCM or CATM) 
+    are not converted but returned without the 'CAT' or 'IPC' prefix
+    
+    Parameters
+    ----------
+    
+    code
+        The IPCC code in PRIMAP format (IPCC1996 and IPCC2006 can be converted)
+    
+    Returns
+    -------
+    
+    :str:
+        string containing the category code in pyCPA format
+        
+    Example
+    -------
+    input: 
+        code = 'IPC1A3B34'
+    
+    output:
+        '1A3b3iv'
+        
+    """
 
     arabic_to_roman = {
         '1': 'i',
@@ -225,8 +251,8 @@ def convert_unit_PRIMAP_to_scmdata(data_frame):
     data_frame._meta["variable_unit"] = data_frame._meta["unit"] + ' ' + data_frame._meta["variable"] + time_frame_str
     
     # get unique units
-    unit_values = data_frame.get_unique_meta('unit')
-    present_exception_units = []
+    #unit_values = data_frame.get_unique_meta('unit')
+    #present_exception_units = []
     replacements = dict()
     for exception_unit in list(exception_units.keys()):
         #print(exception_unit)

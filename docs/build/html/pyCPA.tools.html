@@ -35,6 +35,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Changelog" href="changelog.html" />
     <link rel="prev" title="pyCPA.readData package" href="pyCPA.readData.html" /> 
 </head>
 
@@ -92,6 +93,10 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-pyCPA.tools.conversion">pyCPA.tools.conversion module</a></li>
 </ul>
 </li>
+</ul>
+<p class="caption"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
 </ul>
 
             
@@ -166,28 +171,19 @@
 <dt id="pyCPA.tools.conversion.map_data">
 <code class="sig-prename descclassname">pyCPA.tools.conversion.</code><code class="sig-name descname">map_data</code><span class="sig-paren">(</span><em class="sig-param">input_DF</em>, <em class="sig-param">mapping_file</em>, <em class="sig-param">folder</em>, <em class="sig-param">conversion</em>, <em class="sig-param">add_fields</em>, <em class="sig-param">cols_to_remove: list = []</em>, <em class="sig-param">verbose: bool = False</em><span class="sig-paren">)</span> &#x2192; scmdata.dataframe.ScmDataFrame<a class="reference internal" href="_modules/pyCPA/tools/conversion.html#map_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyCPA.tools.conversion.map_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Map data from one metadata column to another one including summing and subtraction
-Parameters
-———-
-input_DF</p>
-<blockquote>
-<div><p>ScmDataFrame with data to be mapped</p>
-</div></blockquote>
-<dl class="simple">
-<dt>mapping_file</dt><dd><p>csv file that contains the mapping rules</p>
+:param input_DF: ScmDataFrame with data to be mapped
+:param mapping_file: csv file that contains the mapping rules
+:param folder: the folder the mapping file resides in
+:param conversion: a dict defining the rows to use in the input_DF the mapping_file and the output DF
+:param add_fields: a dict defining metadata columns to add and their value
+:param cols_to_remove: a list defining columns that will be removed: default is an empty list
+:param verbose: bool: if set to true a lot of debug output will be written to the terminal</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>scmDataFrame with the converted data</p>
 </dd>
-<dt>folder</dt><dd><p>the folder the mapping file resides in</p>
-</dd>
-<dt>conversion</dt><dd><p>a dict defining the rows to use in the input_DF the mapping_file and the output DF</p>
-</dd>
-<dt>add_fields</dt><dd><p>a dict defining metadata columns to add and their value</p>
-</dd>
-<dt>cols_to_remove</dt><dd><p>a list defining columns that will be removed: default is an empty list</p>
-</dd>
-<dt>verbose</dt><dd><p>bool: if set to true a lot of debug output will be written to the terminal</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">scmdata.dataframe.ScmDataFrame</span></code></dt><dd><p>scmDataFrame with the converted data</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">scmdata.dataframe.ScmDataFrame</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -202,6 +198,8 @@ input_DF</p>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="changelog.html" class="btn btn-neutral float-right" title="Changelog" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="pyCPA.readData.html" class="btn btn-neutral float-left" title="pyCPA.readData package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
