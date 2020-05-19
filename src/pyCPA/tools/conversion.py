@@ -15,7 +15,7 @@ def map_data(input_DF, mapping_file, folder, conversion, add_fields, cols_to_rem
              verbose: bool = False) -> scmdata.dataframe.ScmDataFrame:
     """
     Map data from one metadata column to another one including summing and subtraction. This function can be used e.g. 
-    to map data from one categoriyation into another one, or for data preprocessing.
+    to map data from one categorization into another one, or for data preprocessing.
     
     Parameters
     ----------
@@ -47,6 +47,8 @@ def map_data(input_DF, mapping_file, folder, conversion, add_fields, cols_to_rem
     mapping_table = pd.DataFrame
     mapping_table = pd.read_csv(os.path.join(folder, mapping_file))
     
+    first_data = True
+    
     # loop over entires of mapping table
     for iCode in range(0, len(mapping_table)):
         # get to_code
@@ -76,7 +78,8 @@ def map_data(input_DF, mapping_file, folder, conversion, add_fields, cols_to_rem
                     converted_data.set_meta(mapping_table[key].iloc[iCode], add_fields[key])
             
                 # add the data to converted DF
-                if 'DF_mapped' in locals():
+                if first_data:
+                    first_data = False
                     DF_mapped.append(converted_data, inplace = True)
                 else:
                     DF_mapped = converted_data.copy()
