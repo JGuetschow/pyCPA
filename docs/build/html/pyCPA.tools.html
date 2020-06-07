@@ -83,6 +83,7 @@
               <p class="caption"><span class="caption-text">Documentation:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_manual.html">User Manual</a></li>
 <li class="toctree-l1"><a class="reference internal" href="development.html">Development</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API reference</span></p>
@@ -148,7 +149,9 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/pyCPA.tools.rst.txt" rel="nofollow"> View page source</a>
+            
+              <a href="https://github.com/JGuetschow/pyCPA/blob/master/docs/sourcepyCPA.tools.rst" class="fa fa-github"> Edit on GitHub</a>
+            
           
         
       </li>
@@ -170,20 +173,25 @@
 <dl class="function">
 <dt id="pyCPA.tools.conversion.map_data">
 <code class="sig-prename descclassname">pyCPA.tools.conversion.</code><code class="sig-name descname">map_data</code><span class="sig-paren">(</span><em class="sig-param">input_DF</em>, <em class="sig-param">mapping_file</em>, <em class="sig-param">folder</em>, <em class="sig-param">conversion</em>, <em class="sig-param">add_fields</em>, <em class="sig-param">cols_to_remove: list = []</em>, <em class="sig-param">verbose: bool = False</em><span class="sig-paren">)</span> &#x2192; scmdata.dataframe.ScmDataFrame<a class="reference internal" href="_modules/pyCPA/tools/conversion.html#map_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyCPA.tools.conversion.map_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Map data from one metadata column to another one including summing and subtraction
-:param input_DF: ScmDataFrame with data to be mapped
-:param mapping_file: csv file that contains the mapping rules
-:param folder: the folder the mapping file resides in
-:param conversion: a dict defining the rows to use in the input_DF the mapping_file and the output DF
-:param add_fields: a dict defining metadata columns to add and their value
-:param cols_to_remove: a list defining columns that will be removed: default is an empty list
-:param verbose: bool: if set to true a lot of debug output will be written to the terminal</p>
+<dd><p>Map data from one metadata column to another one including summing and subtraction. This function can be used e.g.
+to map data from one categorization into another one, or for data preprocessing.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>scmDataFrame with the converted data</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_DF</strong> – ScmDataFrame with data to be mapped</p></li>
+<li><p><strong>mapping_file</strong> – csv file that contains the mapping rules.</p></li>
+<li><p><strong>folder</strong> – the folder the mapping file resides in</p></li>
+<li><p><strong>conversion</strong> – a dict defining the rows to use in the input_DF the mapping_file and the output DF</p></li>
+<li><p><strong>add_fields</strong> – a dict defining metadata columns to add and their value</p></li>
+<li><p><strong>cols_to_remove</strong> – a list defining columns that will be removed: default is an empty list</p></li>
+<li><p><strong>verbose</strong> – bool: if set to true a lot of debug output will be written to the terminal</p></li>
+</ul>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">scmdata.dataframe.ScmDataFrame</span></code></p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>scmDataFrame with the converted data</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">scmdata.dataframe.ScmDataFrame</span></code></p>
 </dd>
 </dl>
 </dd></dl>

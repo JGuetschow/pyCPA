@@ -21,13 +21,16 @@ def convert_IPCC_code_PRIMAP_to_pyCPA(code) -> str:
     the pyCPA format which is closer to the original (but without all the dots)
     
     Codes that are not part of the official hierarchy (starting with IPCM or CATM) 
-    are not converted but returned without the 'CAT' or 'IPC' prefix
+    are not converted but returned without the 'CAT' or 'IPC' prefix.
     
     Parameters
     ----------
     
     code
-        The IPCC code in PRIMAP format (IPCC1996 and IPCC2006 can be converted)
+        String containing the IPCC code in PRIMAP format (IPCC1996 and IPCC2006 can be converted)
+        The PRIMAP format codes consist of upper case letters and numvers only. These are converted 
+        back to the original formatting which includes lower case letters and roman numerals. 
+        The dots are omitted in both farmattings (ToDo maybe change and add them back in)
     
     Returns
     -------

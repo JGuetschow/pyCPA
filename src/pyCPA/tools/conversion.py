@@ -48,6 +48,7 @@ def map_data(input_DF, mapping_file, folder, conversion, add_fields, cols_to_rem
     mapping_table = pd.read_csv(os.path.join(folder, mapping_file))
     
     first_data = True
+    #DF_mapped = 
     
     # loop over entires of mapping table
     for iCode in range(0, len(mapping_table)):
@@ -79,10 +80,10 @@ def map_data(input_DF, mapping_file, folder, conversion, add_fields, cols_to_rem
             
                 # add the data to converted DF
                 if first_data:
+                    DF_mapped = converted_data.copy()
+                else:
                     first_data = False
                     DF_mapped.append(converted_data, inplace = True)
-                else:
-                    DF_mapped = converted_data.copy()
             else:
                 if verbose:
                     print('No input data for sector ' + to_code_current)     

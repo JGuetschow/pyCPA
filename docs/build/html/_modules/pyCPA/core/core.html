@@ -81,6 +81,7 @@
               <p class="caption"><span class="caption-text">Documentation:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual.html">User Manual</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../development.html">Development</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API reference</span></p>
@@ -173,8 +174,37 @@
 <span class="c1">#### function to convert given PRIMAP IPCC 1996 / 2006 / CRF code to pyCPA format</span>
 <span class="c1">########    </span>
 <span class="k">def</span> <span class="nf">convert_IPCC_code_PRIMAP_to_pyCPA</span><span class="p">(</span><span class="n">code</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="c1"># this function converts IPCC emissions category codes from the PRIMAP-format to</span>
-    <span class="c1"># the pyCPA format which is closer to the original (without all the dots)</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function converts IPCC emissions category codes from the PRIMAP-format to</span>
+<span class="sd">    the pyCPA format which is closer to the original (but without all the dots)</span>
+<span class="sd">    </span>
+<span class="sd">    Codes that are not part of the official hierarchy (starting with IPCM or CATM) </span>
+<span class="sd">    are not converted but returned without the &#39;CAT&#39; or &#39;IPC&#39; prefix.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    </span>
+<span class="sd">    code</span>
+<span class="sd">        String containing the IPCC code in PRIMAP format (IPCC1996 and IPCC2006 can be converted)</span>
+<span class="sd">        The PRIMAP format codes consist of upper case letters and numvers only. These are converted </span>
+<span class="sd">        back to the original formatting which includes lower case letters and roman numerals. </span>
+<span class="sd">        The dots are omitted in both farmattings (ToDo maybe change and add them back in)</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    </span>
+<span class="sd">    :str:</span>
+<span class="sd">        string containing the category code in pyCPA format</span>
+<span class="sd">        </span>
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    input: </span>
+<span class="sd">        code = &#39;IPC1A3B34&#39;</span>
+<span class="sd">    </span>
+<span class="sd">    output:</span>
+<span class="sd">        &#39;1A3b3iv&#39;</span>
+<span class="sd">        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">arabic_to_roman</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s1">&#39;1&#39;</span><span class="p">:</span> <span class="s1">&#39;i&#39;</span><span class="p">,</span>
@@ -382,8 +412,8 @@
     <span class="n">data_frame</span><span class="o">.</span><span class="n">_meta</span><span class="p">[</span><span class="s2">&quot;variable_unit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_frame</span><span class="o">.</span><span class="n">_meta</span><span class="p">[</span><span class="s2">&quot;unit&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">data_frame</span><span class="o">.</span><span class="n">_meta</span><span class="p">[</span><span class="s2">&quot;variable&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">time_frame_str</span>
     
     <span class="c1"># get unique units</span>
-    <span class="n">unit_values</span> <span class="o">=</span> <span class="n">data_frame</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="s1">&#39;unit&#39;</span><span class="p">)</span>
-    <span class="n">present_exception_units</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1">#unit_values = data_frame.get_unique_meta(&#39;unit&#39;)</span>
+    <span class="c1">#present_exception_units = []</span>
     <span class="n">replacements</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">exception_unit</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">exception_units</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
         <span class="c1">#print(exception_unit)</span>

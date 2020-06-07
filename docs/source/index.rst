@@ -11,7 +11,11 @@ Welcome to pyCPA's documentation!
    :caption: Documentation:
 
    installation
+
+   user_manual
+
    development
+
 
 .. toctree::
    :maxdepth: 2
