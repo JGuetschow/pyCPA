@@ -80,9 +80,9 @@ def map_data(input_DF, mapping_file, folder, conversion, add_fields, cols_to_rem
             
                 # add the data to converted DF
                 if first_data:
+                    first_data = False
                     DF_mapped = converted_data.copy()
                 else:
-                    first_data = False
                     DF_mapped.append(converted_data, inplace = True)
             else:
                 if verbose:
