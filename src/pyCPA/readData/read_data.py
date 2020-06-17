@@ -10,35 +10,35 @@ import scmdata
 import os
 import pandas as pd
 
-def read_CRF_data(file, folder, col_rename, col_defaults) -> scmdata.dataframe.ScmDataFrame:
+def read_wide_csv_data(file, folder, col_rename, col_defaults) -> scmdata.dataframe.ScmDataFrame:
     
-    CRF_data = pd.DataFrame
-    CRF_data = pd.read_csv(os.path.join(folder, file))
+    read_data = pd.DataFrame
+    read_data = pd.read_csv(os.path.join(folder, file))
         
     ## rename headers 
     ## include checks and throw errors
-    columns = CRF_data.columns.values 
+    columns = read_data.columns.values 
     for col in col_rename:
         columns[columns == col] = col_rename[col]
 
-    CRF_data.columns = columns
+    read_data.columns = columns
     
     ## add default value columns
     ## TODO include checks if cols already present and throw errors
     for col in col_defaults:
-        CRF_data.insert(0, col, col_defaults[col])
+        read_data.insert(0, col, col_defaults[col])
     
     ## if class column exists, rename it because that is a python keyword
     ## if it doesn't exist initialize with 'TOTAL'
-    if 'class' in CRF_data.columns.values:
-        CRF_data.columns.values[CRF_data.columns.get_loc("class")] = "class_t"
+    if 'class' in read_data.columns.values:
+        read_data.columns.values[read_data.columns.get_loc("class")] = "class_t"
     else:
-        idx_variable_col = CRF_data.columns.get_loc("variable")
-        CRF_data.insert(idx_variable_col + 1, 'class_t', 'TOTAL')
+        idx_variable_col = read_data.columns.get_loc("variable")
+        read_data.insert(idx_variable_col + 1, 'class_t', 'TOTAL')
         
     
     ## convert to scmdata dataframe
-    CRF_scm = scmdata.dataframe.ScmDataFrame(CRF_data)
+    read_scm = scmdata.dataframe.ScmDataFrame(read_data)
     
     ## return
-    return CRF_scm
+    return read_scm

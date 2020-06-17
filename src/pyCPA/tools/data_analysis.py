@@ -7,10 +7,10 @@ Created on Tue Jun  9 08:39:51 2020
 """
 
 
-import scmdata
 import pandas as pd
 import os
-#from pyCPA.core import combine_rows
+from datetime import datetime
+
 
 def check_coverage(input_DF, data_filter, axes_variables, folder: str = '\default', 
                    filename: str = '\default', verbose: bool = False) -> pd.DataFrame:
@@ -78,7 +78,17 @@ def check_coverage(input_DF, data_filter, axes_variables, folder: str = '\defaul
     coverage_DF = pd.DataFrame(data = all_rows, columns = [axes_variables[1] + ' \ ' + axes_variables[0]] + values_col)
         
     # save the result
-    #if not (folder == '\none' or filename == '\none'):
-        # ToDo: code for saving
+    if not (folder == '\none' or filename == '\none'):
+        if filename == '\default':
+            date = datetime.now()
+            # the filename could contain more information on the other metadata to identify the content from the name
+            filename = 'coverage_' + axes_variables[0] + '_' + axes_variables[1] + '_' + date.strftime("%m_%d_%Y") + '.csv'
+        if folder == '\default':
+            #TODO make configurable
+            folder = 'output'
+        if not os.path.isdir(folder):
+            os.mkdir(folder, 0o755)
+            
+        coverage_DF.to_csv(os.path.join(folder, filename), index = False)
    
     return coverage_DF
