@@ -64,7 +64,7 @@ PACKAGE_DIR = {"": SOURCE_DIR}
 PACKAGE_DATA = {"pyCPA": ["metadata"]}
 
 
-README = "README.md"
+README = "README.rst"
 
 with open(README, "r") as readme_file:
     README_TEXT = readme_file.read()
