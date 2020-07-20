@@ -1,8 +1,6 @@
 pyCPA
 =====
 
-SCMData
-=======
 
 .. sec-begin-links
 
