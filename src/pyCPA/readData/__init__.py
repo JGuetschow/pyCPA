@@ -7,6 +7,6 @@ Created on Fri Apr  3 21:57:09 2020
 """
 
 # import function from files to make them available without a further nesting level
-from .read_data import read_CRF_data
+from .read_data import read_wide_csv_data
 
-__all__ = ['read_CRF_data']
+__all__ = ['read_wide_csv_data']

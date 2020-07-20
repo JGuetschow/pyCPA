@@ -124,6 +124,32 @@ def convert_IPCC_code_PRIMAP_to_pyCPA(code) -> str:
 #### function to convert PRIMAP IPCC 1996 / 2006 / CRF categories to pyCPA format in data frame
 ########
 def convert_IPCC_categories_PRIMAP_to_pyCPA(data_frame):
+    """
+    This function converts all IPCC emissions category codes in the input data frame 
+    from the PRIMAP-format to the pyCPA format which is closer to the original 
+    (but without all the dots)
+    
+    The PRIMAP format codes consist of upper case letters and numvers only. These are converted 
+    back to the original formatting which includes lower case letters and roman numerals. 
+    The dots are omitted in both farmattings (ToDo maybe change and add them back in)    
+        
+    Codes that are not part of the official hierarchy (starting with IPCM or CATM) 
+    are not converted but returned without the 'CAT' or 'IPC' prefix.
+    
+    Parameters
+    ----------
+    
+    data_frame
+        data_frame with IPCC category codes in in PRIMAP format (IPCC1996 and IPCC2006 can be converted)
+            
+    Returns
+    -------
+    
+    :obj:`scmdata.dataframe.ScmDataFrame`
+        scmDataFrame with the converted data
+
+        
+    """
     # this function converts IPCC emissions category codes from the PRIMAP-format to
     # the pyCPA format which is closer to the original (without all the dots)
     
