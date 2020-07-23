@@ -17,11 +17,12 @@ import pyCPA
 
 # config
 data_folder = 'data'
-# TODO: specification_folder = 'metadata/category_conversion'
-# TODO: mapping_file = 'IPCC2006_2_IPCC1996.csv'
+specification_folder = 'metadata/category_conversion'
+mapping_file = 'conversion_IPCC2006-1996_pyCPA_example.csv'
 CRF_file = 'Guetschow-et-al-2019-PRIMAP-crf_2019-v2.csv'
 split_name = CRF_file.split('.csv')
 converted_CRF_file = split_name[0] + '_pyCPA.csv'
+IPCC1996_CRF_file = split_name[0] + '_pyCPA_IPCC1996.csv'
 
 ## CRF reading define which columns should be renamed 
 col_replacements = {
@@ -43,15 +44,14 @@ defaultGWP = 'AR4'
 
 ## definitions necessary for the mapping
 conversion = {
-    'from_code_mapping': 'IPCC code',
-    'column_data': 'category',
-    'to_code_mapping': 'Code',
+    'from_code_mapping': 'CODE2006',
+    'column_data': 'category', #tell it that it's working on the category column
+    'to_code_mapping': 'CODE1996',
 }
 
 ## additional information from the mapping table that should be stored in the resulting dataframe
 additional_fields = {
-    'Description': "Category Description",
-    'Type': "type_t"
+    'FULLNAME1996': "Category Name" #additionally create a column with the category name
 }
 
 cols_to_remove = ['class_t']
@@ -72,13 +72,13 @@ pyCPA.core.convert_unit_PRIMAP_to_scmdata(CRF_scm)
 # convert category codes
 pyCPA.core.convert_IPCC_categories_PRIMAP_to_pyCPA(CRF_scm)
 
-# TODO: convert to IPCC1996
-# CRF_in_IPCC1996 = pyCPA.tools.conversion.map_data(CRF_scm, mapping_file, specification_folder, conversion, additional_fields, 
- #                      cols_to_remove = cols_to_remove, verbose = False)
+# convert to IPCC1996 (just a few subcategories)
+CRF_in_IPCC1996 = pyCPA.tools.conversion.map_data(CRF_scm, mapping_file, specification_folder, conversion, additional_fields, 
+                      cols_to_remove = cols_to_remove, verbose = False)
 
-# remove class_t column as not needed here
-
-# save csv
+# save csv IPCC2006 categories
 CRF_scm.to_csv(os.path.join(data_folder, converted_CRF_file), date_format = 'YYYY')
 
+# save csv IPCC1996 categories
+CRF_in_IPCC1996.to_csv(os.path.join(data_folder, IPCC1996_CRF_file), date_format = 'YYYY')
 

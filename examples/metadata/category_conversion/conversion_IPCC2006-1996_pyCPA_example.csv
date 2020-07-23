@@ -1,0 +1,18 @@
+CODE2006,CODENAME2006,FULLNAME2006,CODE1996,CODENAME1996,FULLNAME1996
+0,NationalTotal,Total emissions,0,NationalTotal,Total emissions
+1,Energy,Energy,1,TotalEnergy,Total Energy
+1A,FuelCombustionActivities,Fuel Combustion Activities (Sectoral Approach),1.A,FuelCombustionActivities,Fuel Combustion Activities (Sectoral Approach)
+1A1,EnergyIndustries,Energy Industries,1.A.1,EnergyIndustries,Energy Industries
+1A1a,MainActivityElectricityAndHeatProduction,Main Activity Electricity and Heat Production,1.A.1.a,PublicElectricityAndHeatProduction,Public Electricity and Heat Production
+1A1ai,ElectricityGeneration,ElectricityGeneration,1.A.1.a.i,PublicElectricityGeneration,Public Electricity Generation
+1A1aii,CombinedHeatAndPowerGeneration,Combined Heat and Power Generation (CHP),1.A.1.a.ii,PublicCombinedHeatAndPowerGeneration ,Public Combined Heat and Power Generation (CHP)
+1A1aiii,HeatPlants,Heat Plants,1.A.1.a.iii,PublicHeatPlants,Public Heat Plants
+1A1b,PetroleumRefining,Petroleum Refining,1.A.1.b,PetroleumRefining,Petroleum Refining
+1A1c,ManufactureOfSolidFuelsAndOtherEnergyIndustries,Manufacture of Solid Fuels and Other Energy Industries,1.A.1.c,ManufactureOfSolidFuelsAndOtherEnergyIndustries,Manufacture of Solid Fuels and Other Energy Industries
+1A2,ManufacturingIndustriesAndConstruction,Manufacturing Industries and Construction,1.A.2,ManufacturingIndustriesAndConstruction,Manufacturing Industries and Construction
+1A2a,IronAndSteel,Iron and Steel,1.A.2.a,IronAndSteel,Iron and Steel
+1A2b,NonFerrousMetals,Non-Ferrous Metals,1.A.2.b,NonFerrousMetals,Non-Ferrous Metals
+1A2c,Chemicals,Chemicals,1.A.2.c,Chemicals,Chemicals
+1A2d,PulpPaperPrint,"Pulp, Paper and Print",1.A.2.d,PulpPaperPrint,"Pulp, Paper and Print"
+1A2e,FoodProcessingBeveragesAndTobacco,"Food Processing, Beverages and Tobacco",1.A.2.e,FoodProcessingBeveragesTobacco,"Food Processing, Beverages and Tobacco"
+1A2f + 1A2g + 1A2h + 1A2i + 1A2j + 1A2k + 1A2l + 1A2m,ManufacturingFtoM,Manufacturing Industries and Construction subsections F to M,1.A.2.f,Other,Other
