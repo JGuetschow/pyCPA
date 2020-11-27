@@ -51,7 +51,7 @@ conversion = {
 
 ## additional information from the mapping table that should be stored in the resulting dataframe
 additional_fields = {
-    'FULLNAME1996': "Category Name" #additionally create a column with the category name
+    "Category Name": 'FULLNAME1996' #additionally create a column with the category name
 }
 
 cols_to_remove = ['class_t']

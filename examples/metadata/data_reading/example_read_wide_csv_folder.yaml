@@ -1,0 +1,55 @@
+--- # pyCPA data reading configuration file
+# function to use for data reading
+# currently possible
+# * read_wide_csv_folder
+function: 'read_wide_csv_folder'
+
+# folder for data reading (currently full path. In the future: change to relative to data location)
+folder: '/home/johannes/data/PRIMAP/helper_tools/test_convert_unfccc/data_conv/annexI'
+
+# regular expression to match the files in the given folder that should be read
+file_regex: '*.csv'
+
+# rename columns in input file to match pyCPA data frame column names
+# to remove a column use '\DROP' as value
+# col_rename: {
+#     'col_input_1': 'col_pyCPA_1',
+#     'col_input_2': 'col_pyCPA_2',
+#     }
+col_rename: {}
+
+# add columns with default values
+# col_defaults: {
+#     'new_col_1': 'value',
+#    }
+col_defaults: {}
+
+# map metatdata values from input file to pyCPA data frame. A dict with pyCPA column names
+# as keys. Values are dicts with input values as keys and output values as values.
+# A standard use case is to map gas names from input data to the standardized names used in pyCPA / scmdata
+# meta_mapping: {
+#     'pyCPA_col_1': {'col_1_value_1_in': 'col_1_value_1_out',
+#                     'col_1_value_2_in': 'col_1_value_2_out',
+#                     },
+#     'pyCPA_col_2': {'col_2_value_1_in': 'col_2_value_1_out',
+#                     'col_2_value_2_in': 'col_2_value_2_out',
+#                     },
+#     }
+meta_mapping: {}
+
+# filter data. there is one filter that defined data that should be removed and one filter that defines
+# data that should be kept. Filtering is after value conversion, so use mapped values to
+# define the filter. Column names are pyCPA columns.
+# Each entry in the dict defines an individual filter. The names of the filters have no relevance 
+# filter_keep: {
+#     'f_1': {'variable': ['CO2', 'CH4'], 'region': 'USA'},
+#     'f_2': {'variable': 'N2O'}        
+#     } # this examplefilter keeps allCO2 and CH4 data for the USA and N2O data for all countries
+filter_keep: {}
+# the remove filter  defines severalfilters. For each item in the dict one filter will be created removing the
+# data that matches the line/
+# filter_remove: {
+#     'f_1': {'scenario': 'HISTORY'},
+#     } # this filter removes all data with 'HISTORY' as scenario
+filter_remove: {}
+

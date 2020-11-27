@@ -150,8 +150,6 @@ def convert_IPCC_categories_PRIMAP_to_pyCPA(data_frame):
 
         
     """
-    # this function converts IPCC emissions category codes from the PRIMAP-format to
-    # the pyCPA format which is closer to the original (without all the dots)
     
     all_codes = data_frame.get_unique_meta('category')
     
@@ -286,7 +284,8 @@ def convert_unit_PRIMAP_to_scmdata(data_frame):
     for exception_unit in list(exception_units.keys()):
         #print(exception_unit)
         # TODO this needs error handling (e.g. when nothing has been matched)
-        CRF_current_unit = data_frame.filter(unit = regexp_str + exception_unit + '$', regexp=True)
+        CRF_current_unit = data_frame.filter(unit = regexp_str + exception_unit + '$', regexp=True,
+                                             log_if_empty = False)
         # get unique values of variable unit combinations
         units_current_unit = CRF_current_unit.get_unique_meta('variable_unit')
         # for each create a dict entry for conversion
@@ -317,227 +316,385 @@ def convert_unit_PRIMAP_to_scmdata(data_frame):
 ########    
 #### function to combine data for different values of metadata
 ########
-def combine_rows(data_frame, column, values_to_combine, new_value, other_cols, operator, 
-                 cols_to_remove: list = [], inplace: bool = True, verbose: bool = False) -> scmdata.dataframe.ScmDataFrame:
-    # this function combines rows for given values of a meta data columns where all other values coincide
-    # with other_cols (a dict) a subset of the dataset can be defined which the function oeprates on
-    # operator will be used for all but the first values_to_combine (first always has positive sign) 
+def combine_rows(data_frame, mapping, other_cols, 
+                 cols_to_remove: list = [], inplace: bool = True, verbose: bool = False) -> scmdata.run.ScmRun:
+    """
+    this function combines rows for given values of a meta data columns where all other values coincide
+    with other_cols (a dict) a subset of the dataset can be defined which the function oeprates on
+    operator will be used for all but the first values_to_combine (first always has positive sign)
     
     # currently only add and substract operators are implemented
     # TODO iplement checks for operator
-              
-    all_active_col_values = data_frame.get_unique_meta(column)
-    present_values_to_combine = list(set(all_active_col_values).intersection(set(values_to_combine)))
+    
+    Parameters
+    ----------
+    
+    data_frame
+        data_frame to work on
         
-    if len(present_values_to_combine) == 0:
-        # throw warning
-        print('No data for any value to combine of column ' + column)
-        #if not inplace:
-        #    return 
-    else:
+    mapping
+        a dict which has column names as keys. Each entry is a list where the first item is a 
+        list of values for the column (the values to be mapped), the second item is the operator 
+        (or list of operators), and the third item is the target value
+        Example:
+        mapping = {
+            "category": [['1.A', '1.B', '1.C'], ['+'] '1'],
+            "type_t": [['ACT'], ['+'], 'NET'],
+            }
+        The example would combine categories 1.A, 1.B, and 1.C for type ACT to category 1, type NET
+        Operators can be used on all columns but be careful with using them on more than one column.
+        Tey will be applied after each other, so if a time series gets a '-' operator from two columns
+        the result will be '+'.
+        
+    other_cols
+        a dict with column: value pairs specifying to only work on a subset of the dataframe 
+        defined by the column: value pairs
+        
+    cols_to_remove
+        list with column names that should be removed from the result dataframe. Default: empty list
+        
+    inplace
+        bool defining if operation takes place on input DF (True) or if newly generated data will be returned
+        as an individual DF while the input DF remains unchanged (False). Default: True
+    
+    verbose
+        bool. If True a lot of debug information is written to the terminal. Default: False 
+    
+    Returns
+    -------
+    
+    :obj:`scmdata.dataframe.ScmDataFrame`
+        scmDataFrame with the mapped data. Only the newly generated data will be returned
+
+        
+    """    
+
+          
         # first filter the dataset such that we only work on the data defined by other_cols and other_col_values
-        # we also don't need the rows which have vales of "column" which are not in values_to_combine
-        col_filter = other_cols.copy()
-        values_to_combine_and_target = values_to_combine.copy()
+    # we also don't need the rows which have vales of "column" which are not in values_to_combine
+    col_filter = other_cols.copy()
+    for column in mapping.keys():
         if inplace: 
-            values_to_combine_and_target.append(new_value)
+            values_to_combine_and_target = mapping[column][0].copy()
+            values_to_combine_and_target.append(mapping[column][2])
             col_filter[column] = values_to_combine_and_target
         else:
-            col_filter[column] = values_to_combine
+            col_filter[column] = mapping[column][0]
+        
+    data_to_work_with = data_frame.filter(keep = True, inplace = False, **col_filter, log_if_empty = False)
+    
+    if data_to_work_with.timeseries().empty:
+        print('No data left after filtering for wanted column values: filter: ')
+        for col in col_filter.keys():
+            print(col + ': ' + ', '.join(col_filter[col]))
+        return
+    
+    # remove this data from the main data_frame. The current approch saves memory but looses data if function crashes.
+    # one could also work on a copy and return the copy only if all worked out
+    # don't remove as we might want additional rows not replacement of rows
+    # data_frame.filter(keep = False, inplace = True, **col_filter)
+
+    # now split existing result time series from rest of data_to_work_with
+    if not inplace:
+        col_filter = {}
+        for column in mapping.keys():
+            col_filter[column] = mapping[column][2]
+        existing_result_timeseries = data_to_work_with.filter(keep = True, inplace = False, 
+                                                              **col_filter, log_if_empty = False)
+        # check if result timeseries already exists (currently not used)
+        if existing_result_timeseries.timeseries().empty:
+            result_existing = False
+        else:
+            result_existing = True
             
-        data_to_work_with = data_frame.filter(keep = True, inplace = False, **col_filter)
-        
-        if data_to_work_with.timeseries().empty:
-            print('No data left after filtering for other column values')
-            return
-        
-        # remove this data from the main data_frame. The current approch saves memory but looses data if function crashes.
-        # one could also work on a copy and return the copy only if all worked out
-        # don't remove as we might want additional rows not replacement of rows
-        # data_frame.filter(keep = False, inplace = True, **col_filter)
+    # get the data to combine
+    col_filter = {}
+    for column in mapping.keys():
+        col_filter[column] = mapping[column][0]
+    data_to_work_with.filter(keep = True, inplace = True, **col_filter, log_if_empty = False)
+    #if verbose:
+    #    print(data_to_work_with.head())
+       
+    # check if all units are the same
+    all_units = data_to_work_with.get_unique_meta('unit')
+    if len(all_units) > 1:
+        # we need unit conversion
+        # check if all variables are the same
+        all_vars = data_to_work_with.get_unique_meta('variable')
+        if len(all_vars) > 1:
+            # now we have two cases: 
+            # 1) the variable is operated on and we need CO2 equivalence
+            # 2) the variable is a group column and we need unit conversion per combination of 
+            #    group col values
+            CO2eq_needed = False
+            if 'variable' in mapping.keys():
+                if len(mapping['variable'][0]) > 1:
+                    CO2eq_needed = True
+                    # theoretically we also have to check if the result entity is  CO2eq entity
+                    # it doesn't make much sense to just convert CO2 to KYOTOGHG but just in case
+                    # somebody does it we should add the code for that here
+            
+            if CO2eq_needed:
+                # 1) CO2 equivalence is needed
+                unit_to = 'Mt CO2 / yr'
+                # get all contexts present
+                all_contexts = data_to_work_with.get_unique_meta('unit_context')
 
-        # now split existing result time series from rest of data_to_work_with
-        if not inplace:
-            col_filter[column] = new_value
-            existing_result_timeseries = data_to_work_with.filter(keep = True, inplace = False, **col_filter)
-            # check if result timeseries already exists (currently not used)
-            if existing_result_timeseries.timeseries().empty:
-                result_existing = False
+                for current_context in all_contexts:
+                    # convert data
+                    if verbose:
+                        print('converting for context ' + current_context)
+                        print('unit_to: ' + unit_to)
+                    data_to_work_with.convert_unit(unit_to, context = current_context, inplace = True, 
+                                                  **{'unit_context': current_context})
+                    #print(data_to_work_with.head())
+                    
             else:
-                result_existing = True
-        
-        col_filter[column] = values_to_combine
-        data_to_work_with.filter(keep = True, inplace = True, **col_filter)
-        if verbose:
-            print(data_to_work_with.head())
-           
-
-        # check if all units are the same
-        all_units = data_to_work_with.get_unique_meta('unit')
-        if len(all_units) > 1:
-            # we need unit conversion
-            # check if all variables are the same
-            all_vars = data_to_work_with.get_unique_meta('variable')
-            if len(all_vars) > 1:
-                # now we have two cases: 
-                # 1) the variable is operated on and we need CO2 equivalence
-                # 2) the variable is a group column and we need unit conversion per variable
-                
-                if column == 'variable':
-                    # 1) CO2 equivalence is needed
-                    unit_to = 'Mt CO2 / yr'
-                    # get all contexts present
-                    all_contexts = data_to_work_with.get_unique_meta('unit_context')
-
-                    for current_context in all_contexts:
-                        # convert data
-                        if verbose:
-                            print('converting for context ' + current_context)
-                            print('unit_to: ' + unit_to)
-                        data_to_work_with.convert_unit(unit_to, context = current_context, inplace = True, 
-                                                      **{'unit_context': current_context})
-                        #print(data_to_work_with.head())
+                # 2) no CO2 equivalence but individual conversion for each variable
+                for variable in all_vars:
+                    if verbose:
+                        print('converting for variable ' + variable) 
+                    data_this_var = data_to_work_with.filter(keep = True, inplace = False, 
+                                                             **{'variable': variable}, log_if_empty = False)
+                    all_units_this_var = data_this_var.get_unique_meta('unit')
+                    if verbose:
+                        print('All units for ' + variable + ': ' + ', '.join(all_units_this_var))
+                    if len(all_units_this_var) > 1:
+                        # now we have to check the other metadata cols which are not combined
+                        all_columns = data_this_var.meta.columns.values
+                        all_columns_to_check = list(set(all_columns) - set(mapping.keys()))
                         
-                else:
-                    # 2) no CO2 equivalence but individual conversion for each variable
-                    for variable in all_vars:
-                        if verbose:
-                            print('converting for variable ' + variable) 
-                        data_this_var = data_to_work_with.filter(keep = True, inplace = False, 
-                                                                 **{'variable': variable})
-                        all_units_this_var = data_this_var.get_unique_meta('unit')
-                        if verbose:
-                            print(all_units_this_var)
-                        if len(all_units_this_var) > 1:
+                        group_cols = []
+                        unique_cols = dict()
+
+                        for current_column in all_columns_to_check:
+                            values_this_col = data_to_work_with.get_unique_meta(current_column)
+                            if len(values_this_col) > 1:
+                                group_cols.append(current_column)
+                            else:
+                                unique_cols[current_column] = values_this_col[0]
+                        
+                        # remove unit from group cols. If it's not in the list an exeption will 
+                        # be raised. This is fine as it should exist unless there is a problem 
+                        # with the code
+                        group_cols.remove('unit')
+                        
+                        if group_cols:
+                            # we have more columns that are not mapped and might be 
+                            # responsible for the different units. Check that so we 
+                            # don't have to convert where it's not necessary or not 
+                            # possible. We get all possible combinations and work on
+                            # tme one by one
+                            if verbose:
+                                print('Checking unit conversion for vombinations of cols ' + 
+                                      ', '.join(group_cols))
+                                
+                            group_col_combinations = data_this_var.meta[group_cols]
+                            unique_GCC = group_col_combinations.drop_duplicates()
+                            
+                            for GCC in unique_GCC:
+                                if verbose:
+                                    print('Value combination :' + ', '.join(GCC))
+                                # build filter
+                                filter_GCC = {}
+                                for index, col in enumerate(group_cols):
+                                    filter_GCC[col] = GCC[index]
+                                
+                                # check if we have several units
+                                data_this_GCC = data_this_var.filter(keep = True, inplace = False, 
+                                                             **filter_GCC, log_if_empty = False)
+                                all_units_this_GCC = data_this_GCC.get_unique_meta('unit')
+                                if len(all_units_this_GCC) > 1:
+                                    # need unit conversion
+                                    unit_to = all_units_this_GCC[0]
+                                    if verbose:
+                                        print('converting to ' + unit_to)
+                                    
+                                    filter_GCC['variable'] = variable
+                                    # get all contexts
+                                    current_contexts = data_this_GCC.get_unique_meta('unit_context')
+                                    for context in current_contexts:
+                                        filter_GCC['context'] = context
+                                        data_to_work_with.convert_unit(unit_to, inplace = True, context = context, **filter_GCC)
+                                else:
+                                    if verbose:
+                                        print('No conversion needed')
+                        else:
                             unit_to = all_units_this_var[0]
                             if verbose:
                                 print('converting to ' + unit_to)
                             # convert data
-                            # TODO: contexts have to be considered? Or does that happen automatically because they are stored in the dataframe
-                            data_to_work_with.convert_unit(unit_to, inplace = True, **{'variable': variable})
+                            # get all contexts
+                            current_contexts = data_this_var.get_unique_meta('unit_context')
+                            for context in current_contexts:
+                                data_to_work_with.convert_unit(unit_to, inplace = True, context = context, **{'variable': variable, 'context': context})
+                    elif verbose:
+                        print('No conversion needed')
                     
-            else: # not tested so far
-                unit_to = all_units[0]
-                # convert data
-                # TODO: contexts have to be considered? Or does that happen automatically because they are stored in the dataframe
-                data_to_work_with.convert_unit(unit_to, inplace = True)
+        else: # not tested so far
+            unit_to = all_units[0]
+            # convert data
+            # get all contexts
+            current_contexts = data_to_work_with.get_unique_meta('unit_context')
+            for context in current_contexts:
+                data_to_work_with.convert_unit(unit_to, inplace = True, context = context, **{'context': context})
 
-        # prepare data in case of subtractions
+    # prepare data in case of subtractions
+    for column in mapping.keys():
         # first check if we have individual operators for all values_to_combine
-        if type(operator) is list: 
-            # check if list has the correct length (move to beginning of function)
-            # also add a check if it's just '+' and '-'
-            if len(operator) != len(values_to_combine):
-                # throw error
-                # TODO: throw error
-                print('operator list and values_to_combine have different lengths')
-                print(operator)
-                print(values_to_combine)
-                return
+        operator = mapping[column][1]
+        values_to_combine = mapping[column][0]
+        if not values_to_combine == ['*']:
+            if type(operator) is list: 
+                # check if list has the correct length (move to beginning of function)
+                # also add a check if it's just '+' and '-'
+                if len(operator) != len(values_to_combine):
+                    # throw error
+                    # TODO: throw error
+                    print('operator list and values_to_combine have different lengths')
+                    print(operator)
+                    print(mapping[column][0])
+                    return
+                else:
+                    # find the entries with '-'
+                    subtract_values = []
+                    for i_operator in range(0, len(operator)):
+                        if operator[i_operator] == '-':
+                            subtract_values.append(values_to_combine[i_operator])
             else:
-                # find the entries with '-'
-                subtract_values = []
-                for i_operator in range(0, len(operator)):
-                    if operator[i_operator] == '-':
-                        subtract_values.append(values_to_combine[i_operator])
-        else:
-            # if only one value_to_combine apply operator to that.
-            # if more than one value,apply to all but the first
-            if len(values_to_combine) == 1:
-                subtract_values = values_to_combine
-            else:
-                subtract_values = values_to_combine[1 :]
-        
-        # now apply - to all rows with column values in subtract_values (if there are any)
-        if subtract_values:
-            print(subtract_values)
-        
-            data_to_change_sign = data_to_work_with.filter(inplace = False, keep = True, 
-                                                           **{column: subtract_values})
-            data_to_work_with.filter(inplace = True, keep = False, **{column: subtract_values})
-
-            data_to_change_sign_TS = data_to_change_sign.timeseries().apply(lambda x: - x)
-            data_changed_sign = scmdata.dataframe.ScmDataFrame(data_to_change_sign_TS)
-
-            data_to_work_with.append(data_changed_sign,inplace = True)
-       
-                
-        # use groupby to create   
-        ## first find all cols that have non-unique values (except for the colum to operate on)
-        all_columns = data_to_work_with.meta.columns.values
-        all_columns_to_check = list(set(all_columns) - set([column]))
-
-        group_cols = []
-        unique_cols = dict()
-
-        for current_column in all_columns_to_check:
-            values_this_col = data_to_work_with.get_unique_meta(current_column)
-            if verbose:
-                print(current_column)
-                print(values_this_col)
-            if len(values_this_col) > 1:
-                group_cols.append(current_column)
-            else:
-                unique_cols[current_column] = values_this_col[0]
-
-        if len(group_cols) == 0:
-            # what to do if we want to work on regions and there is only one present. need another col in this case
-            group_cols.append('region')
-        
-        if 'unit' in group_cols:
-            if 'variable' in group_cols:
-                all_variables = data_to_work_with.get_unique_meta('variable')
-                for variable in all_variables:
-                    data_this_var = data_to_work_with.filter(keep = True, inplace = False, **{'variable': variable})
-                    all_units_this_var = data_this_var.get_unique_meta('unit')
-                    if len(all_units_this_var) > 1:
-                        # throw error
-                        # TODO: throw error
-                        print('Unit col has non-unique metadata for variable ' + variable + 
-                              '. Something went wrong with unit conversion.')
-                        return
-            else:
-                # throw error
-                # TODO: throw error
-                print('Unit col has non-unique metadata. Something went wrong with unit conversion.')
-                return
+                # if only one value_to_combine apply operator to that.
+                # if more than one value, apply to all but the first
+                if operator == '-':
+                    if len(values_to_combine) == 1:
+                        subtract_values = values_to_combine
+                    else:
+                        subtract_values = values_to_combine[1 :]
+                else:
+                    subtract_values = []
+    
+            # now apply - to all rows with column values in subtract_values (if there are any)
+            if subtract_values:
+                if verbose:
+                    print(subtract_values)
             
-        units = data_to_work_with.get_unique_meta('unit')
+                data_to_change_sign = data_to_work_with.filter(inplace = False, keep = True, 
+                                                               **{column: subtract_values}, log_if_empty = False)
+                data_to_work_with.filter(inplace = True, keep = False, **{column: subtract_values}, 
+                                         log_if_empty = False)
+        
+                data_to_change_sign_TS = data_to_change_sign.timeseries().apply(lambda x: - x)
+                data_changed_sign = scmdata.run.ScmRun(data_to_change_sign_TS)
+        
+                data_to_work_with.append(data_changed_sign, inplace = True)
+   
+            
+    # use groupby to create the mapped data 
+    ## first find all cols that have non-unique values (except for the colums to operate on)
+    all_columns = data_to_work_with.meta.columns.values
+    all_columns_to_check = list(set(all_columns) - set(mapping.keys()))
+
+    group_cols = []
+    unique_cols = dict()
+
+    for current_column in all_columns_to_check:
+        values_this_col = data_to_work_with.get_unique_meta(current_column)
         if verbose:
-            print('unit values:', *units, sep= ', ' )
-            print('Grouping on columns:', *group_cols, sep = ', ')
-        # apply the operation (currently only sum)
-        result_DF = data_to_work_with.timeseries().groupby(group_cols).sum()
-
-        ## add the meta columns back in. they were removed by groupby 
-        ## get all col values
-        columns = data_to_work_with.meta.columns.values
-        group_cols.append(column)
-        columns = list(set(columns) - set(group_cols) - set(cols_to_remove))
-        if verbose:
-            print(columns)
-        for i_column in range(0, len(columns)):
-
-            values_this_col = data_to_work_with.get_unique_meta(columns[i_column])
-            if len(values_this_col) > 1:
-                # TODO: throw exception
-                result_DF.insert(i_column, columns[i_column], values_this_col[0])
-            else:
-                result_DF.insert(i_column, columns[i_column], values_this_col[0])
-
-        result_DF.insert(len(columns), column, new_value)
-
-        # make a new ScmDataFrame 
-        result_scmdata = scmdata.dataframe.ScmDataFrame(result_DF)
-
-        # append to data_frame
-        if inplace:
-            # remove existing data before appending
-            # the best way would be to just remove data that's actually added. 
-            # Here we remove all data that's potentially added (i.e. the target value for column
-            # and the other_values for the ter columns
-            col_filter[column] = new_value
-            data_frame.filter(keep = False, inplace = True, **col_filter)
-            data_frame.append(result_scmdata, inplace = True)
+            print(current_column)
+            print(values_this_col)
+        if len(values_this_col) > 1:
+            group_cols.append(current_column)
         else:
-            return result_scmdata
+            unique_cols[current_column] = values_this_col[0]
+
+    if len(group_cols) == 0:
+        # what to do if we want to work on regions and there is only one present. need another col in this case
+        group_cols.append('region')
+    
+    
+    # sanity check if there are metadata combinations which only differ in unit
+    # too much work to check here. Check result instead (not implemented yet)
+#    if 'unit' in group_cols:
+#        # this is not covering all cases. In general time series could differ in unit and another field 
+#        # but not variable. It's just not very likely
+#        if 'variable' in group_cols:
+#            all_variables = data_to_work_with.get_unique_meta('variable')
+#            for variable in all_variables:
+#                data_this_var = data_to_work_with.filter(keep = True, inplace = False, **{'variable': variable})
+#                all_units_this_var = data_this_var.get_unique_meta('unit')
+#                if len(all_units_this_var) > 1:
+#                    # throw error
+#                    # TODO: throw error
+#                    print('Unit col has non-unique metadata for variable ' + variable + 
+#                          '. Something went wrong with unit conversion.')
+#                    return
+#        else:
+#            # throw error
+#            # TODO: throw error
+#            print('Unit col has non-unique metadata. Something went wrong with unit conversion.')
+#            return
+        
+    
+    if verbose:
+        units = data_to_work_with.get_unique_meta('unit')
+        print('unit values:', *units, sep= ', ' )
+        print('mapping on columns:', *group_cols, sep = ', ')
+    
+    # apply the operation (currently only sum)
+    result_DF = data_to_work_with.timeseries().groupby(group_cols).sum()
+
+    ## add the meta columns back in. they were removed by groupby 
+    ## get all col values
+    columns = data_to_work_with.meta.columns.values
+    columns = list(set(columns) - set(group_cols) - set(mapping.keys()) - set(cols_to_remove))
+    if verbose:
+        print(columns)
+    for i_column in range(0, len(columns)):
+
+        values_this_col = data_to_work_with.get_unique_meta(columns[i_column])
+        if verbose:
+            print(columns[i_column])
+            print(values_this_col)
+        if len(values_this_col) > 1:
+            # TODO: throw exception
+            result_DF.insert(i_column, columns[i_column], values_this_col[0])
+        else:
+            result_DF.insert(i_column, columns[i_column], values_this_col[0])
+
+    i = 0
+    for column in mapping.keys():
+        result_DF.insert(len(columns) + i, column, mapping[column][2])
+        i += 1
+        if verbose:
+            print('inserting column "' + column + '" with value "' + mapping[column][2] + '"')
+
+    # make a new ScmDataFrame 
+    result_scmdata = scmdata.run.ScmRun(result_DF)
+
+    # append to data_frame
+    if inplace:
+        # remove existing data before appending
+        
+        # check which new data has been added (unit and unit_context may have changed, so we overwrite
+        # remove rows which differ from the new data in unit and unit_contect)
+        col_filter = {}
+        meta_to_consider = list(set(result_scmdata.meta.columns.values) - set(['unit', 'unit_context']))
+        unique_meta = []
+        for meta in meta_to_consider:
+            values = result_scmdata.get_unique_meta(meta)
+            if len(values) == 1:
+                col_filter[meta] = values
+                unique_meta.append(meta)
+        meta_to_consider = list(set(meta_to_consider) - set(unique_meta))
+        
+        for iRow, row  in result_DF.iterrows():
+            # set up the filter
+            col_filter_current = col_filter.copy()
+            for meta in meta_to_consider:
+                col_filter_current[meta] = row[meta]
+            
+            # remove the row from the original DF
+            data_frame.filter(keep = False, inplace = True, **col_filter, log_if_empty = False)
+               
+        data_frame.append(result_scmdata, inplace = True)
+    else:
+        return result_scmdata

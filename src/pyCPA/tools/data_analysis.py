@@ -40,22 +40,22 @@ def check_coverage(input_DF, data_filter, axes_variables, folder: str = '\defaul
     Returns
     -------
     
-    :obj:`scmdata.dataframe.ScmDataFrame`
+    :obj:`scmdata.run.ScmRun`
         scmDataFrame with the converted data
         
     """
     
     # filter the input dataframe
-    input_DF.filter(keep = True, inplace = True, **data_filter)
+    filtered_DF = input_DF.filter(keep = True, inplace = False, **data_filter)
     
     # now loop over rows and filter for each row variable. In a nested loop do the same for cols
     # the coverage count is just the number of rows in the filtered dataframe
     
     # get the values for columns
-    values_col = input_DF.get_unique_meta(axes_variables[0])
+    values_col = sorted(filtered_DF.get_unique_meta(axes_variables[0]))
     
     # get the values for rows
-    values_rows = input_DF.get_unique_meta(axes_variables[1])
+    values_rows = sorted(filtered_DF.get_unique_meta(axes_variables[1]))
     
         
     # list to collect rows
@@ -64,7 +64,7 @@ def check_coverage(input_DF, data_filter, axes_variables, folder: str = '\defaul
     for row in values_rows:
         # ToDo: check if first filtering for rows and then for each col is really faster than 
         # filtering for both for each cell
-        current_DF = input_DF.filter(keep = True, inplace = False, **{axes_variables[1]: row})
+        current_DF = filtered_DF.filter(keep = True, inplace = False, **{axes_variables[1]: row})
         
         results_this_row = [row]
         for col in values_col:
