@@ -25,7 +25,7 @@ def check_coverage(input_DF, data_filter, axes_variables, folder: str = '\defaul
     ----------
     
     input\_DF
-        ScmDataFrame with data to be abalyzed
+        ScmDataFrame with data to be analyzed
     data\_filter
         filter in scmdata format (a dict) to filter the data before processing
     axes\_variables
@@ -64,11 +64,13 @@ def check_coverage(input_DF, data_filter, axes_variables, folder: str = '\defaul
     for row in values_rows:
         # ToDo: check if first filtering for rows and then for each col is really faster than 
         # filtering for both for each cell
-        current_DF = filtered_DF.filter(keep = True, inplace = False, **{axes_variables[1]: row})
+        current_DF = filtered_DF.filter(keep = True, inplace = False, **{axes_variables[1]: row},
+                                                                         log_if_empty = False)
         
         results_this_row = [row]
         for col in values_col:
-            DF_this_cell = current_DF.filter(keep = True, inplace = False, **{axes_variables[0]: col})
+            DF_this_cell = current_DF.filter(keep = True, inplace = False, **{axes_variables[0]: col},
+                                                                              log_if_empty = False)
             shape_DF = DF_this_cell.meta.shape
             results_this_row.append(shape_DF[0])
             
@@ -94,8 +96,8 @@ def check_coverage(input_DF, data_filter, axes_variables, folder: str = '\defaul
     return coverage_DF
 
 
-#def check_consistency(input_DF, checks, data_filter, folder: str = '\default', 
-#                   filename: str = '\default', verbose: bool = False) -> pd.DataFrame:
+#def check_consistency(input_DF, tests, folder: string = '', data_filter: dict = {}, 
+#                   verbose: bool = False) -> pd.DataFrame:
 #    """
 #    
 #    Resulting data will be saved as a csv file and also returned as a pandas DataFrame
@@ -104,11 +106,18 @@ def check_coverage(input_DF, data_filter, axes_variables, folder: str = '\defaul
 #    ----------
 #    
 #    input\_DF
-#        ScmDataFrame with data to be abalyzed
-#    checks
-#        dict with checks to make or filename containing a yaml description of such a dict. 
-#        Each entry has a name and a dict which contains the information on what to check.
-#        The information is again a dict with the following field
+#        ScmDataFrame with data to be analyzed
+#    test_file
+#        either: 
+#            1: dict containing the tests in the following structure
+#            tests = {
+#                    category_1: 'category_1.A + category 1.B',
+#                    }
+#            The value of each dict entry has to be of the format that combine_rows understands, i.e. 
+#            value1_whitespace_operator_whitespace_value2
+#        or:
+#            string with the name of a csv file which has two columns
+#            
 #    data\_filter
 #        filter in scmdata format (a dict) to filter the data before processing
 #    folder
@@ -124,12 +133,19 @@ def check_coverage(input_DF, data_filter, axes_variables, folder: str = '\defaul
 #    -------
 #    
 #    :obj:`scmdata.dataframe.ScmDataFrame`
-#        scmDataFrame with the converted data
+#        scmDataFrame with the checks table amended with information on passed and failed checks 
 #        
 #    """
 #    
 #    # filter the input dataframe
 #    input_DF.filter(keep = True, inplace = True, **data_filter)
+#    
+#
+#    # read the mapping table
+#    mapping_table = pd.read_csv(os.path.join(folder, tests))
+#    
+#    
+#    #### old stuff
 #    
 #    # now loop over rows and filter for each row variable. In a nested loop do the same for cols
 #    # the coverage count is just the number of rows in the filtered dataframe
