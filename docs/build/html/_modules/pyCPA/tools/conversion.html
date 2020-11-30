@@ -1,38 +1,39 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html4" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pyCPA.tools.conversion &mdash; pyCPA 0.0.1 documentation</title>
+  <title>pyCPA.tools.conversion &mdash; pyCPA 0+untagged.22.gb54d30c.dirty documentation</title>
   
-
-  
-  
-  
-  
-
-  
-  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-
-    
 
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
@@ -48,7 +49,7 @@
           
 
           
-            <a href="../../../index.html" class="icon icon-home"> pyCPA
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> pyCPA
           
 
           
@@ -56,6 +57,10 @@
 
           
             
+            
+              <div class="version">
+                0
+              </div>
             
           
 
@@ -71,6 +76,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -98,6 +104,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -136,7 +143,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
@@ -167,10 +174,13 @@
 <span class="kn">import</span> <span class="nn">scmdata</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">pyCPA.core</span> <span class="kn">import</span> <span class="n">combine_rows</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">pyCPA.core</span> <span class="k">import</span> <span class="n">combine_rows</span>
 
-<div class="viewcode-block" id="map_data"><a class="viewcode-back" href="../../../pyCPA.tools.html#pyCPA.tools.conversion.map_data">[docs]</a><span class="k">def</span> <span class="nf">map_data</span><span class="p">(</span><span class="n">input_DF</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span> <span class="n">folder</span><span class="p">,</span> <span class="n">conversion</span><span class="p">,</span> <span class="n">add_fields</span><span class="p">,</span> <span class="n">cols_to_remove</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[],</span> 
-             <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">scmdata</span><span class="o">.</span><span class="n">dataframe</span><span class="o">.</span><span class="n">ScmDataFrame</span><span class="p">:</span>
+
+
+<div class="viewcode-block" id="map_data"><a class="viewcode-back" href="../../../pyCPA.tools.html#pyCPA.tools.conversion.map_data">[docs]</a><span class="k">def</span> <span class="nf">map_data</span><span class="p">(</span><span class="n">input_DF</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">,</span> <span class="n">folder</span><span class="p">,</span> <span class="n">conversion</span><span class="p">,</span> <span class="n">onlynew</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">add_fields</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{},</span> 
+             <span class="n">cols_to_remove</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[],</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">scmdata</span><span class="o">.</span><span class="n">run</span><span class="o">.</span><span class="n">ScmRun</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Map data from one metadata column to another one including summing and subtraction. This function can be used e.g. </span>
 <span class="sd">    to map data from one categorization into another one, or for data preprocessing.</span>
@@ -186,8 +196,29 @@
 <span class="sd">        the folder the mapping file resides in</span>
 <span class="sd">    conversion</span>
 <span class="sd">        a dict defining the rows to use in the input\_DF the mapping\_file and the output DF</span>
+<span class="sd">        either of the form</span>
+<span class="sd">        conversion = {</span>
+<span class="sd">            &quot;category&quot;: [&quot;CRFcategory&quot;, &quot;IPCCcategory&quot;], </span>
+<span class="sd">            &quot;categoryName&quot;: [&quot;*&quot;, &quot;IPCCcategoryName&quot;], </span>
+<span class="sd">            &quot;classification&quot;: [&quot;CRFclass&quot;, &quot;IPCCclass&quot;]</span>
+<span class="sd">        }</span>
+<span class="sd">        or of the simplified form</span>
+<span class="sd">        conversion = {</span>
+<span class="sd">            &#39;from_code_mapping&#39;: &#39;categoryCode&#39;,</span>
+<span class="sd">            &#39;column_data&#39;: &#39;category&#39;, #tell it that it&#39;s working on the category column</span>
+<span class="sd">            &#39;to_code_mapping&#39;: &#39;CODE1996&#39;,</span>
+<span class="sd">        }</span>
+<span class="sd">        </span>
+<span class="sd">    onlynew</span>
+<span class="sd">        bool. If True only aggregated data will be returned. Else aggregated data added </span>
+<span class="sd">        will be added to the input DF and the resulting DF will be returned. Default True</span>
 <span class="sd">    add\_fields</span>
-<span class="sd">        a dict defining metadata columns to add and their value</span>
+<span class="sd">        a dict defining metadata columns to add and the column in the conversion file </span>
+<span class="sd">        defining their value: default is an empty dict</span>
+<span class="sd">        Do not use with the generalized conversion format because the information can </span>
+<span class="sd">        be integrated into the conversion</span>
+<span class="sd">        Example:</span>
+<span class="sd">            add\_fields = {&quot;type_t&quot;: &quot;type&quot;}</span>
 <span class="sd">    cols\_to\_remove</span>
 <span class="sd">        a list defining columns that will be removed: default is an empty list</span>
 <span class="sd">    verbose</span>
@@ -196,58 +227,134 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    </span>
-<span class="sd">    :obj:`scmdata.dataframe.ScmDataFrame`</span>
-<span class="sd">        scmDataFrame with the converted data</span>
+<span class="sd">    :obj:`scmdata.run.ScmRun`</span>
+<span class="sd">        scmRun with the converted data</span>
 <span class="sd">        </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
+    <span class="c1"># check if parameters make sense</span>
+    <span class="k">if</span> <span class="n">add_fields</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">onlynew</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Adding fields is only possible with onlynew = True&quot;</span><span class="p">)</span> 
+    
+    <span class="n">sorted_keys</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">conversion</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+    <span class="k">if</span> <span class="n">sorted_keys</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;column_data&quot;</span><span class="p">,</span> <span class="s2">&quot;from_code_mapping&quot;</span><span class="p">,</span> <span class="s2">&quot;to_code_mapping&quot;</span><span class="p">]:</span>
+        <span class="n">conversion</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">conversion</span><span class="p">[</span><span class="s2">&quot;column_data&quot;</span><span class="p">]:</span> <span class="p">[</span><span class="n">conversion</span><span class="p">[</span><span class="s2">&quot;from_code_mapping&quot;</span><span class="p">],</span> <span class="n">conversion</span><span class="p">[</span><span class="s2">&quot;to_code_mapping&quot;</span><span class="p">]]</span>
+        <span class="p">}</span>
+    
+    <span class="k">if</span> <span class="n">add_fields</span><span class="p">:</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">conversion</span><span class="p">[</span><span class="s2">&quot;output&quot;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">add_fields</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">temp</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">add_fields</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="n">conversion</span><span class="p">[</span><span class="s2">&quot;output&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span> 
+    
+    <span class="n">allowed_operators</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">]</span>
+    
     <span class="c1"># read the mapping table</span>
-    <span class="n">mapping_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span>
     <span class="n">mapping_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">))</span>
     
     <span class="n">first_data</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="c1">#DF_mapped = </span>
-    
+
     <span class="c1"># loop over entires of mapping table</span>
-    <span class="k">for</span> <span class="n">iCode</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">mapping_table</span><span class="p">)):</span>
-        <span class="c1"># get to_code</span>
-        <span class="n">to_code_current</span> <span class="o">=</span> <span class="n">mapping_table</span><span class="p">[</span><span class="n">conversion</span><span class="p">[</span><span class="s1">&#39;to_code_mapping&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">iCode</span><span class="p">]</span>
-        
+    <span class="k">for</span> <span class="n">iRow</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">mapping_table</span><span class="p">)):</span>
         <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;#########################&#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Working on category &#39;</span> <span class="o">+</span> <span class="n">to_code_current</span> <span class="o">+</span> <span class="s1">&#39; (&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">iCode</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Working on row &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">iRow</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">mapping_table</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">iRow</span><span class="p">])</span> 
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;#########################&#39;</span><span class="p">)</span>
-        <span class="c1"># get from_code from mapping table and analyze it</span>
-        <span class="n">from_code_current</span> <span class="o">=</span> <span class="n">mapping_table</span><span class="p">[</span><span class="n">conversion</span><span class="p">[</span><span class="s1">&#39;from_code_mapping&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">iCode</span><span class="p">]</span>
-        <span class="c1"># check if empty (then it&#39;s not a string, but a float with content nan)</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">from_code_current</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="n">parts</span> <span class="o">=</span> <span class="n">from_code_current</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
-            <span class="n">operator</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;+&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span>
-            <span class="n">categories</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span>
-                
+        
+        
+        <span class="n">columns</span> <span class="o">=</span> <span class="n">conversion</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        
+        <span class="n">combo</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
+            <span class="c1"># for each column create the entry in the combination dict</span>
+            <span class="c1"># first get input values</span>
+            <span class="k">if</span> <span class="n">conversion</span><span class="p">[</span><span class="n">column</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;*&#39;</span><span class="p">:</span>
+                <span class="n">input_values</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;*&#39;</span><span class="p">]</span>
+                <span class="n">operator</span> <span class="o">=</span> <span class="s1">&#39;+&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># get from_code from mapping table and analyze it</span>
+                <span class="n">from_value_current</span> <span class="o">=</span> <span class="n">mapping_table</span><span class="p">[</span><span class="n">conversion</span><span class="p">[</span><span class="n">column</span><span class="p">][</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">iRow</span><span class="p">]</span>
+                <span class="c1"># convert to str if it&#39;s not</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">from_value_current</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                    <span class="c1"># convert to str</span>
+                    <span class="n">from_value_current</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">from_value_current</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">from_value_current</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;nan&#39;</span><span class="p">]:</span>
+                    <span class="n">input_values</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;\s[\+-]\s&#39;</span><span class="p">,</span> <span class="n">from_value_current</span><span class="p">)</span>
+                    <span class="n">operator</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s1">&#39;(?&lt;=\s)[\+-](?=\s)&#39;</span><span class="p">,</span> <span class="n">from_value_current</span><span class="p">)</span>
+                    <span class="n">first_op</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s1">&#39;^[\+-](?=\s)&#39;</span><span class="p">,</span> <span class="n">input_values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="k">if</span> <span class="n">first_op</span><span class="p">:</span>
+                        <span class="n">operator</span> <span class="o">=</span> <span class="n">first_op</span> <span class="o">+</span> <span class="n">operator</span>
+                        <span class="n">input_values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">input_values</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">:]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">operator</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;+&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">operator</span>
+
+                    <span class="c1"># check if operator only consists of allowed operators</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">op</span> <span class="ow">in</span> <span class="n">allowed_operators</span> <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">operator</span><span class="p">):</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Illegal operator found for column &#39;</span> <span class="o">+</span> <span class="n">column</span> <span class="o">+</span> <span class="s1">&#39; in &#39;</span> <span class="o">+</span> <span class="n">from_value_current</span> <span class="o">+</span> <span class="s1">&#39;, row </span><span class="si">{:d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iRow</span><span class="p">))</span>
+                        <span class="k">break</span>
+
+            <span class="c1"># get the output value</span>
+            <span class="n">to_value_current</span> <span class="o">=</span> <span class="n">mapping_table</span><span class="p">[</span><span class="n">conversion</span><span class="p">[</span><span class="n">column</span><span class="p">][</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">iRow</span><span class="p">]</span>
+            <span class="c1"># convert to str if it&#39;s not</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">to_value_current</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="c1"># convert to str</span>
+                <span class="n">to_value_current</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">to_value_current</span><span class="p">)</span>
+
+            <span class="c1"># check if conversion for column makes sense     </span>
+            <span class="k">if</span> <span class="n">to_value_current</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;nan&#39;</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">from_value_current</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;nan&#39;</span><span class="p">]:</span>
+                    <span class="c1"># from also empty, then ignore column</span>
+                    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Conversion for column &#39;</span> <span class="o">+</span> <span class="n">column</span> <span class="o">+</span> <span class="s1">&#39; empty for row </span><span class="si">{:d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iRow</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># to is empty, from not. That is an error in the mapping table</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Inconsistent mapping table for &#39;</span> <span class="o">+</span> <span class="n">column</span> <span class="o">+</span> <span class="s1">&#39;, row </span><span class="si">{:d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iRow</span><span class="p">))</span>
+                    <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">from_value_current</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span><span class="s1">&#39;nan&#39;</span><span class="p">]:</span>
+                    <span class="c1"># from is empty, to not. That is an error in the mapping table</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Inconsistent mapping table for &#39;</span> <span class="o">+</span> <span class="n">column</span> <span class="o">+</span> <span class="s1">&#39;, row </span><span class="si">{:d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iRow</span><span class="p">))</span>
+                    <span class="k">break</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">combo</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">input_values</span><span class="p">,</span> <span class="n">operator</span><span class="p">,</span> <span class="n">to_value_current</span><span class="p">]</span>
+        
+        <span class="c1"># check if the resulting cobination dict is not empty</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">combo</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Conversion dict is empty for row </span><span class="si">{:d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iRow</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
             <span class="c1"># prepare and make a call to map the data and combine if necessary</span>
-            <span class="n">converted_data</span> <span class="o">=</span> <span class="n">combine_rows</span><span class="p">(</span><span class="n">input_DF</span><span class="p">,</span> <span class="n">conversion</span><span class="p">[</span><span class="s1">&#39;column_data&#39;</span><span class="p">],</span> <span class="n">categories</span><span class="p">,</span> <span class="n">to_code_current</span><span class="p">,</span> <span class="p">{},</span> 
-                                          <span class="n">operator</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">cols_to_remove</span> <span class="o">=</span> <span class="n">cols_to_remove</span><span class="p">,</span> 
-                                          <span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span><span class="p">)</span>
+            <span class="n">converted_data</span> <span class="o">=</span> <span class="n">combine_rows</span><span class="p">(</span><span class="n">input_DF</span><span class="p">,</span> <span class="n">combo</span><span class="p">,</span> <span class="p">{},</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+                                          <span class="n">cols_to_remove</span> <span class="o">=</span> <span class="n">cols_to_remove</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span><span class="p">)</span>
+            
             <span class="k">if</span> <span class="n">converted_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="c1"># add additional columns</span>
                 <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Adding data for sector &#39;</span> <span class="o">+</span> <span class="n">to_code_current</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Adding data for row </span><span class="si">{:d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iRow</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;. combo dict:&#39;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">combo</span><span class="p">)</span>
+                    
                 <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">add_fields</span><span class="p">:</span>
-                    <span class="n">converted_data</span><span class="o">.</span><span class="n">set_meta</span><span class="p">(</span><span class="n">mapping_table</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">iCode</span><span class="p">],</span> <span class="n">add_fields</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
-            
+                    <span class="c1">#converted_data.set_meta(mapping_table[key].iloc[iRow], add_fields[key])</span>
+                    <span class="n">converted_data</span><span class="o">.</span><span class="fm">__setitem__</span><span class="p">(</span><span class="n">mapping_table</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">iRow</span><span class="p">],</span> <span class="n">add_fields</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+                    
                 <span class="c1"># add the data to converted DF</span>
                 <span class="k">if</span> <span class="n">first_data</span><span class="p">:</span>
-                    <span class="n">DF_mapped</span> <span class="o">=</span> <span class="n">converted_data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-                <span class="k">else</span><span class="p">:</span>
                     <span class="n">first_data</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="k">if</span> <span class="n">onlynew</span><span class="p">:</span>
+                        <span class="n">DF_mapped</span> <span class="o">=</span> <span class="n">converted_data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">DF_mapped</span> <span class="o">=</span> <span class="n">input_DF</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                        <span class="c1"># remove the columns</span>
+                        <span class="n">DF_mapped</span><span class="o">.</span><span class="n">drop_meta</span><span class="p">(</span><span class="n">cols_to_remove</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+                        <span class="n">DF_mapped</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">converted_data</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>                        
+                <span class="k">else</span><span class="p">:</span>
                     <span class="n">DF_mapped</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">converted_data</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;No input data for sector &#39;</span> <span class="o">+</span> <span class="n">to_code_current</span><span class="p">)</span>     
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;No source category for target category &#39;</span> <span class="o">+</span> <span class="n">to_code_current</span> <span class="o">+</span> <span class="s1">&#39; given.&#39;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;No input data for row </span><span class="si">{:d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iRow</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.combo dict:&#39;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">combo</span><span class="p">)</span>     
         
     <span class="k">return</span> <span class="n">DF_mapped</span></div>
 </pre></div>
@@ -262,11 +369,19 @@
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2020, Johannes Gütschow
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -277,7 +392,6 @@
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

@@ -1,38 +1,39 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html4" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pyCPA.core.core &mdash; pyCPA 0.0.1 documentation</title>
+  <title>pyCPA.core.core &mdash; pyCPA 0+untagged.22.gb54d30c.dirty documentation</title>
   
-
-  
-  
-  
-  
-
-  
-  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-
-    
 
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
@@ -48,7 +49,7 @@
           
 
           
-            <a href="../../../index.html" class="icon icon-home"> pyCPA
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> pyCPA
           
 
           
@@ -56,6 +57,10 @@
 
           
             
+            
+              <div class="version">
+                0
+              </div>
             
           
 
@@ -71,6 +76,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -98,6 +104,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -136,7 +143,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
@@ -282,8 +289,32 @@
 <span class="c1">#### function to convert PRIMAP IPCC 1996 / 2006 / CRF categories to pyCPA format in data frame</span>
 <span class="c1">########</span>
 <div class="viewcode-block" id="convert_IPCC_categories_PRIMAP_to_pyCPA"><a class="viewcode-back" href="../../../pyCPA.core.html#pyCPA.core.convert_IPCC_categories_PRIMAP_to_pyCPA">[docs]</a><span class="k">def</span> <span class="nf">convert_IPCC_categories_PRIMAP_to_pyCPA</span><span class="p">(</span><span class="n">data_frame</span><span class="p">):</span>
-    <span class="c1"># this function converts IPCC emissions category codes from the PRIMAP-format to</span>
-    <span class="c1"># the pyCPA format which is closer to the original (without all the dots)</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function converts all IPCC emissions category codes in the input data frame </span>
+<span class="sd">    from the PRIMAP-format to the pyCPA format which is closer to the original </span>
+<span class="sd">    (but without all the dots)</span>
+<span class="sd">    </span>
+<span class="sd">    The PRIMAP format codes consist of upper case letters and numvers only. These are converted </span>
+<span class="sd">    back to the original formatting which includes lower case letters and roman numerals. </span>
+<span class="sd">    The dots are omitted in both farmattings (ToDo maybe change and add them back in)    </span>
+<span class="sd">        </span>
+<span class="sd">    Codes that are not part of the official hierarchy (starting with IPCM or CATM) </span>
+<span class="sd">    are not converted but returned without the &#39;CAT&#39; or &#39;IPC&#39; prefix.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    </span>
+<span class="sd">    data_frame</span>
+<span class="sd">        data_frame with IPCC category codes in in PRIMAP format (IPCC1996 and IPCC2006 can be converted)</span>
+<span class="sd">            </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    </span>
+<span class="sd">    :obj:`scmdata.dataframe.ScmDataFrame`</span>
+<span class="sd">        scmDataFrame with the converted data</span>
+
+<span class="sd">        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="n">all_codes</span> <span class="o">=</span> <span class="n">data_frame</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="s1">&#39;category&#39;</span><span class="p">)</span>
     
@@ -418,7 +449,8 @@
     <span class="k">for</span> <span class="n">exception_unit</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">exception_units</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
         <span class="c1">#print(exception_unit)</span>
         <span class="c1"># TODO this needs error handling (e.g. when nothing has been matched)</span>
-        <span class="n">CRF_current_unit</span> <span class="o">=</span> <span class="n">data_frame</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">unit</span> <span class="o">=</span> <span class="n">regexp_str</span> <span class="o">+</span> <span class="n">exception_unit</span> <span class="o">+</span> <span class="s1">&#39;$&#39;</span><span class="p">,</span> <span class="n">regexp</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">CRF_current_unit</span> <span class="o">=</span> <span class="n">data_frame</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">unit</span> <span class="o">=</span> <span class="n">regexp_str</span> <span class="o">+</span> <span class="n">exception_unit</span> <span class="o">+</span> <span class="s1">&#39;$&#39;</span><span class="p">,</span> <span class="n">regexp</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                             <span class="n">log_if_empty</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
         <span class="c1"># get unique values of variable unit combinations</span>
         <span class="n">units_current_unit</span> <span class="o">=</span> <span class="n">CRF_current_unit</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="s1">&#39;variable_unit&#39;</span><span class="p">)</span>
         <span class="c1"># for each create a dict entry for conversion</span>
@@ -449,230 +481,388 @@
 <span class="c1">########    </span>
 <span class="c1">#### function to combine data for different values of metadata</span>
 <span class="c1">########</span>
-<div class="viewcode-block" id="combine_rows"><a class="viewcode-back" href="../../../pyCPA.core.html#pyCPA.core.combine_rows">[docs]</a><span class="k">def</span> <span class="nf">combine_rows</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">values_to_combine</span><span class="p">,</span> <span class="n">new_value</span><span class="p">,</span> <span class="n">other_cols</span><span class="p">,</span> <span class="n">operator</span><span class="p">,</span> 
-                 <span class="n">cols_to_remove</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[],</span> <span class="n">inplace</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">scmdata</span><span class="o">.</span><span class="n">dataframe</span><span class="o">.</span><span class="n">ScmDataFrame</span><span class="p">:</span>
-    <span class="c1"># this function combines rows for given values of a meta data columns where all other values coincide</span>
-    <span class="c1"># with other_cols (a dict) a subset of the dataset can be defined which the function oeprates on</span>
-    <span class="c1"># operator will be used for all but the first values_to_combine (first always has positive sign) </span>
-    
-    <span class="c1"># currently only add and substract operators are implemented</span>
-    <span class="c1"># TODO iplement checks for operator</span>
-              
-    <span class="n">all_active_col_values</span> <span class="o">=</span> <span class="n">data_frame</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
-    <span class="n">present_values_to_combine</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">all_active_col_values</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">values_to_combine</span><span class="p">)))</span>
-        
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">present_values_to_combine</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="c1"># throw warning</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;No data for any value to combine of column &#39;</span> <span class="o">+</span> <span class="n">column</span><span class="p">)</span>
-        <span class="c1">#if not inplace:</span>
-        <span class="c1">#    return </span>
-    <span class="k">else</span><span class="p">:</span>
+<div class="viewcode-block" id="combine_rows"><a class="viewcode-back" href="../../../pyCPA.core.html#pyCPA.core.combine_rows">[docs]</a><span class="k">def</span> <span class="nf">combine_rows</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">mapping</span><span class="p">,</span> <span class="n">other_cols</span><span class="p">,</span> 
+                 <span class="n">cols_to_remove</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[],</span> <span class="n">inplace</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">scmdata</span><span class="o">.</span><span class="n">run</span><span class="o">.</span><span class="n">ScmRun</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    this function combines rows for given values of a meta data columns where all other values coincide</span>
+<span class="sd">    with other_cols (a dict) a subset of the dataset can be defined which the function oeprates on</span>
+<span class="sd">    operator will be used for all but the first values_to_combine (first always has positive sign)</span>
+<span class="sd">    </span>
+<span class="sd">    # currently only add and substract operators are implemented</span>
+<span class="sd">    # TODO iplement checks for operator</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    </span>
+<span class="sd">    data_frame</span>
+<span class="sd">        data_frame to work on</span>
+<span class="sd">        </span>
+<span class="sd">    mapping</span>
+<span class="sd">        a dict which has column names as keys. Each entry is a list where the first item is a </span>
+<span class="sd">        list of values for the column (the values to be mapped), the second item is the operator </span>
+<span class="sd">        (or list of operators), and the third item is the target value</span>
+<span class="sd">        Example:</span>
+<span class="sd">        mapping = {</span>
+<span class="sd">            &quot;category&quot;: [[&#39;1.A&#39;, &#39;1.B&#39;, &#39;1.C&#39;], [&#39;+&#39;] &#39;1&#39;],</span>
+<span class="sd">            &quot;type_t&quot;: [[&#39;ACT&#39;], [&#39;+&#39;], &#39;NET&#39;],</span>
+<span class="sd">            }</span>
+<span class="sd">        The example would combine categories 1.A, 1.B, and 1.C for type ACT to category 1, type NET</span>
+<span class="sd">        Operators can be used on all columns but be careful with using them on more than one column.</span>
+<span class="sd">        Tey will be applied after each other, so if a time series gets a &#39;-&#39; operator from two columns</span>
+<span class="sd">        the result will be &#39;+&#39;.</span>
+<span class="sd">        </span>
+<span class="sd">    other_cols</span>
+<span class="sd">        a dict with column: value pairs specifying to only work on a subset of the dataframe </span>
+<span class="sd">        defined by the column: value pairs</span>
+<span class="sd">        </span>
+<span class="sd">    cols_to_remove</span>
+<span class="sd">        list with column names that should be removed from the result dataframe. Default: empty list</span>
+<span class="sd">        </span>
+<span class="sd">    inplace</span>
+<span class="sd">        bool defining if operation takes place on input DF (True) or if newly generated data will be returned</span>
+<span class="sd">        as an individual DF while the input DF remains unchanged (False). Default: True</span>
+<span class="sd">    </span>
+<span class="sd">    verbose</span>
+<span class="sd">        bool. If True a lot of debug information is written to the terminal. Default: False </span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    </span>
+<span class="sd">    :obj:`scmdata.dataframe.ScmDataFrame`</span>
+<span class="sd">        scmDataFrame with the mapped data. Only the newly generated data will be returned</span>
+
+<span class="sd">        </span>
+<span class="sd">    &quot;&quot;&quot;</span>    
+
+          
         <span class="c1"># first filter the dataset such that we only work on the data defined by other_cols and other_col_values</span>
-        <span class="c1"># we also don&#39;t need the rows which have vales of &quot;column&quot; which are not in values_to_combine</span>
-        <span class="n">col_filter</span> <span class="o">=</span> <span class="n">other_cols</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">values_to_combine_and_target</span> <span class="o">=</span> <span class="n">values_to_combine</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="c1"># we also don&#39;t need the rows which have vales of &quot;column&quot; which are not in values_to_combine</span>
+    <span class="n">col_filter</span> <span class="o">=</span> <span class="n">other_cols</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">inplace</span><span class="p">:</span> 
-            <span class="n">values_to_combine_and_target</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_value</span><span class="p">)</span>
+            <span class="n">values_to_combine_and_target</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">[</span><span class="n">column</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">values_to_combine_and_target</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mapping</span><span class="p">[</span><span class="n">column</span><span class="p">][</span><span class="mi">2</span><span class="p">])</span>
             <span class="n">col_filter</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">values_to_combine_and_target</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">col_filter</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">values_to_combine</span>
+            <span class="n">col_filter</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">[</span><span class="n">column</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        
+    <span class="n">data_to_work_with</span> <span class="o">=</span> <span class="n">data_frame</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">keep</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">col_filter</span><span class="p">,</span> <span class="n">log_if_empty</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">timeseries</span><span class="p">()</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;No data left after filtering for wanted column values: filter: &#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">col_filter</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">col</span> <span class="o">+</span> <span class="s1">&#39;: &#39;</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">col_filter</span><span class="p">[</span><span class="n">col</span><span class="p">]))</span>
+        <span class="k">return</span>
+    
+    <span class="c1"># remove this data from the main data_frame. The current approch saves memory but looses data if function crashes.</span>
+    <span class="c1"># one could also work on a copy and return the copy only if all worked out</span>
+    <span class="c1"># don&#39;t remove as we might want additional rows not replacement of rows</span>
+    <span class="c1"># data_frame.filter(keep = False, inplace = True, **col_filter)</span>
+
+    <span class="c1"># now split existing result time series from rest of data_to_work_with</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">inplace</span><span class="p">:</span>
+        <span class="n">col_filter</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">col_filter</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">[</span><span class="n">column</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">existing_result_timeseries</span> <span class="o">=</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">keep</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+                                                              <span class="o">**</span><span class="n">col_filter</span><span class="p">,</span> <span class="n">log_if_empty</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="c1"># check if result timeseries already exists (currently not used)</span>
+        <span class="k">if</span> <span class="n">existing_result_timeseries</span><span class="o">.</span><span class="n">timeseries</span><span class="p">()</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="n">result_existing</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result_existing</span> <span class="o">=</span> <span class="kc">True</span>
             
-        <span class="n">data_to_work_with</span> <span class="o">=</span> <span class="n">data_frame</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">keep</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">col_filter</span><span class="p">)</span>
-        
-        <span class="k">if</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">timeseries</span><span class="p">()</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;No data left after filtering for other column values&#39;</span><span class="p">)</span>
-            <span class="k">return</span>
-        
-        <span class="c1"># remove this data from the main data_frame. The current approch saves memory but looses data if function crashes.</span>
-        <span class="c1"># one could also work on a copy and return the copy only if all worked out</span>
-        <span class="c1"># don&#39;t remove as we might want additional rows not replacement of rows</span>
-        <span class="c1"># data_frame.filter(keep = False, inplace = True, **col_filter)</span>
+    <span class="c1"># get the data to combine</span>
+    <span class="n">col_filter</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">col_filter</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">[</span><span class="n">column</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">keep</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">col_filter</span><span class="p">,</span> <span class="n">log_if_empty</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="c1">#if verbose:</span>
+    <span class="c1">#    print(data_to_work_with.head())</span>
+       
+    <span class="c1"># check if all units are the same</span>
+    <span class="n">all_units</span> <span class="o">=</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="s1">&#39;unit&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_units</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># we need unit conversion</span>
+        <span class="c1"># check if all variables are the same</span>
+        <span class="n">all_vars</span> <span class="o">=</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="s1">&#39;variable&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_vars</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># now we have two cases: </span>
+            <span class="c1"># 1) the variable is operated on and we need CO2 equivalence</span>
+            <span class="c1"># 2) the variable is a group column and we need unit conversion per combination of </span>
+            <span class="c1">#    group col values</span>
+            <span class="n">CO2eq_needed</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="s1">&#39;variable&#39;</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mapping</span><span class="p">[</span><span class="s1">&#39;variable&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">CO2eq_needed</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="c1"># theoretically we also have to check if the result entity is  CO2eq entity</span>
+                    <span class="c1"># it doesn&#39;t make much sense to just convert CO2 to KYOTOGHG but just in case</span>
+                    <span class="c1"># somebody does it we should add the code for that here</span>
+            
+            <span class="k">if</span> <span class="n">CO2eq_needed</span><span class="p">:</span>
+                <span class="c1"># 1) CO2 equivalence is needed</span>
+                <span class="n">unit_to</span> <span class="o">=</span> <span class="s1">&#39;Mt CO2 / yr&#39;</span>
+                <span class="c1"># get all contexts present</span>
+                <span class="n">all_contexts</span> <span class="o">=</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="s1">&#39;unit_context&#39;</span><span class="p">)</span>
 
-        <span class="c1"># now split existing result time series from rest of data_to_work_with</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">inplace</span><span class="p">:</span>
-            <span class="n">col_filter</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_value</span>
-            <span class="n">existing_result_timeseries</span> <span class="o">=</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">keep</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">col_filter</span><span class="p">)</span>
-            <span class="c1"># check if result timeseries already exists (currently not used)</span>
-            <span class="k">if</span> <span class="n">existing_result_timeseries</span><span class="o">.</span><span class="n">timeseries</span><span class="p">()</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-                <span class="n">result_existing</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">for</span> <span class="n">current_context</span> <span class="ow">in</span> <span class="n">all_contexts</span><span class="p">:</span>
+                    <span class="c1"># convert data</span>
+                    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;converting for context &#39;</span> <span class="o">+</span> <span class="n">current_context</span><span class="p">)</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;unit_to: &#39;</span> <span class="o">+</span> <span class="n">unit_to</span><span class="p">)</span>
+                    <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">convert_unit</span><span class="p">(</span><span class="n">unit_to</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="n">current_context</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> 
+                                                  <span class="o">**</span><span class="p">{</span><span class="s1">&#39;unit_context&#39;</span><span class="p">:</span> <span class="n">current_context</span><span class="p">})</span>
+                    <span class="c1">#print(data_to_work_with.head())</span>
+                    
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">result_existing</span> <span class="o">=</span> <span class="kc">True</span>
-        
-        <span class="n">col_filter</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">values_to_combine</span>
-        <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">keep</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">col_filter</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">data_to_work_with</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
-           
-
-        <span class="c1"># check if all units are the same</span>
-        <span class="n">all_units</span> <span class="o">=</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="s1">&#39;unit&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_units</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="c1"># we need unit conversion</span>
-            <span class="c1"># check if all variables are the same</span>
-            <span class="n">all_vars</span> <span class="o">=</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="s1">&#39;variable&#39;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_vars</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="c1"># now we have two cases: </span>
-                <span class="c1"># 1) the variable is operated on and we need CO2 equivalence</span>
-                <span class="c1"># 2) the variable is a group column and we need unit conversion per variable</span>
-                
-                <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="s1">&#39;variable&#39;</span><span class="p">:</span>
-                    <span class="c1"># 1) CO2 equivalence is needed</span>
-                    <span class="n">unit_to</span> <span class="o">=</span> <span class="s1">&#39;Mt CO2 / yr&#39;</span>
-                    <span class="c1"># get all contexts present</span>
-                    <span class="n">all_contexts</span> <span class="o">=</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="s1">&#39;unit_context&#39;</span><span class="p">)</span>
-
-                    <span class="k">for</span> <span class="n">current_context</span> <span class="ow">in</span> <span class="n">all_contexts</span><span class="p">:</span>
-                        <span class="c1"># convert data</span>
-                        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-                            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;converting for context &#39;</span> <span class="o">+</span> <span class="n">current_context</span><span class="p">)</span>
-                            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;unit_to: &#39;</span> <span class="o">+</span> <span class="n">unit_to</span><span class="p">)</span>
-                        <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">convert_unit</span><span class="p">(</span><span class="n">unit_to</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="n">current_context</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> 
-                                                      <span class="o">**</span><span class="p">{</span><span class="s1">&#39;unit_context&#39;</span><span class="p">:</span> <span class="n">current_context</span><span class="p">})</span>
-                        <span class="c1">#print(data_to_work_with.head())</span>
+                <span class="c1"># 2) no CO2 equivalence but individual conversion for each variable</span>
+                <span class="k">for</span> <span class="n">variable</span> <span class="ow">in</span> <span class="n">all_vars</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;converting for variable &#39;</span> <span class="o">+</span> <span class="n">variable</span><span class="p">)</span> 
+                    <span class="n">data_this_var</span> <span class="o">=</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">keep</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+                                                             <span class="o">**</span><span class="p">{</span><span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="n">variable</span><span class="p">},</span> <span class="n">log_if_empty</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+                    <span class="n">all_units_this_var</span> <span class="o">=</span> <span class="n">data_this_var</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="s1">&#39;unit&#39;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;All units for &#39;</span> <span class="o">+</span> <span class="n">variable</span> <span class="o">+</span> <span class="s1">&#39;: &#39;</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">all_units_this_var</span><span class="p">))</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_units_this_var</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="c1"># now we have to check the other metadata cols which are not combined</span>
+                        <span class="n">all_columns</span> <span class="o">=</span> <span class="n">data_this_var</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span>
+                        <span class="n">all_columns_to_check</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">all_columns</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">mapping</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
                         
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="c1"># 2) no CO2 equivalence but individual conversion for each variable</span>
-                    <span class="k">for</span> <span class="n">variable</span> <span class="ow">in</span> <span class="n">all_vars</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-                            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;converting for variable &#39;</span> <span class="o">+</span> <span class="n">variable</span><span class="p">)</span> 
-                        <span class="n">data_this_var</span> <span class="o">=</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">keep</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
-                                                                 <span class="o">**</span><span class="p">{</span><span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="n">variable</span><span class="p">})</span>
-                        <span class="n">all_units_this_var</span> <span class="o">=</span> <span class="n">data_this_var</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="s1">&#39;unit&#39;</span><span class="p">)</span>
-                        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-                            <span class="nb">print</span><span class="p">(</span><span class="n">all_units_this_var</span><span class="p">)</span>
-                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_units_this_var</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">group_cols</span> <span class="o">=</span> <span class="p">[]</span>
+                        <span class="n">unique_cols</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+                        <span class="k">for</span> <span class="n">current_column</span> <span class="ow">in</span> <span class="n">all_columns_to_check</span><span class="p">:</span>
+                            <span class="n">values_this_col</span> <span class="o">=</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="n">current_column</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values_this_col</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                                <span class="n">group_cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_column</span><span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">unique_cols</span><span class="p">[</span><span class="n">current_column</span><span class="p">]</span> <span class="o">=</span> <span class="n">values_this_col</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                        
+                        <span class="c1"># remove unit from group cols. If it&#39;s not in the list an exeption will </span>
+                        <span class="c1"># be raised. This is fine as it should exist unless there is a problem </span>
+                        <span class="c1"># with the code</span>
+                        <span class="n">group_cols</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;unit&#39;</span><span class="p">)</span>
+                        
+                        <span class="k">if</span> <span class="n">group_cols</span><span class="p">:</span>
+                            <span class="c1"># we have more columns that are not mapped and might be </span>
+                            <span class="c1"># responsible for the different units. Check that so we </span>
+                            <span class="c1"># don&#39;t have to convert where it&#39;s not necessary or not </span>
+                            <span class="c1"># possible. We get all possible combinations and work on</span>
+                            <span class="c1"># tme one by one</span>
+                            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Checking unit conversion for vombinations of cols &#39;</span> <span class="o">+</span> 
+                                      <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">group_cols</span><span class="p">))</span>
+                                
+                            <span class="n">group_col_combinations</span> <span class="o">=</span> <span class="n">data_this_var</span><span class="o">.</span><span class="n">meta</span><span class="p">[</span><span class="n">group_cols</span><span class="p">]</span>
+                            <span class="n">unique_GCC</span> <span class="o">=</span> <span class="n">group_col_combinations</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
+                            
+                            <span class="k">for</span> <span class="n">GCC</span> <span class="ow">in</span> <span class="n">unique_GCC</span><span class="p">:</span>
+                                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Value combination :&#39;</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">GCC</span><span class="p">))</span>
+                                <span class="c1"># build filter</span>
+                                <span class="n">filter_GCC</span> <span class="o">=</span> <span class="p">{}</span>
+                                <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">group_cols</span><span class="p">):</span>
+                                    <span class="n">filter_GCC</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">GCC</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+                                
+                                <span class="c1"># check if we have several units</span>
+                                <span class="n">data_this_GCC</span> <span class="o">=</span> <span class="n">data_this_var</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">keep</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+                                                             <span class="o">**</span><span class="n">filter_GCC</span><span class="p">,</span> <span class="n">log_if_empty</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+                                <span class="n">all_units_this_GCC</span> <span class="o">=</span> <span class="n">data_this_GCC</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="s1">&#39;unit&#39;</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_units_this_GCC</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                                    <span class="c1"># need unit conversion</span>
+                                    <span class="n">unit_to</span> <span class="o">=</span> <span class="n">all_units_this_GCC</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                                    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;converting to &#39;</span> <span class="o">+</span> <span class="n">unit_to</span><span class="p">)</span>
+                                    
+                                    <span class="n">filter_GCC</span><span class="p">[</span><span class="s1">&#39;variable&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">variable</span>
+                                    <span class="c1"># get all contexts</span>
+                                    <span class="n">current_contexts</span> <span class="o">=</span> <span class="n">data_this_GCC</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="s1">&#39;unit_context&#39;</span><span class="p">)</span>
+                                    <span class="k">for</span> <span class="n">context</span> <span class="ow">in</span> <span class="n">current_contexts</span><span class="p">:</span>
+                                        <span class="n">filter_GCC</span><span class="p">[</span><span class="s1">&#39;context&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">context</span>
+                                        <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">convert_unit</span><span class="p">(</span><span class="n">unit_to</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="n">context</span><span class="p">,</span> <span class="o">**</span><span class="n">filter_GCC</span><span class="p">)</span>
+                                <span class="k">else</span><span class="p">:</span>
+                                    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;No conversion needed&#39;</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
                             <span class="n">unit_to</span> <span class="o">=</span> <span class="n">all_units_this_var</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                             <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
                                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;converting to &#39;</span> <span class="o">+</span> <span class="n">unit_to</span><span class="p">)</span>
                             <span class="c1"># convert data</span>
-                            <span class="c1"># TODO: contexts have to be considered? Or does that happen automatically because they are stored in the dataframe</span>
-                            <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">convert_unit</span><span class="p">(</span><span class="n">unit_to</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span><span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="n">variable</span><span class="p">})</span>
+                            <span class="c1"># get all contexts</span>
+                            <span class="n">current_contexts</span> <span class="o">=</span> <span class="n">data_this_var</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="s1">&#39;unit_context&#39;</span><span class="p">)</span>
+                            <span class="k">for</span> <span class="n">context</span> <span class="ow">in</span> <span class="n">current_contexts</span><span class="p">:</span>
+                                <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">convert_unit</span><span class="p">(</span><span class="n">unit_to</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="n">context</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span><span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="n">variable</span><span class="p">,</span> <span class="s1">&#39;context&#39;</span><span class="p">:</span> <span class="n">context</span><span class="p">})</span>
+                    <span class="k">elif</span> <span class="n">verbose</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;No conversion needed&#39;</span><span class="p">)</span>
                     
-            <span class="k">else</span><span class="p">:</span> <span class="c1"># not tested so far</span>
-                <span class="n">unit_to</span> <span class="o">=</span> <span class="n">all_units</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="c1"># convert data</span>
-                <span class="c1"># TODO: contexts have to be considered? Or does that happen automatically because they are stored in the dataframe</span>
-                <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">convert_unit</span><span class="p">(</span><span class="n">unit_to</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span> <span class="c1"># not tested so far</span>
+            <span class="n">unit_to</span> <span class="o">=</span> <span class="n">all_units</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="c1"># convert data</span>
+            <span class="c1"># get all contexts</span>
+            <span class="n">current_contexts</span> <span class="o">=</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="s1">&#39;unit_context&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">context</span> <span class="ow">in</span> <span class="n">current_contexts</span><span class="p">:</span>
+                <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">convert_unit</span><span class="p">(</span><span class="n">unit_to</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="n">context</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span><span class="s1">&#39;context&#39;</span><span class="p">:</span> <span class="n">context</span><span class="p">})</span>
 
-        <span class="c1"># prepare data in case of subtractions</span>
+    <span class="c1"># prepare data in case of subtractions</span>
+    <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="c1"># first check if we have individual operators for all values_to_combine</span>
-        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">operator</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">:</span> 
-            <span class="c1"># check if list has the correct length (move to beginning of function)</span>
-            <span class="c1"># also add a check if it&#39;s just &#39;+&#39; and &#39;-&#39;</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">operator</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">values_to_combine</span><span class="p">):</span>
-                <span class="c1"># throw error</span>
-                <span class="c1"># TODO: throw error</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;operator list and values_to_combine have different lengths&#39;</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">operator</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">values_to_combine</span><span class="p">)</span>
-                <span class="k">return</span>
+        <span class="n">operator</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">[</span><span class="n">column</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">values_to_combine</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">[</span><span class="n">column</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">values_to_combine</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;*&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">operator</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">:</span> 
+                <span class="c1"># check if list has the correct length (move to beginning of function)</span>
+                <span class="c1"># also add a check if it&#39;s just &#39;+&#39; and &#39;-&#39;</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">operator</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">values_to_combine</span><span class="p">):</span>
+                    <span class="c1"># throw error</span>
+                    <span class="c1"># TODO: throw error</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;operator list and values_to_combine have different lengths&#39;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">operator</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">mapping</span><span class="p">[</span><span class="n">column</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="k">return</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># find the entries with &#39;-&#39;</span>
+                    <span class="n">subtract_values</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">for</span> <span class="n">i_operator</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">operator</span><span class="p">)):</span>
+                        <span class="k">if</span> <span class="n">operator</span><span class="p">[</span><span class="n">i_operator</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span><span class="p">:</span>
+                            <span class="n">subtract_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">values_to_combine</span><span class="p">[</span><span class="n">i_operator</span><span class="p">])</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="c1"># find the entries with &#39;-&#39;</span>
-                <span class="n">subtract_values</span> <span class="o">=</span> <span class="p">[]</span>
-                <span class="k">for</span> <span class="n">i_operator</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">operator</span><span class="p">)):</span>
-                    <span class="k">if</span> <span class="n">operator</span><span class="p">[</span><span class="n">i_operator</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span><span class="p">:</span>
-                        <span class="n">subtract_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">values_to_combine</span><span class="p">[</span><span class="n">i_operator</span><span class="p">])</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># if only one value_to_combine apply operator to that.</span>
-            <span class="c1"># if more than one value,apply to all but the first</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values_to_combine</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">subtract_values</span> <span class="o">=</span> <span class="n">values_to_combine</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">subtract_values</span> <span class="o">=</span> <span class="n">values_to_combine</span><span class="p">[</span><span class="mi">1</span> <span class="p">:]</span>
-        
-        <span class="c1"># now apply - to all rows with column values in subtract_values (if there are any)</span>
-        <span class="k">if</span> <span class="n">subtract_values</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">subtract_values</span><span class="p">)</span>
-        
-            <span class="n">data_to_change_sign</span> <span class="o">=</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">keep</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> 
-                                                           <span class="o">**</span><span class="p">{</span><span class="n">column</span><span class="p">:</span> <span class="n">subtract_values</span><span class="p">})</span>
-            <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">keep</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span><span class="n">column</span><span class="p">:</span> <span class="n">subtract_values</span><span class="p">})</span>
-
-            <span class="n">data_to_change_sign_TS</span> <span class="o">=</span> <span class="n">data_to_change_sign</span><span class="o">.</span><span class="n">timeseries</span><span class="p">()</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span>
-            <span class="n">data_changed_sign</span> <span class="o">=</span> <span class="n">scmdata</span><span class="o">.</span><span class="n">dataframe</span><span class="o">.</span><span class="n">ScmDataFrame</span><span class="p">(</span><span class="n">data_to_change_sign_TS</span><span class="p">)</span>
-
-            <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_changed_sign</span><span class="p">,</span><span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-       
-                
-        <span class="c1"># use groupby to create   </span>
-        <span class="c1">## first find all cols that have non-unique values (except for the colum to operate on)</span>
-        <span class="n">all_columns</span> <span class="o">=</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span>
-        <span class="n">all_columns_to_check</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">all_columns</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">([</span><span class="n">column</span><span class="p">]))</span>
-
-        <span class="n">group_cols</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">unique_cols</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-
-        <span class="k">for</span> <span class="n">current_column</span> <span class="ow">in</span> <span class="n">all_columns_to_check</span><span class="p">:</span>
-            <span class="n">values_this_col</span> <span class="o">=</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="n">current_column</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">current_column</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">values_this_col</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values_this_col</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">group_cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_column</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">unique_cols</span><span class="p">[</span><span class="n">current_column</span><span class="p">]</span> <span class="o">=</span> <span class="n">values_this_col</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">group_cols</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="c1"># what to do if we want to work on regions and there is only one present. need another col in this case</span>
-            <span class="n">group_cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;region&#39;</span><span class="p">)</span>
-        
-        <span class="k">if</span> <span class="s1">&#39;unit&#39;</span> <span class="ow">in</span> <span class="n">group_cols</span><span class="p">:</span>
-            <span class="k">if</span> <span class="s1">&#39;variable&#39;</span> <span class="ow">in</span> <span class="n">group_cols</span><span class="p">:</span>
-                <span class="n">all_variables</span> <span class="o">=</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="s1">&#39;variable&#39;</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">variable</span> <span class="ow">in</span> <span class="n">all_variables</span><span class="p">:</span>
-                    <span class="n">data_this_var</span> <span class="o">=</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">keep</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span><span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="n">variable</span><span class="p">})</span>
-                    <span class="n">all_units_this_var</span> <span class="o">=</span> <span class="n">data_this_var</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="s1">&#39;unit&#39;</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_units_this_var</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                        <span class="c1"># throw error</span>
-                        <span class="c1"># TODO: throw error</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Unit col has non-unique metadata for variable &#39;</span> <span class="o">+</span> <span class="n">variable</span> <span class="o">+</span> 
-                              <span class="s1">&#39;. Something went wrong with unit conversion.&#39;</span><span class="p">)</span>
-                        <span class="k">return</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="c1"># throw error</span>
-                <span class="c1"># TODO: throw error</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Unit col has non-unique metadata. Something went wrong with unit conversion.&#39;</span><span class="p">)</span>
-                <span class="k">return</span>
+                <span class="c1"># if only one value_to_combine apply operator to that.</span>
+                <span class="c1"># if more than one value, apply to all but the first</span>
+                <span class="k">if</span> <span class="n">operator</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values_to_combine</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">subtract_values</span> <span class="o">=</span> <span class="n">values_to_combine</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">subtract_values</span> <span class="o">=</span> <span class="n">values_to_combine</span><span class="p">[</span><span class="mi">1</span> <span class="p">:]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">subtract_values</span> <span class="o">=</span> <span class="p">[]</span>
+    
+            <span class="c1"># now apply - to all rows with column values in subtract_values (if there are any)</span>
+            <span class="k">if</span> <span class="n">subtract_values</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">subtract_values</span><span class="p">)</span>
             
-        <span class="n">units</span> <span class="o">=</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="s1">&#39;unit&#39;</span><span class="p">)</span>
+                <span class="n">data_to_change_sign</span> <span class="o">=</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">keep</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> 
+                                                               <span class="o">**</span><span class="p">{</span><span class="n">column</span><span class="p">:</span> <span class="n">subtract_values</span><span class="p">},</span> <span class="n">log_if_empty</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+                <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">keep</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span><span class="n">column</span><span class="p">:</span> <span class="n">subtract_values</span><span class="p">},</span> 
+                                         <span class="n">log_if_empty</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+        
+                <span class="n">data_to_change_sign_TS</span> <span class="o">=</span> <span class="n">data_to_change_sign</span><span class="o">.</span><span class="n">timeseries</span><span class="p">()</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span>
+                <span class="n">data_changed_sign</span> <span class="o">=</span> <span class="n">scmdata</span><span class="o">.</span><span class="n">run</span><span class="o">.</span><span class="n">ScmRun</span><span class="p">(</span><span class="n">data_to_change_sign_TS</span><span class="p">)</span>
+        
+                <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_changed_sign</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+   
+            
+    <span class="c1"># use groupby to create the mapped data </span>
+    <span class="c1">## first find all cols that have non-unique values (except for the colums to operate on)</span>
+    <span class="n">all_columns</span> <span class="o">=</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">all_columns_to_check</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">all_columns</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">mapping</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+
+    <span class="n">group_cols</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">unique_cols</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">current_column</span> <span class="ow">in</span> <span class="n">all_columns_to_check</span><span class="p">:</span>
+        <span class="n">values_this_col</span> <span class="o">=</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="n">current_column</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;unit values:&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">units</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span> <span class="s1">&#39;, &#39;</span> <span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Grouping on columns:&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">group_cols</span><span class="p">,</span> <span class="n">sep</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="p">)</span>
-        <span class="c1"># apply the operation (currently only sum)</span>
-        <span class="n">result_DF</span> <span class="o">=</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">timeseries</span><span class="p">()</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">group_cols</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-
-        <span class="c1">## add the meta columns back in. they were removed by groupby </span>
-        <span class="c1">## get all col values</span>
-        <span class="n">columns</span> <span class="o">=</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span>
-        <span class="n">group_cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
-        <span class="n">columns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">group_cols</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">cols_to_remove</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i_column</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">columns</span><span class="p">)):</span>
-
-            <span class="n">values_this_col</span> <span class="o">=</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="n">columns</span><span class="p">[</span><span class="n">i_column</span><span class="p">])</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values_this_col</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="c1"># TODO: throw exception</span>
-                <span class="n">result_DF</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">i_column</span><span class="p">,</span> <span class="n">columns</span><span class="p">[</span><span class="n">i_column</span><span class="p">],</span> <span class="n">values_this_col</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">result_DF</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">i_column</span><span class="p">,</span> <span class="n">columns</span><span class="p">[</span><span class="n">i_column</span><span class="p">],</span> <span class="n">values_this_col</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-
-        <span class="n">result_DF</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">columns</span><span class="p">),</span> <span class="n">column</span><span class="p">,</span> <span class="n">new_value</span><span class="p">)</span>
-
-        <span class="c1"># make a new ScmDataFrame </span>
-        <span class="n">result_scmdata</span> <span class="o">=</span> <span class="n">scmdata</span><span class="o">.</span><span class="n">dataframe</span><span class="o">.</span><span class="n">ScmDataFrame</span><span class="p">(</span><span class="n">result_DF</span><span class="p">)</span>
-
-        <span class="c1"># append to data_frame</span>
-        <span class="k">if</span> <span class="n">inplace</span><span class="p">:</span>
-            <span class="c1"># remove existing data before appending</span>
-            <span class="c1"># the best way would be to just remove data that&#39;s actually added. </span>
-            <span class="c1"># Here we remove all data that&#39;s potentially added (i.e. the target value for column</span>
-            <span class="c1"># and the other_values for the ter columns</span>
-            <span class="n">col_filter</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_value</span>
-            <span class="n">data_frame</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">keep</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">col_filter</span><span class="p">)</span>
-            <span class="n">data_frame</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result_scmdata</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">current_column</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">values_this_col</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values_this_col</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">group_cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_column</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">result_scmdata</span></div>
+            <span class="n">unique_cols</span><span class="p">[</span><span class="n">current_column</span><span class="p">]</span> <span class="o">=</span> <span class="n">values_this_col</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">group_cols</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># what to do if we want to work on regions and there is only one present. need another col in this case</span>
+        <span class="n">group_cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;region&#39;</span><span class="p">)</span>
+    
+    
+    <span class="c1"># sanity check if there are metadata combinations which only differ in unit</span>
+    <span class="c1"># too much work to check here. Check result instead (not implemented yet)</span>
+<span class="c1">#    if &#39;unit&#39; in group_cols:</span>
+<span class="c1">#        # this is not covering all cases. In general time series could differ in unit and another field </span>
+<span class="c1">#        # but not variable. It&#39;s just not very likely</span>
+<span class="c1">#        if &#39;variable&#39; in group_cols:</span>
+<span class="c1">#            all_variables = data_to_work_with.get_unique_meta(&#39;variable&#39;)</span>
+<span class="c1">#            for variable in all_variables:</span>
+<span class="c1">#                data_this_var = data_to_work_with.filter(keep = True, inplace = False, **{&#39;variable&#39;: variable})</span>
+<span class="c1">#                all_units_this_var = data_this_var.get_unique_meta(&#39;unit&#39;)</span>
+<span class="c1">#                if len(all_units_this_var) &gt; 1:</span>
+<span class="c1">#                    # throw error</span>
+<span class="c1">#                    # TODO: throw error</span>
+<span class="c1">#                    print(&#39;Unit col has non-unique metadata for variable &#39; + variable + </span>
+<span class="c1">#                          &#39;. Something went wrong with unit conversion.&#39;)</span>
+<span class="c1">#                    return</span>
+<span class="c1">#        else:</span>
+<span class="c1">#            # throw error</span>
+<span class="c1">#            # TODO: throw error</span>
+<span class="c1">#            print(&#39;Unit col has non-unique metadata. Something went wrong with unit conversion.&#39;)</span>
+<span class="c1">#            return</span>
+        
+    
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">units</span> <span class="o">=</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="s1">&#39;unit&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;unit values:&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">units</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span> <span class="s1">&#39;, &#39;</span> <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;mapping on columns:&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">group_cols</span><span class="p">,</span> <span class="n">sep</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="p">)</span>
+    
+    <span class="c1"># apply the operation (currently only sum)</span>
+    <span class="n">result_DF</span> <span class="o">=</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">timeseries</span><span class="p">()</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">group_cols</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+    <span class="c1">## add the meta columns back in. they were removed by groupby </span>
+    <span class="c1">## get all col values</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">group_cols</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">mapping</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">cols_to_remove</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i_column</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">columns</span><span class="p">)):</span>
+
+        <span class="n">values_this_col</span> <span class="o">=</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="n">columns</span><span class="p">[</span><span class="n">i_column</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">columns</span><span class="p">[</span><span class="n">i_column</span><span class="p">])</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">values_this_col</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values_this_col</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># TODO: throw exception</span>
+            <span class="n">result_DF</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">i_column</span><span class="p">,</span> <span class="n">columns</span><span class="p">[</span><span class="n">i_column</span><span class="p">],</span> <span class="n">values_this_col</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result_DF</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">i_column</span><span class="p">,</span> <span class="n">columns</span><span class="p">[</span><span class="n">i_column</span><span class="p">],</span> <span class="n">values_this_col</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">result_DF</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">mapping</span><span class="p">[</span><span class="n">column</span><span class="p">][</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;inserting column &quot;&#39;</span> <span class="o">+</span> <span class="n">column</span> <span class="o">+</span> <span class="s1">&#39;&quot; with value &quot;&#39;</span> <span class="o">+</span> <span class="n">mapping</span><span class="p">[</span><span class="n">column</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">)</span>
+
+    <span class="c1"># make a new ScmDataFrame </span>
+    <span class="n">result_scmdata</span> <span class="o">=</span> <span class="n">scmdata</span><span class="o">.</span><span class="n">run</span><span class="o">.</span><span class="n">ScmRun</span><span class="p">(</span><span class="n">result_DF</span><span class="p">)</span>
+
+    <span class="c1"># append to data_frame</span>
+    <span class="k">if</span> <span class="n">inplace</span><span class="p">:</span>
+        <span class="c1"># remove existing data before appending</span>
+        
+        <span class="c1"># check which new data has been added (unit and unit_context may have changed, so we overwrite</span>
+        <span class="c1"># remove rows which differ from the new data in unit and unit_contect)</span>
+        <span class="n">col_filter</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">meta_to_consider</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">result_scmdata</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;unit&#39;</span><span class="p">,</span> <span class="s1">&#39;unit_context&#39;</span><span class="p">]))</span>
+        <span class="n">unique_meta</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">meta</span> <span class="ow">in</span> <span class="n">meta_to_consider</span><span class="p">:</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">result_scmdata</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">col_filter</span><span class="p">[</span><span class="n">meta</span><span class="p">]</span> <span class="o">=</span> <span class="n">values</span>
+                <span class="n">unique_meta</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span>
+        <span class="n">meta_to_consider</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">meta_to_consider</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">unique_meta</span><span class="p">))</span>
+        
+        <span class="k">for</span> <span class="n">iRow</span><span class="p">,</span> <span class="n">row</span>  <span class="ow">in</span> <span class="n">result_DF</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="c1"># set up the filter</span>
+            <span class="n">col_filter_current</span> <span class="o">=</span> <span class="n">col_filter</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">meta</span> <span class="ow">in</span> <span class="n">meta_to_consider</span><span class="p">:</span>
+                <span class="n">col_filter_current</span><span class="p">[</span><span class="n">meta</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">meta</span><span class="p">]</span>
+            
+            <span class="c1"># remove the row from the original DF</span>
+            <span class="n">data_frame</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">keep</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">col_filter</span><span class="p">,</span> <span class="n">log_if_empty</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+               
+        <span class="n">data_frame</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result_scmdata</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">result_scmdata</span></div>
 </pre></div>
 
            </div>
@@ -685,11 +875,19 @@
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2020, Johannes Gütschow
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -700,7 +898,6 @@
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

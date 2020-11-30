@@ -37,9 +37,9 @@ CLASSIFIERS = [
     "Programming Language :: Python :: 3.7",
 ]
 
-REQUIREMENTS = ["scmdata>=0.4", "pyam-iamc>=0.4.1"]
+REQUIREMENTS = ["scmdata>=0.7", "pyam-iamc>=0.4.1"]
 #REQUIREMENTS_TESTS = ["codecov", "nbval", "pytest-cov", "pytest>=5.0.0"]
-REQUIREMENTS_DOCS = ["sphinx"]
+REQUIREMENTS_DOCS = ["sphinx", "versioneer"]
 REQUIREMENTS_DEPLOY = ["setuptools"]
 
 REQUIREMENTS_DEV = [

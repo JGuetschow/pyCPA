@@ -1,38 +1,39 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html4" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pyCPA.tools package &mdash; pyCPA 0.0.1 documentation</title>
+  <title>pyCPA.tools package &mdash; pyCPA 0+untagged.22.gb54d30c.dirty documentation</title>
   
-
-  
-  
-  
-  
-
-  
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-
-    
 
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Changelog" href="changelog.html" />
@@ -50,7 +51,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> pyCPA
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> pyCPA
           
 
           
@@ -58,6 +59,10 @@
 
           
             
+            
+              <div class="version">
+                0
+              </div>
             
           
 
@@ -73,6 +78,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -103,6 +109,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -141,7 +148,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>pyCPA.tools package</li>
     
@@ -172,28 +179,56 @@
 <p>&#64;author: Johannes Gütschow, <a class="reference external" href="mailto:mail&#37;&#52;&#48;johannes-guetschow&#46;de">mail<span>&#64;</span>johannes-guetschow<span>&#46;</span>de</a></p>
 <dl class="function">
 <dt id="pyCPA.tools.conversion.map_data">
-<code class="sig-prename descclassname">pyCPA.tools.conversion.</code><code class="sig-name descname">map_data</code><span class="sig-paren">(</span><em class="sig-param">input_DF</em>, <em class="sig-param">mapping_file</em>, <em class="sig-param">folder</em>, <em class="sig-param">conversion</em>, <em class="sig-param">add_fields</em>, <em class="sig-param">cols_to_remove: list = []</em>, <em class="sig-param">verbose: bool = False</em><span class="sig-paren">)</span> &#x2192; scmdata.dataframe.ScmDataFrame<a class="reference internal" href="_modules/pyCPA/tools/conversion.html#map_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyCPA.tools.conversion.map_data" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pyCPA.tools.conversion.</code><code class="descname">map_data</code><span class="sig-paren">(</span><em>input_DF</em>, <em>mapping_file</em>, <em>folder</em>, <em>conversion</em>, <em>onlynew: bool = True</em>, <em>add_fields: dict = {}</em>, <em>cols_to_remove: list = []</em>, <em>verbose: bool = False</em><span class="sig-paren">)</span> &#x2192; scmdata.run.ScmRun<a class="reference internal" href="_modules/pyCPA/tools/conversion.html#map_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyCPA.tools.conversion.map_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Map data from one metadata column to another one including summing and subtraction. This function can be used e.g.
 to map data from one categorization into another one, or for data preprocessing.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>input_DF</strong> – ScmDataFrame with data to be mapped</p></li>
-<li><p><strong>mapping_file</strong> – csv file that contains the mapping rules.</p></li>
-<li><p><strong>folder</strong> – the folder the mapping file resides in</p></li>
-<li><p><strong>conversion</strong> – a dict defining the rows to use in the input_DF the mapping_file and the output DF</p></li>
-<li><p><strong>add_fields</strong> – a dict defining metadata columns to add and their value</p></li>
-<li><p><strong>cols_to_remove</strong> – a list defining columns that will be removed: default is an empty list</p></li>
-<li><p><strong>verbose</strong> – bool: if set to true a lot of debug output will be written to the terminal</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>input_DF</strong> – ScmDataFrame with data to be mapped</li>
+<li><strong>mapping_file</strong> – csv file that contains the mapping rules.</li>
+<li><strong>folder</strong> – the folder the mapping file resides in</li>
+<li><strong>conversion</strong> – <p>a dict defining the rows to use in the input_DF the mapping_file and the output DF
+either of the form
+conversion = {</p>
+<blockquote>
+<div>”category”: [“CRFcategory”, “IPCCcategory”],
+“categoryName”: [“*”, “IPCCcategoryName”],
+“classification”: [“CRFclass”, “IPCCclass”]</div></blockquote>
+<p>}
+or of the simplified form
+conversion = {</p>
+<blockquote>
+<div>’from_code_mapping’: ‘categoryCode’,
+‘column_data’: ‘category’, #tell it that it’s working on the category column
+‘to_code_mapping’: ‘CODE1996’,</div></blockquote>
+<p>}</p>
+</li>
+<li><strong>onlynew</strong> – bool. If True only aggregated data will be returned. Else aggregated data added
+will be added to the input DF and the resulting DF will be returned. Default True</li>
+<li><strong>add_fields</strong> – <p>a dict defining metadata columns to add and the column in the conversion file
+defining their value: default is an empty dict
+Do not use with the generalized conversion format because the information can
+be integrated into the conversion
+Example:</p>
+<blockquote>
+<div>add_fields = {“type_t”: “type”}</div></blockquote>
+</li>
+<li><strong>cols_to_remove</strong> – a list defining columns that will be removed: default is an empty list</li>
+<li><strong>verbose</strong> – bool: if set to true a lot of debug output will be written to the terminal</li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>scmDataFrame with the converted data</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">scmdata.dataframe.ScmDataFrame</span></code></p>
-</dd>
-</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">scmRun with the converted data</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scmdata.run.ScmRun</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -219,11 +254,19 @@ to map data from one categorization into another one, or for data preprocessing.
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2020, Johannes Gütschow
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -234,7 +277,6 @@ to map data from one categorization into another one, or for data preprocessing.
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

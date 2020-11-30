@@ -26,13 +26,17 @@ def check_coverage(input_DF, data_filter, axes_variables, folder: str = '\defaul
     
     input\_DF
         ScmDataFrame with data to be analyzed
+        
     data\_filter
         filter in scmdata format (a dict) to filter the data before processing
+        
     axes\_variables
         list with two entries for x and y axis. Each a variable from thew metadata cols of the input\_DF
+        
     folder
         the folder where the result will be saved. If not given or set to "\defaukt" the default output 
         folder will be used. If set to "\none" no file will be written.
+        
     filename
         filename for the result. If not given or set to "\default" a filename will be generated. 
         If set to "\none" no file will be written.
@@ -96,27 +100,36 @@ def check_coverage(input_DF, data_filter, axes_variables, folder: str = '\defaul
     return coverage_DF
 
 
-#def check_consistency(input_DF, tests, folder: string = '', data_filter: dict = {}, 
-#                   verbose: bool = False) -> pd.DataFrame:
+#def check_consistency(input_DF, tests, columns, folder_test: str = '', data_filter: dict = {}, 
+#                      folder_output: str = '\default', filename_output: str = '\default', 
+#                      verbose: bool = False) -> pd.DataFrame:
 #    """
 #    
-#    Resulting data will be saved as a csv file and also returned as a pandas DataFrame
+#    Testing data consistency. Currently tests can only be done within one dimension. 
+#    Results are saved to a text file and if desired written to terminal 
 #    
 #    Parameters
 #    ----------
 #    
 #    input\_DF
 #        ScmDataFrame with data to be analyzed
-#    test_file
+#        
+#    tests
 #        either: 
-#            1: dict containing the tests in the following structure
-#            tests = {
-#                    category_1: 'category_1.A + category 1.B',
-#                    }
-#            The value of each dict entry has to be of the format that combine_rows understands, i.e. 
-#            value1_whitespace_operator_whitespace_value2
+#            1: pandas DataFrame containing the tests in a column structure as defined by conversion.             
+#            The values of each source column have to be of the format that combine_rows understands, i.e. 
+#            value1_whitespace_operator_whitespace_value2 ...
 #        or:
-#            string with the name of a csv file which has two columns
+#            string with the name of a csv file which has the column structure described below
+#            
+#    conversion
+#        a dict defining the rows to use in the input\_DF the tests DF. Keys are pyCPA column names
+#        while the values are source and target column names in the tests dataframe/file.
+#        The syntax is the same as in conversion.map_data
+#        columns = {
+#            "category": ["SourceCategory", "TargetCategory"], 
+#            "categoryName": "CRFcategoryName", 
+#        }
 #            
 #    data\_filter
 #        filter in scmdata format (a dict) to filter the data before processing
@@ -137,12 +150,16 @@ def check_coverage(input_DF, data_filter, axes_variables, folder: str = '\defaul
 #        
 #    """
 #    
-#    # filter the input dataframe
-#    input_DF.filter(keep = True, inplace = True, **data_filter)
+#    # filter the input dataframe (copy to not change the original dataframe in the calling code)
+#    filtered_DF = input_DF.filter(keep = True, inplace = False, **data_filter)
 #    
-#
-#    # read the mapping table
-#    mapping_table = pd.read_csv(os.path.join(folder, tests))
+#    # prepare tests 
+#    if istype(test, str):
+#        # read the table
+#        table_test = pd.read_csv(os.path.join(folder, tests)) 
+#    
+#    
+#    mapping_table = 
 #    
 #    
 #    #### old stuff
