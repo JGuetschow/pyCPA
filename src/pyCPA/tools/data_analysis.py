@@ -246,6 +246,7 @@ def check_consistency(input_DF, tests, columns, folder_test: str = '', data_filt
                     if not all(op in allowed_operators for op in operator):
                         message = 'Illegal operator found for column ' + column + ' in ' 
                         + from_value_current + ', row {:d}'.format(iRow)
+
                         if verbose:
                             print(message)
                         if logging:
@@ -484,7 +485,7 @@ def check_consistency(input_DF, tests, columns, folder_test: str = '', data_filt
                         if logging:
                             log.append(message)
                         results_this_row.append('no_CD')
-                    
+
                 # now add the row with the results to the result DF
                 row_results.append(results_this_row)
                     
