@@ -111,7 +111,12 @@ def check_consistency(input_DF, tests, columns, folder_test: str = '', data_filt
     """
     
     Testing data consistency. Results are saved to a csv file, a log file is written and the csv 
-    file contents are also returned as a pandas DataFrame 
+    file contents are also returned as a pandas DataFrame. The rows of the csv fiel correspond to
+    the tests while the columns are defined by the values available in the data column given in
+    table\_col. Each cell contains a list of values from table\_cell for which the test fails.
+    If several rows in the input_DF correspond to a test,table\_col, and table\_cell value the
+    value is displayed if th etest failes for at least on of the rows. 
+
     
     Parameters
     ----------
@@ -147,8 +152,12 @@ def check_consistency(input_DF, tests, columns, folder_test: str = '', data_filt
         of the calculated time series from the existing time series.
     
     table\_col
+        string defining the data column that is used for the second dimension of the result table. 
+        Default: variable
     
     table\_cell
+        String defining the data column that is used for the displayed values in the result table cells.
+        Default: region
     
     folder\_output
         the folder where the result will be saved. If not given or set to "\default" the default output 
