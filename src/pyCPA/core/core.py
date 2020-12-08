@@ -84,7 +84,6 @@ def convert_IPCC_code_PRIMAP_to_pyCPA(code) -> str:
             else: 
                 new_code = code_remaining[0] + '.' + code_remaining[1]
                 code_remaining = code_remaining[2 : ] 
-                #print('code=' + new_code + ' code_remaining=' + code_remaining)
                 # the next part is a number. match by regexp to also match 2 digit numbers (just in case there are any, currently not needed)
                 match = re.match('[0-9]*', code_remaining)
                 if match is None:
@@ -95,24 +94,21 @@ def convert_IPCC_code_PRIMAP_to_pyCPA(code) -> str:
                 else:    
                     new_code = new_code + '.' + match.group(0)
                     code_remaining = code_remaining[len(match.group(0)) : ]
-                    #print('code=' + new_code + ' code_remaining=' + code_remaining)
-
+                    
                     # fourth level is a char. Has to be transformed to lower case
                     if len(code_remaining) > 0:
                         new_code = new_code + '.' + code_remaining[0].lower()
                         code_remaining = code_remaining[1 : ]
-                        #print('code=' + new_code + ' code_remaining=' + code_remaining)
-
+                        
                         # now we have an arabic numeral in the PRIMAP-format but a roman numeral in pyCPA
                         if len(code_remaining) > 0:
                             new_code = new_code + '.' + arabic_to_roman[code_remaining[0]]
                             code_remaining = code_remaining[1 :]
-                            #print('code=' + new_code + ' code_remaining=' + code_remaining)
-
-                            # now we have a number again. An it's the end of the code. So just copy the rest
-                            new_code = new_code + '.' + code_remaining
-                            #print('code=' + new_code + ' code_remaining=' + code_remaining)
-
+                            
+                            if len(code_remaining) > 0:
+                                # now we have a number again. An it's the end of the code. So just copy the rest
+                                new_code = new_code + '.' + code_remaining
+                                
         return new_code
     
     else:
