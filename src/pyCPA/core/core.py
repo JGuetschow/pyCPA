@@ -76,11 +76,13 @@ def convert_IPCC_code_PRIMAP_to_pyCPA(code) -> str:
             ## only work with the part without 'IPC' or 'CAT'
             code_remaining = code[3 :]
 
-            ## first two chars are unchanged
-            if len(code) in [1, 2]:
+            ## first two chars are unchanged but a dot is added
+            if len(code) == 1:
                 new_code = code_remaining
+            elif len(code) == 2:
+                new_code = code_remaining[0] + '.' + code_remaining[1]
             else: 
-                new_code = code_remaining[0 : 2]
+                new_code = code_remaining[0] + '.' + code_remaining[1]
                 code_remaining = code_remaining[2 : ] 
                 #print('code=' + new_code + ' code_remaining=' + code_remaining)
                 # the next part is a number. match by regexp to also match 2 digit numbers (just in case there are any, currently not needed)
@@ -91,24 +93,24 @@ def convert_IPCC_code_PRIMAP_to_pyCPA(code) -> str:
                     print('Category code ' + code + ' does not obey spcifications. No number found on third level')
                     new_code = ''
                 else:    
-                    new_code = new_code + match.group(0)
+                    new_code = new_code + '.' + match.group(0)
                     code_remaining = code_remaining[len(match.group(0)) : ]
                     #print('code=' + new_code + ' code_remaining=' + code_remaining)
 
                     # fourth level is a char. Has to be transformed to lower case
                     if len(code_remaining) > 0:
-                        new_code = new_code + code_remaining[0].lower()
+                        new_code = new_code + '.' + code_remaining[0].lower()
                         code_remaining = code_remaining[1 : ]
                         #print('code=' + new_code + ' code_remaining=' + code_remaining)
 
                         # now we have an arabic numeral in the PRIMAP-format but a roman numeral in pyCPA
                         if len(code_remaining) > 0:
-                            new_code = new_code + arabic_to_roman[code_remaining[0]]
+                            new_code = new_code + '.' + arabic_to_roman[code_remaining[0]]
                             code_remaining = code_remaining[1 :]
                             #print('code=' + new_code + ' code_remaining=' + code_remaining)
 
                             # now we have a number again. An it's the end of the code. So just copy the rest
-                            new_code = new_code + code_remaining
+                            new_code = new_code + '.' + code_remaining
                             #print('code=' + new_code + ' code_remaining=' + code_remaining)
 
         return new_code
@@ -370,7 +372,7 @@ def combine_rows(data_frame, mapping, other_cols,
     """    
 
           
-        # first filter the dataset such that we only work on the data defined by other_cols and other_col_values
+    # first filter the dataset such that we only work on the data defined by other_cols and other_col_values
     # we also don't need the rows which have vales of "column" which are not in values_to_combine
     col_filter = other_cols.copy()
     for column in mapping.keys():
@@ -496,9 +498,10 @@ def combine_rows(data_frame, mapping, other_cols,
                                 if verbose:
                                     print('Value combination :' + ', '.join(GCC))
                                 # build filter
-                                filter_GCC = {}
-                                for index, col in enumerate(group_cols):
-                                    filter_GCC[col] = GCC[index]
+                                filter_GCC = dict(zip(group_cols, GCC))
+                                #filter_GCC = {}
+                                #for index, col in enumerate(group_cols):
+                                #    filter_GCC[col] = GCC[index]
                                 
                                 # check if we have several units
                                 data_this_GCC = data_this_var.filter(keep = True, inplace = False, 

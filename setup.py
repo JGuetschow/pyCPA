@@ -39,7 +39,7 @@ CLASSIFIERS = [
 
 REQUIREMENTS = ["scmdata>=0.7", "pyam-iamc>=0.4.1"]
 #REQUIREMENTS_TESTS = ["codecov", "nbval", "pytest-cov", "pytest>=5.0.0"]
-REQUIREMENTS_DOCS = ["sphinx", "versioneer"]
+REQUIREMENTS_DOCS = ["sphinx", "sphinx_rtd_theme"]
 REQUIREMENTS_DEPLOY = ["setuptools"]
 
 REQUIREMENTS_DEV = [
