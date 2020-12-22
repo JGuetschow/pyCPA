@@ -53,7 +53,7 @@ def check_coverage(input_DF, data_filter, axes_variables, folder: str = '\defaul
     """
     
     # filter the input dataframe
-    filtered_DF = input_DF.filter(keep = True, inplace = False, **data_filter)
+    filtered_DF = input_DF.filter(keep = True, inplace = False, **data_filter, log_if_empty = False)
     
     # now loop over rows and filter for each row variable. In a nested loop do the same for cols
     # the coverage count is just the number of rows in the filtered dataframe
@@ -105,7 +105,7 @@ def check_coverage(input_DF, data_filter, axes_variables, folder: str = '\defaul
 
 def check_consistency(input_DF, tests, columns, folder_test: str = '', data_filter: dict = {}, 
                       pass_threshold: float = 0.001, table_col: str = 'variable',
-                      table_cell: str = 'region',
+                      table_row: str = '\index', table_cell: str = 'region', 
                       folder_output: str = '\default', filename_table: str = '\default', 
                       filename_log: str = '\default', verbose: bool = False) -> pd.DataFrame:
     """
@@ -137,9 +137,13 @@ def check_consistency(input_DF, tests, columns, folder_test: str = '', data_filt
         while the values are source and target column names in the tests dataframe/file.
         The syntax is the same as in conversion.map_data
         columns = {
-            "category": ["SourceCategory", "TargetCategory"], 
-            "categoryName": "CRFcategoryName", 
+            "category": ["category", "categoryAgg"], 
+            "categoryName": ["*", "categoryNameAgg"], 
         }
+        In this example the categories given in column "category" will be aggregated and tested against the
+        category given in categoryAgg. categoryNameAgg is the category name of the aggregated data and must 
+        be given for the comparison to work. (alternatively categoryName metadata could be dropped before the
+        checks are performed) 
     
     folder\_test
         String with the folder where the tests file resides. Default: ''
@@ -205,7 +209,7 @@ def check_consistency(input_DF, tests, columns, folder_test: str = '', data_filt
     n_values = len(values_table)
     all_columns = filtered_DF.meta.columns.values
     all_columns_to_check = list(set(all_columns) - set(column_names) - set([table_col]))
-    columns_compare = list(set(all_columns_to_check) - set(['unit', 'unit_context']))
+    columns_compare = list(set(all_columns) - set(column_names) - set(['unit', 'unit_context']))
     available_years_str = input_DF.time_points.years().astype(str)
     available_years = input_DF.time_points.values
     
@@ -224,6 +228,11 @@ def check_consistency(input_DF, tests, columns, folder_test: str = '', data_filt
         if logging:
             log.append('Test ' + '{}'.format(iRow) + ': row:' + ', '.join(table_tests.iloc[iRow]))
             
+        if table_row == '\index':
+            row_ID = str(iRow)
+        else:
+            row_ID = table_tests[table_row].iloc[iRow]
+        
         # prepare for the combination of data
         combo = {}
         result_filter = {}
@@ -278,17 +287,17 @@ def check_consistency(input_DF, tests, columns, folder_test: str = '', data_filt
                         print(message)
                     if logging:
                         log.append(message)
-                    row_results.append([iRow] + ['Inc'] * n_values)
+                    row_results.append([row_ID] + ['Inc'] * n_values)
                     break
                         
                 else:
                     # to is empty, from not. That is an error in the mapping table
-                    message = 'Inconsistent test table table for ' + column + ', row {:d}'.format(iRow)
+                    message = 'Inconsistent test table for ' + column + ', row {:d}'.format(iRow)
                     if verbose:
                         print(message)
                     if logging:
                         log.append(message)
-                    row_results.append([iRow] + ['Inc'] * n_values)
+                    row_results.append([row_ID] + ['Inc'] * n_values)
                     break
             else:
                 if from_value_current in ['None', '','nan']:
@@ -298,7 +307,7 @@ def check_consistency(input_DF, tests, columns, folder_test: str = '', data_filt
                         print(message)
                     if logging:
                         log.append(message)
-                    row_results.append([iRow] + ['Inc'] * n_values)
+                    row_results.append([row_ID] + ['Inc'] * n_values)
                     break
                 else:
                     combo[column] = [input_values, operator, to_value_current]
@@ -311,18 +320,18 @@ def check_consistency(input_DF, tests, columns, folder_test: str = '', data_filt
                 print(message)
             if logging:
                 log.append(message)
-            row_results.append([iRow] + ['Empt'] * n_values)
+            row_results.append([row_ID] + ['Empt'] * n_values)
         else:
             # prepare and make a call to map the data and combine if necessary
-            combined_data = combine_rows(filtered_DF, combo, {}, inplace = False, verbose = verbose)
+            combined_data = combine_rows(filtered_DF, combo, {}, inplace = False, verbose = False)
             
-            if combined_data.shape[0] > 0:
+            if combined_data is not None:
                 if verbose:
                     print('Generated data for row {:d}'.format(iRow) + '. combo dict:')
                     print(combo)
                 
                 # now loop over the values of the table_col
-                results_this_row = [iRow]
+                results_this_row = [row_ID]
                 for value in values_table:
                     combined_data_current = combined_data.filter(keep = True, inplace = False, 
                                                                  **{table_col: value}, log_if_empty = False)
@@ -408,45 +417,66 @@ def check_consistency(input_DF, tests, columns, folder_test: str = '', data_filt
                             comp_col_combinations_comb = combined_data_current.meta[columns_compare]
                             unique_CC_ex = comp_col_combinations_ex.drop_duplicates()
                             unique_CC_comb = comp_col_combinations_comb.drop_duplicates()
-                        
-                            # prepare to compare
-                            unique_CC_ex_set = set(map(tuple, unique_CC_ex))
-                            unique_CC_comb_set = set(map(tuple, unique_CC_comb))
-                            unique_CC_diff = unique_CC_ex_set ^ unique_CC_comb_set # symmetric difference
-                        
-                            if unique_CC_diff:
-                                message = ('Number of unique metadata combination differs for combined and existing data. '
-                                           + 'Comparing not implemented for this case. '
-                                           + 'Rows for combined data: ' + '{}'.format(len(unique_CC_comb)) 
-                                           + '; Rows for existing data'  + '{}'.format(len(unique_CC_ex)))
-                                # output and save information
+                            
+                            # create a merged dataframe to find the rows that exist only on one side
+                            merged_DF = pd.merge(unique_CC_ex, unique_CC_comb, how='outer', suffixes=('','_y'), 
+                                                 indicator=True)
+                            
+                            rows_ex_not_in_comb = merged_DF[merged_DF['_merge']=='left_only'][unique_CC_ex.columns]
+                            rows_comb_not_in_ex = merged_DF[merged_DF['_merge']=='right_only'][unique_CC_comb.columns]
+                            
+                            if len(rows_ex_not_in_comb) > 0:
+                                # temp: print some info
                                 if verbose:
-                                    print(message)
-                                    print('unique_CC_ex')
-                                    print(unique_CC_ex)
-                                    print('unique_CC_comb')
-                                    print(unique_CC_comb)
-                                if logging:
-                                    log.append(message)
-                                    log.append('unique_CC_ex:')
-                                    for row in unique_CC_ex:
-                                        log.append(', '.join(row))
-                                    log.append('unique_CC_comb:')
-                                    for row in unique_CC_comb:
-                                        log.append(', '.join(row))
+                                    print('rows in existing data but not in combined data')
+                                    print(rows_ex_not_in_comb)
+                                #### TODO: add logging
+                                
+                                # add the rows containing zero only
+                                for iRow in range(len(rows_ex_not_in_comb)):
+                                    filter_missing = dict(zip(columns_compare, list(rows_ex_not_in_comb.iloc[iRow])));
+                                    if iRow > 0:
+                                        rows_to_add.append(existing_data.filter(**filter_missing, inplace = False), inplace = True)
+                                    else:
+                                        rows_to_add = existing_data.filter(**filter_missing, inplace = False)
                                     
-                                results_this_row.append('RC_mm')
-                                # move to next value
-                                continue
-                            
-                            
+                                rows_to_add = rows_to_add * 0
+                                combined_data_current.append(rows_to_add, inplace = True)
+                                    
+                            if len(rows_comb_not_in_ex) > 0:
+                                if verbose:
+                                    print('rows in combined data but not in existing data')
+                                    print(rows_comb_not_in_ex)
+
+                                # add the rows containing zero only
+                                for iRow in range(len(rows_comb_not_in_ex)):
+                                    filter_missing = dict(zip(columns_compare, list(rows_comb_not_in_ex.iloc[iRow])));
+                                    if iRow > 0:
+                                        rows_to_add.append(combined_data_current.filter(**filter_missing, inplace = False), inplace = True)
+                                    else:
+                                        rows_to_add = combined_data_current.filter(**filter_missing, inplace = False)
+                                    
+                                rows_to_add = rows_to_add * 0
+                                existing_data.append(rows_to_add, inplace = True)
+                                
                             
                             # now we have the same metadata, so we can compare the two sets
-                            data_diff = existing_data.subtract(combined_data, {})
-                            data_sum = existing_data.add(combined_data, {})
+                            data_diff = existing_data.subtract(combined_data_current, {})
+                            data_sum = existing_data.add(combined_data_current, {})
                             rel_deviation = data_diff.divide(data_sum, {})
                             
-                            failed = rel_deviation.values > pass_threshold / 2
+                            # find unique cols to hide them in log messages for readability
+                            group_cols_comb = []
+                            unique_cols_comb = dict()
+
+                            for current_column in all_columns_to_check:
+                                values_this_col = combined_data_current.get_unique_meta(current_column)
+                                if len(values_this_col) > 1:
+                                    group_cols_comb.append(current_column)
+                                else:
+                                    unique_cols_comb[current_column] = values_this_col[0]
+                            
+                            failed = abs(rel_deviation.values) > pass_threshold / 2
                             if failed.any():
                                 message = 'Test failed' 
                                 if verbose:
@@ -464,9 +494,9 @@ def check_consistency(input_DF, tests, columns, folder_test: str = '', data_filt
                                     results_this_cell.append(failed_rows_deviation.index.get_level_values(table_cell)[iRow])
                                     # now the detailed output for log and verbose
                                     message = (', '.join(idx_reduced.index[iRow]) + ':\n' 
-                                               + ', '.join(['{0}: {1:0.1f}'.format(val[0], val[1] * 2) for val in 
+                                               + ', '.join(['{0}: {1:0.2f}%'.format(val[0], val[1] * 200) for val in 
                                                             zip(available_years_str[failed_rows_failed[iRow]], 
-                                                                failed_rows_deviation[available_years[failed_rows_failed[iRow]]].iloc[iRow].values)]))
+                                                                abs(failed_rows_deviation[available_years[failed_rows_failed[iRow]]].iloc[iRow].values))]))
                                                
                                     if verbose:
                                         print(message)
@@ -504,7 +534,7 @@ def check_consistency(input_DF, tests, columns, folder_test: str = '', data_filt
                     print(message)
                 if logging:
                     log.append(message)
-                row_results.append([iRow] + ['no_CD'] * n_values)
+                row_results.append([row_ID] + ['no_CD'] * n_values)
 
     # create dataframe from list of results
     results_DF = pd.DataFrame(data = row_results, columns = ['test \ ' + table_col] + values_table)

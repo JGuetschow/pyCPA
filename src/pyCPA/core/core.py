@@ -6,7 +6,7 @@ Created on Mon Mar 16 14:02:19 2020
 @author: johannes
 """
 
-#import pandas as pd
+import pandas as pd
 import scmdata
 #import os
 import itertools
@@ -60,6 +60,18 @@ def convert_IPCC_code_PRIMAP_to_pyCPA(code) -> str:
         '9': 'viiii'
     }
     
+    code_mapping = {
+        'MAG': 'M.AG',
+        'MAGELV': 'M.AG.ELV',
+        'MBK': 'M.BK',
+        'MBKA': 'M.BK.A',
+        'MBKM': 'M.BK.M',
+        'M1A2M': 'M.1.A.2.m',
+        'MLULUCF': 'M.LULUCF',
+        'MMULTIOP': 'M.MULTIOP',
+        'M0EL': 'M.0.EL',
+    }
+    
     # TODO: checks at all levels (currently only a few)
 
     if len(code) < 4:
@@ -71,15 +83,18 @@ def convert_IPCC_code_PRIMAP_to_pyCPA(code) -> str:
         # check if it's a custom code (beginning with 'M'). Currently these are the same in pyCPA as in PRIMAP
         if code[3] =='M':
             new_code = code[3 :]
+            if new_code in code_mapping.keys():
+                new_code = code_mapping[new_code]
+            
         else:
             # actual conversion happening here
             ## only work with the part without 'IPC' or 'CAT'
             code_remaining = code[3 :]
 
             ## first two chars are unchanged but a dot is added
-            if len(code) == 1:
+            if len(code_remaining) == 1:
                 new_code = code_remaining
-            elif len(code) == 2:
+            elif len(code_remaining) == 2:
                 new_code = code_remaining[0] + '.' + code_remaining[1]
             else: 
                 new_code = code_remaining[0] + '.' + code_remaining[1]
@@ -156,8 +171,9 @@ def convert_IPCC_categories_PRIMAP_to_pyCPA(data_frame):
     for code in all_codes:
         replacements[code] = convert_IPCC_code_PRIMAP_to_pyCPA(code)
     
-    data_frame.rename({'category': replacements}, inplace = True)
-    
+    # make the replacement
+    data_frame['category'] = data_frame['category'].replace(replacements)
+
 
 ########
 #### function to add GWP column from variable names
@@ -186,10 +202,8 @@ def add_GWP_information(data_frame, defaultGWP):
         all_variables = data_frame.get_unique_meta('variable')
 
         # copy the unit col to "unit_context" to then work with replacements
-        idx_unit_col = data_frame.meta.columns.get_loc("unit")
-        data_frame._meta.insert(idx_unit_col + 1, 'unit_context', '')
-        data_frame._meta["unit_context"] = data_frame._meta["variable"] # + ' ' + defaultGWP
-
+        data_frame["unit_context"] = data_frame["variable"] # + ' ' + defaultGWP
+        
         # build regexp to match the GWP conversion variables
         regexp_str = '('
         for unit in units_GWP:
@@ -231,8 +245,9 @@ def add_GWP_information(data_frame, defaultGWP):
             GWP_replacements[variable] = GWP_mapping[currentGWP]
 
         # make the replacement
-        data_frame.rename({'variable': variable_replacements, 'unit_context': GWP_replacements}, inplace = True)
-    
+        data_frame['variable'] = data_frame['variable'].replace(variable_replacements)
+        data_frame['unit_context'] = data_frame['unit_context'].replace(GWP_replacements)
+
 
 ########
 #### function to bring units in scmdata format
@@ -269,11 +284,10 @@ def convert_unit_PRIMAP_to_scmdata(data_frame):
         regexp_str = regexp_str + unit  + '|' 
     regexp_str = regexp_str[0 : - 1] + ')' #'(.*)'
     
+    
     # add variable_unit column with replaced units.
     ## special units will be replaced later
-    idx_unit_col = data_frame.meta.columns.get_loc("unit")
-    data_frame._meta.insert(idx_unit_col + 1, 'variable_unit', '')
-    data_frame._meta["variable_unit"] = data_frame._meta["unit"] + ' ' + data_frame._meta["variable"] + time_frame_str
+    data_frame["variable_unit"] = data_frame["unit"].astype(str) + ' ' + data_frame["variable"].astype(str) + time_frame_str
     
     # get unique units
     #unit_values = data_frame.get_unique_meta('unit')
@@ -302,14 +316,10 @@ def convert_unit_PRIMAP_to_scmdata(data_frame):
             # add the variable if necessary
             replacements[current_var_unit] = replacement_str.replace('<variable>', variable) # untested as N replacement not tested yet
     
-    # now do the replacement
-    data_frame.rename({'variable_unit': replacements}, inplace = True)
-
-    # delete unit col
-    data_frame._meta.drop('unit', 1, inplace = True)
-
-    # rename column 'variable_unit' to 'unit'
-    data_frame.meta.columns.values[data_frame.meta.columns.get_loc("variable_unit")] = 'unit'
+    data_frame['variable_unit'] = data_frame['variable_unit'].replace(replacements)
+    data_frame['unit'] = data_frame['variable_unit']
+    data_frame.drop_meta({'variable_unit'}, inplace = True)
+    
 
 ########    
 #### function to combine data for different values of metadata
@@ -336,7 +346,7 @@ def combine_rows(data_frame, mapping, other_cols,
         (or list of operators), and the third item is the target value
         Example:
         mapping = {
-            "category": [['1.A', '1.B', '1.C'], ['+'] '1'],
+            "category": [['1.A', '1.B', '1.C'], '+', '1'],
             "type_t": [['ACT'], ['+'], 'NET'],
             }
         The example would combine categories 1.A, 1.B, and 1.C for type ACT to category 1, type NET
@@ -379,6 +389,9 @@ def combine_rows(data_frame, mapping, other_cols,
         else:
             col_filter[column] = mapping[column][0]
         
+    if verbose:
+        print('col_filter = ')
+        print(col_filter)   
     data_to_work_with = data_frame.filter(keep = True, inplace = False, **col_filter, log_if_empty = False)
     
     if data_to_work_with.timeseries().empty:
@@ -407,16 +420,35 @@ def combine_rows(data_frame, mapping, other_cols,
             
     # get the data to combine
     col_filter = {}
+    #zero_cols = {}
     for column in mapping.keys():
+#        if mapping[column][0] == '\\ZERO':
+#            to_zero = True
+#            #zero_cols[column] = mapping[column][2]
+#        else:
+#            to_zero = False
+#            col_filter[column] = mapping[column][0]
         col_filter[column] = mapping[column][0]
     data_to_work_with.filter(keep = True, inplace = True, **col_filter, log_if_empty = False)
     #if verbose:
     #    print(data_to_work_with.head())
        
+#    if to_zero:
+#        # create zero rows for all combinations of metadata values (except the cols operated on)
+#        
+#        # get all combinations of metadata values
+#        all_columns = data_to_work_with.meta.columns.values
+#        ignore_cols = ['unit', 'unit_context']
+#        relevant_cols = list(set(all_columns) - set(mapping.keys()) - )
+#        group_col_combinations = data_this_var.meta[group_cols]
+#        unique_GCC = group_col_combinations.drop_duplicates()
+    
     # check if all units are the same
     all_units = data_to_work_with.get_unique_meta('unit')
     if len(all_units) > 1:
         # we need unit conversion
+        if verbose:
+            print('unit conversion needed. units are ' + ', '.join(all_units))
         # check if all variables are the same
         all_vars = data_to_work_with.get_unique_meta('variable')
         if len(all_vars) > 1:
@@ -433,6 +465,8 @@ def combine_rows(data_frame, mapping, other_cols,
                     # somebody does it we should add the code for that here
             
             if CO2eq_needed:
+                if verbose:
+                    print('Need CO2 equivalence as variables are combined')
                 # 1) CO2 equivalence is needed
                 unit_to = 'Mt CO2 / yr'
                 # get all contexts present
@@ -443,7 +477,7 @@ def combine_rows(data_frame, mapping, other_cols,
                     if verbose:
                         print('converting for context ' + current_context)
                         print('unit_to: ' + unit_to)
-                    data_to_work_with.convert_unit(unit_to, context = current_context, inplace = True, 
+                    data_to_work_with = data_to_work_with.convert_unit(unit_to, context = current_context, inplace = False, 
                                                   **{'unit_context': current_context})
                     #print(data_to_work_with.head())
                     
@@ -484,21 +518,19 @@ def combine_rows(data_frame, mapping, other_cols,
                             # possible. We get all possible combinations and work on
                             # tme one by one
                             if verbose:
-                                print('Checking unit conversion for vombinations of cols ' + 
+                                print('Checking unit conversion for combinations of cols ' + 
                                       ', '.join(group_cols))
                                 
                             group_col_combinations = data_this_var.meta[group_cols]
                             unique_GCC = group_col_combinations.drop_duplicates()
                             
-                            for GCC in unique_GCC:
+                            for iRow in range(len(unique_GCC)):
+                                value_list_GCC = list(unique_GCC.iloc[iRow])
                                 if verbose:
-                                    print('Value combination :' + ', '.join(GCC))
+                                    print('Value combination :' + ', '.join(value_list_GCC))
                                 # build filter
-                                filter_GCC = dict(zip(group_cols, GCC))
-                                #filter_GCC = {}
-                                #for index, col in enumerate(group_cols):
-                                #    filter_GCC[col] = GCC[index]
-                                
+                                filter_GCC = dict(zip(group_cols, value_list_GCC))
+                                                                
                                 # check if we have several units
                                 data_this_GCC = data_this_var.filter(keep = True, inplace = False, 
                                                              **filter_GCC, log_if_empty = False)
@@ -513,8 +545,9 @@ def combine_rows(data_frame, mapping, other_cols,
                                     # get all contexts
                                     current_contexts = data_this_GCC.get_unique_meta('unit_context')
                                     for context in current_contexts:
-                                        filter_GCC['context'] = context
-                                        data_to_work_with.convert_unit(unit_to, inplace = True, context = context, **filter_GCC)
+                                        filter_GCC['unit_context'] = context
+                                        data_to_work_with = data_to_work_with.convert_unit(unit_to, inplace = False, 
+                                                                                           context = context, **filter_GCC)
                                 else:
                                     if verbose:
                                         print('No conversion needed')
@@ -526,7 +559,8 @@ def combine_rows(data_frame, mapping, other_cols,
                             # get all contexts
                             current_contexts = data_this_var.get_unique_meta('unit_context')
                             for context in current_contexts:
-                                data_to_work_with.convert_unit(unit_to, inplace = True, context = context, **{'variable': variable, 'context': context})
+                                data_to_work_with = data_to_work_with.convert_unit(unit_to, inplace = False, context = context, 
+                                                               **{'variable': variable, 'unit_context': context})
                     elif verbose:
                         print('No conversion needed')
                     
@@ -536,8 +570,9 @@ def combine_rows(data_frame, mapping, other_cols,
             # get all contexts
             current_contexts = data_to_work_with.get_unique_meta('unit_context')
             for context in current_contexts:
-                data_to_work_with.convert_unit(unit_to, inplace = True, context = context, **{'context': context})
-
+                data_to_work_with = data_to_work_with.convert_unit(unit_to, inplace = False, context = context, 
+                                                                   **{'unit_context': context})
+                
     # prepare data in case of subtractions
     for column in mapping.keys():
         # first check if we have individual operators for all values_to_combine

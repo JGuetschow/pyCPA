@@ -77,12 +77,6 @@ def map_data(input_DF, mapping_file, folder, conversion, onlynew: bool = True, a
             conversion["column_data"]: [conversion["from_code_mapping"], conversion["to_code_mapping"]]
         }
     
-    if add_fields:
-        temp = conversion["output"]
-        for key in add_fields.keys():
-            temp[key] = add_fields[key]
-        conversion["output"] = temp 
-    
     allowed_operators = ['+', '-']
     
     # read the mapping table
@@ -102,6 +96,7 @@ def map_data(input_DF, mapping_file, folder, conversion, onlynew: bool = True, a
         columns = conversion.keys()
         
         combo = {}
+        skip = False
         for column in columns:
             # for each column create the entry in the combination dict
             # first get input values
@@ -138,28 +133,37 @@ def map_data(input_DF, mapping_file, folder, conversion, onlynew: bool = True, a
                 # convert to str
                 to_value_current = str(to_value_current)
 
-            # check if conversion for column makes sense     
+            # check if conversion for column makes sense
+            if from_value_current in ['\\NOTCOVERED', '\\ZERO']:
+                skip = True
+                break
             if to_value_current in ['None', '', 'nan']:
                 if from_value_current in ['None', '', 'nan']:
                     # from also empty, then ignore column
+                    skip = True
                     if verbose:
                         print('Conversion for column ' + column + ' empty for row {:d}'.format(iRow))
+                        print('to_value: ' + to_value_current + ', from_value: ' + from_value_current)
                 else:
                     # to is empty, from not. That is an error in the mapping table
+                    skip = True
                     print('Inconsistent mapping table for ' + column + ', row {:d}'.format(iRow))
+                    print('to_value: ' + to_value_current + ', from_value: ' + from_value_current)
                     break
             else:
                 if from_value_current in ['None', '','nan']:
                     # from is empty, to not. That is an error in the mapping table
+                    skip = True
                     print('Inconsistent mapping table for ' + column + ', row {:d}'.format(iRow))
+                    print('to_value: ' + to_value_current + ', from_value: ' + from_value_current)
                     break
                 else:
                     combo[column] = [input_values, operator, to_value_current]
         
         # check if the resulting cobination dict is not empty
-        if not combo:
+        if not combo and not skip:
             print('Conversion dict is empty for row {:d}'.format(iRow))
-        else:
+        elif not skip:
             # prepare and make a call to map the data and combine if necessary
             converted_data = combine_rows(input_DF, combo, {}, inplace = False, 
                                           cols_to_remove = cols_to_remove, verbose = verbose)
@@ -172,7 +176,13 @@ def map_data(input_DF, mapping_file, folder, conversion, onlynew: bool = True, a
                     
                 for key in add_fields:
                     #converted_data.set_meta(mapping_table[key].iloc[iRow], add_fields[key])
-                    converted_data.__setitem__(mapping_table[key].iloc[iRow], add_fields[key])
+                    if verbose:
+                        print('cols before insertion')
+                        print(converted_data.meta.columns.values)
+                    converted_data.__setitem__(add_fields[key], mapping_table[key].iloc[iRow])
+                    if verbose:
+                        print('cols after insertion')
+                        print(converted_data.meta.columns.values)
                     
                 # add the data to converted DF
                 if first_data:
@@ -185,6 +195,10 @@ def map_data(input_DF, mapping_file, folder, conversion, onlynew: bool = True, a
                         DF_mapped.drop_meta(cols_to_remove, inplace = True)
                         DF_mapped.append(converted_data, inplace = True)                        
                 else:
+                    if verbose:
+                        print('cols before adding')
+                        print(converted_data.meta.columns.values)
+                    
                     DF_mapped.append(converted_data, inplace = True)
             else:
                 if verbose:
