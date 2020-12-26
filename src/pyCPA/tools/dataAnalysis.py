@@ -444,7 +444,7 @@ def check_consistency(input_DF, tests, columns, folder_test: str = '', data_filt
                                 if logging:
                                     log.append(message)
                                     for row in rows_ex_not_in_comb:
-                                        log.append(' ,'.join(rows_in_ex_not_in_comb))
+                                        log.append(' ,'.join(rows_ex_not_in_comb))
                                     log.append('---------------')
                                                                 
                                 # add the rows containing zero only
