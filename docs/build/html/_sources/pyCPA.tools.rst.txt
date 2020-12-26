@@ -1,6 +1,3 @@
-
--- _ref.pycpatools:
-
 pyCPA.tools package
 ===================
 

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pyCPA.tools.dataAnalysis &mdash; pyCPA 0+untagged.29.gcb6bdf8.dirty documentation</title>
+  <title>pyCPA.tools.dataAnalysis &mdash; pyCPA 0+untagged.34.gaa789d0.dirty documentation</title>
   
 
   
@@ -179,6 +179,7 @@
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">from</span> <span class="nn">pyCPA.core</span> <span class="k">import</span> <span class="n">combine_rows</span>
+<span class="kn">import</span> <span class="nn">scmdata</span>
 
 
 <div class="viewcode-block" id="check_coverage"><a class="viewcode-back" href="../../../pyCPA.tools.html#pyCPA.tools.dataAnalysis.check_coverage">[docs]</a><span class="k">def</span> <span class="nf">check_coverage</span><span class="p">(</span><span class="n">input_DF</span><span class="p">,</span> <span class="n">data_filter</span><span class="p">,</span> <span class="n">axes_variables</span><span class="p">,</span> <span class="n">folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;\default&#39;</span><span class="p">,</span> 
@@ -310,8 +311,7 @@
 <span class="sd">        of the calculated time series from the existing time series.</span>
 <span class="sd">    </span>
 <span class="sd">    table\_col : str</span>
-<span class="sd">        string defining the data column that is used for the second dimension of the result table. </span>
-<span class="sd">        Default: variable</span>
+<span class="sd">        string defining the column from the tests file or DataFrame that should be used to identify the rows ofthe result table. If it is &#39;\\index&#39; the row number of the test will be used. If it is &#39;\\all&#39; the target value for each column that is defined in the test will be used. Default: &#39;\\index&#39;</span>
 <span class="sd">    </span>
 <span class="sd">    table\_row : str</span>
 <span class="sd">        string defining the data column that is used for the second dimension of the result table. </span>
@@ -379,6 +379,7 @@
     
     <span class="c1"># prep for tests</span>
     <span class="n">column_names</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+    <span class="n">col_names_target</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">())]</span>
     <span class="n">values_table</span> <span class="o">=</span> <span class="n">filtered_DF</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="n">table_col</span><span class="p">)</span>
     <span class="n">n_values</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">values_table</span><span class="p">)</span>
     <span class="n">all_columns</span> <span class="o">=</span> <span class="n">filtered_DF</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span>
@@ -400,12 +401,14 @@
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;#########################&#39;</span><span class="p">)</span>
         
         <span class="k">if</span> <span class="n">logging</span><span class="p">:</span>
-            <span class="n">log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Test &#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iRow</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;: row:&#39;</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">table_tests</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">iRow</span><span class="p">]))</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Test &#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iRow</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;: row:&#39;</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">table_tests</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">iRow</span><span class="p">])))</span>
             
         <span class="k">if</span> <span class="n">table_row</span> <span class="o">==</span> <span class="s1">&#39;\index&#39;</span><span class="p">:</span>
-            <span class="n">row_ID</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">iRow</span><span class="p">)</span>
+            <span class="n">row_ID</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">iRow</span><span class="p">)]</span>
+        <span class="k">elif</span> <span class="n">table_row</span> <span class="o">==</span> <span class="s1">&#39;</span><span class="se">\a</span><span class="s1">ll&#39;</span><span class="p">:</span>
+            <span class="n">row_ID</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">table_tests</span><span class="p">[</span><span class="n">col_names_target</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">iRow</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">row_ID</span> <span class="o">=</span> <span class="n">table_tests</span><span class="p">[</span><span class="n">table_row</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">iRow</span><span class="p">]</span>
+            <span class="n">row_ID</span> <span class="o">=</span> <span class="p">[</span><span class="n">table_tests</span><span class="p">[</span><span class="n">table_row</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">iRow</span><span class="p">]]</span>
         
         <span class="c1"># prepare for the combination of data</span>
         <span class="n">combo</span> <span class="o">=</span> <span class="p">{}</span>
@@ -471,7 +474,7 @@
                         <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
                     <span class="k">if</span> <span class="n">logging</span><span class="p">:</span>
                         <span class="n">log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
-                    <span class="n">row_results</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">row_ID</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;Inc&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_values</span><span class="p">)</span>
+                    <span class="n">row_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row_ID</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;Inc&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_values</span><span class="p">)</span>
                     <span class="k">break</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">from_value_current</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span><span class="s1">&#39;nan&#39;</span><span class="p">]:</span>
@@ -481,7 +484,7 @@
                         <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
                     <span class="k">if</span> <span class="n">logging</span><span class="p">:</span>
                         <span class="n">log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
-                    <span class="n">row_results</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">row_ID</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;Inc&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_values</span><span class="p">)</span>
+                    <span class="n">row_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row_ID</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;Inc&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_values</span><span class="p">)</span>
                     <span class="k">break</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">combo</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">input_values</span><span class="p">,</span> <span class="n">operator</span><span class="p">,</span> <span class="n">to_value_current</span><span class="p">]</span>
@@ -494,7 +497,7 @@
                 <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">logging</span><span class="p">:</span>
                 <span class="n">log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
-            <span class="n">row_results</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">row_ID</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;Empt&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_values</span><span class="p">)</span>
+            <span class="n">row_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row_ID</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;Empt&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_values</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># prepare and make a call to map the data and combine if necessary</span>
             <span class="n">combined_data</span> <span class="o">=</span> <span class="n">combine_rows</span><span class="p">(</span><span class="n">filtered_DF</span><span class="p">,</span> <span class="n">combo</span><span class="p">,</span> <span class="p">{},</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
@@ -505,87 +508,22 @@
                     <span class="nb">print</span><span class="p">(</span><span class="n">combo</span><span class="p">)</span>
                 
                 <span class="c1"># now loop over the values of the table_col</span>
-                <span class="n">results_this_row</span> <span class="o">=</span> <span class="p">[</span><span class="n">row_ID</span><span class="p">]</span>
+                <span class="n">results_this_row</span> <span class="o">=</span> <span class="n">row_ID</span>
                 <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">values_table</span><span class="p">:</span>
                     <span class="n">combined_data_current</span> <span class="o">=</span> <span class="n">combined_data</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">keep</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
                                                                  <span class="o">**</span><span class="p">{</span><span class="n">table_col</span><span class="p">:</span> <span class="n">value</span><span class="p">},</span> <span class="n">log_if_empty</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="n">combined_data_current</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                        <span class="c1"># get the existing data from DF</span>
-                        <span class="n">result_filter_current</span> <span class="o">=</span> <span class="n">result_filter</span>
-                        <span class="n">result_filter_current</span><span class="p">[</span><span class="n">table_col</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
-                        
-                        <span class="n">existing_data</span> <span class="o">=</span> <span class="n">filtered_DF</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">keep</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">result_filter</span><span class="p">,</span> 
+                    
+                    <span class="c1"># get the existing data from DF</span>
+                    <span class="n">result_filter_current</span> <span class="o">=</span> <span class="n">result_filter</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                    <span class="n">result_filter_current</span><span class="p">[</span><span class="n">table_col</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+                    <span class="n">existing_data</span> <span class="o">=</span> <span class="n">filtered_DF</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">keep</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">result_filter_current</span><span class="p">,</span> 
                                                           <span class="n">log_if_empty</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+                    
+                    <span class="k">if</span> <span class="n">combined_data_current</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                         <span class="k">if</span> <span class="n">existing_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                             <span class="c1"># first step is to check if we have time-series for the same meta data values</span>
                             <span class="c1"># columns should be the same for combined and existing data as we work on the </span>
-                            <span class="c1"># same dataframe</span>
-                            <span class="n">group_cols_comb</span> <span class="o">=</span> <span class="p">[]</span>
-                            <span class="n">unique_cols_comb</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-                            <span class="n">group_cols_ex</span> <span class="o">=</span> <span class="p">[]</span>
-                            <span class="n">unique_cols_ex</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-
-                            <span class="k">for</span> <span class="n">current_column</span> <span class="ow">in</span> <span class="n">all_columns_to_check</span><span class="p">:</span>
-                                <span class="n">values_this_col</span> <span class="o">=</span> <span class="n">combined_data_current</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="n">current_column</span><span class="p">)</span>
-                                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values_this_col</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                                    <span class="n">group_cols_comb</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_column</span><span class="p">)</span>
-                                <span class="k">else</span><span class="p">:</span>
-                                    <span class="n">unique_cols_comb</span><span class="p">[</span><span class="n">current_column</span><span class="p">]</span> <span class="o">=</span> <span class="n">values_this_col</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-
-                                <span class="n">values_this_col</span> <span class="o">=</span> <span class="n">existing_data</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="n">current_column</span><span class="p">)</span>
-
-                                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values_this_col</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                                    <span class="n">group_cols_ex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_column</span><span class="p">)</span>
-                                <span class="k">else</span><span class="p">:</span>
-
-                                    <span class="n">unique_cols_ex</span><span class="p">[</span><span class="n">current_column</span><span class="p">]</span> <span class="o">=</span> <span class="n">values_this_col</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                            
-                            <span class="c1"># check if group cols and unique cols are the same for combined and result data</span>
-                            <span class="c1"># if not we don&#39;t compare (it would be possible to compare to e.g. data in different</span>
-                            <span class="c1"># GWP specs, but we don&#39;t implement that here at this point)</span>
-                            <span class="k">if</span> <span class="ow">not</span> <span class="n">group_cols_comb</span> <span class="o">==</span> <span class="n">group_cols_ex</span><span class="p">:</span>
-                                <span class="n">message</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Group columns differ for combined and existing data. &#39;</span> 
-                                           <span class="o">+</span> <span class="s1">&#39;Comparing not implemented for this case. &#39;</span>
-                                           <span class="o">+</span> <span class="s1">&#39;Cols for combined data: &#39;</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">group_cols_comb</span><span class="p">)</span> 
-                                           <span class="o">+</span> <span class="s1">&#39;; Cols for existing data&#39;</span>  <span class="o">+</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">group_cols_ex</span><span class="p">))</span>
-
-                                <span class="c1"># output and save information</span>
-                                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-                                    <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
-                                <span class="k">if</span> <span class="n">logging</span><span class="p">:</span>
-                                    <span class="n">log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
-
-                                <span class="n">results_this_row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;GC_mm&#39;</span><span class="p">)</span>
-                                <span class="c1"># move to next value</span>
-                                <span class="k">continue</span>
-                        
-                            <span class="k">if</span> <span class="ow">not</span> <span class="n">unique_cols_comb</span> <span class="o">==</span> <span class="n">unique_cols_ex</span><span class="p">:</span>
-                                <span class="n">message</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Unique columns differ for combined and existing data. &#39;</span> 
-                                           <span class="o">+</span> <span class="s1">&#39;Comparing not implemented for this case. &#39;</span>
-                                           <span class="o">+</span> <span class="s1">&#39;Cols for combined data: &#39;</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">unique_cols_comb</span><span class="p">)</span> 
-                                           <span class="o">+</span> <span class="s1">&#39;; Cols for existing data&#39;</span>  <span class="o">+</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">unique_cols_ex</span><span class="p">))</span>
-
-                                <span class="c1"># output and save information</span>
-                                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-                                    <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
-                                <span class="k">if</span> <span class="n">logging</span><span class="p">:</span>
-                                    <span class="n">log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
-
-                                <span class="n">results_this_row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;UC_mm&#39;</span><span class="p">)</span>
-                                <span class="c1"># move to next value</span>
-                                <span class="k">continue</span>
-                            <span class="k">else</span><span class="p">:</span>
-                                <span class="n">message</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Following columns have unique values: </span><span class="se">\n</span><span class="s1">&#39;</span>
-                                          <span class="o">+</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">: </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">combined_data_current</span><span class="o">.</span><span class="n">meta</span><span class="p">[</span><span class="n">val</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> 
-                                                       <span class="n">unique_cols_comb</span><span class="p">]))</span>
-                                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-                                    <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
-                                <span class="k">if</span> <span class="n">logging</span><span class="p">:</span>
-                                    <span class="n">log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
-                            
-                            <span class="c1"># now we know that the same columns have unique and non-unique values for the </span>
-                            <span class="c1"># combined and existing data. we don&#39;t know if the same metadata values are </span>
-                            <span class="c1"># present. As we want to be able to compare data in different units and GWP </span>
+                            <span class="c1"># same dataframe. As we want to be able to compare data in different units and GWP </span>
                             <span class="c1"># specification the columns to compare don&#39;t contain unit and unit_context</span>
                             <span class="n">comp_col_combinations_ex</span> <span class="o">=</span> <span class="n">existing_data</span><span class="o">.</span><span class="n">meta</span><span class="p">[</span><span class="n">columns_compare</span><span class="p">]</span>
                             <span class="n">comp_col_combinations_comb</span> <span class="o">=</span> <span class="n">combined_data_current</span><span class="o">.</span><span class="n">meta</span><span class="p">[</span><span class="n">columns_compare</span><span class="p">]</span>
@@ -601,27 +539,39 @@
                             
                             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rows_ex_not_in_comb</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                                 <span class="c1"># temp: print some info</span>
+                                <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Following rows are in existing data but not in combined data:&#39;</span> 
                                 <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-                                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;rows in existing data but not in combined data&#39;</span><span class="p">)</span>
+                                    <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
                                     <span class="nb">print</span><span class="p">(</span><span class="n">rows_ex_not_in_comb</span><span class="p">)</span>
-                                <span class="c1">#### TODO: add logging</span>
-                                
+                                <span class="k">if</span> <span class="n">logging</span><span class="p">:</span>
+                                    <span class="n">log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+                                    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows_ex_not_in_comb</span><span class="p">:</span>
+                                        <span class="n">log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39; ,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rows_ex_not_in_comb</span><span class="p">))</span>
+                                    <span class="n">log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;---------------&#39;</span><span class="p">)</span>
+                                                                
                                 <span class="c1"># add the rows containing zero only</span>
-                                <span class="k">for</span> <span class="n">iRow</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rows_ex_not_in_comb</span><span class="p">)):</span>
+                                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rows_ex_not_in_comb</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                                    <span class="n">filter_missing</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">columns_compare</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">rows_ex_not_in_comb</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])));</span>
+                                    <span class="n">rows_to_add</span> <span class="o">=</span> <span class="n">existing_data</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="o">**</span><span class="n">filter_missing</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+                                
+                                <span class="k">for</span> <span class="n">iRow</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">rows_ex_not_in_comb</span><span class="p">)):</span>
                                     <span class="n">filter_missing</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">columns_compare</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">rows_ex_not_in_comb</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">iRow</span><span class="p">])));</span>
-                                    <span class="k">if</span> <span class="n">iRow</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                                        <span class="n">rows_to_add</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">existing_data</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="o">**</span><span class="n">filter_missing</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">),</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-                                    <span class="k">else</span><span class="p">:</span>
-                                        <span class="n">rows_to_add</span> <span class="o">=</span> <span class="n">existing_data</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="o">**</span><span class="n">filter_missing</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+                                    <span class="n">rows_to_add</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">existing_data</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="o">**</span><span class="n">filter_missing</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">),</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
                                     
                                 <span class="n">rows_to_add</span> <span class="o">=</span> <span class="n">rows_to_add</span> <span class="o">*</span> <span class="mi">0</span>
                                 <span class="n">combined_data_current</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rows_to_add</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
                                     
                             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rows_comb_not_in_ex</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                                <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Following rows are in combined data but not in existing data:&#39;</span> 
                                 <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-                                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;rows in combined data but not in existing data&#39;</span><span class="p">)</span>
+                                    <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
                                     <span class="nb">print</span><span class="p">(</span><span class="n">rows_comb_not_in_ex</span><span class="p">)</span>
-
+                                <span class="k">if</span> <span class="n">logging</span><span class="p">:</span>
+                                    <span class="n">log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+                                    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows_comb_not_in_ex</span><span class="p">:</span>
+                                        <span class="n">log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39; ,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rows_comb_not_in_ex</span><span class="p">))</span>
+                                    <span class="n">log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;---------------&#39;</span><span class="p">)</span>
+                                
                                 <span class="c1"># add the rows containing zero only</span>
                                 <span class="k">for</span> <span class="n">iRow</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rows_comb_not_in_ex</span><span class="p">)):</span>
                                     <span class="n">filter_missing</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">columns_compare</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">rows_comb_not_in_ex</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">iRow</span><span class="p">])));</span>
@@ -691,27 +641,43 @@
                             <span class="n">results_this_row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;no_ED&#39;</span><span class="p">)</span>    
                     
                     <span class="k">else</span><span class="p">:</span> <span class="c1">#combined_data_current is empty</span>
-                        <span class="n">message</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;no combined data for value &#39;</span> <span class="o">+</span> <span class="n">value</span><span class="p">)</span> 
+                        <span class="c1"># check if there is existing data</span>
+                        <span class="k">if</span> <span class="n">existing_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;No combined data for value &#39;</span> <span class="o">+</span> <span class="n">value</span>
+                            <span class="n">results_this_row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;no_CD&#39;</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;No data for value &#39;</span> <span class="o">+</span> <span class="n">value</span>
+                            <span class="n">results_this_row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;no_D&#39;</span><span class="p">)</span>
                         <span class="c1"># output and save information</span>
                         <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
                             <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
                         <span class="k">if</span> <span class="n">logging</span><span class="p">:</span>
                             <span class="n">log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
-                        <span class="n">results_this_row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;no_CD&#39;</span><span class="p">)</span>
-
+                        
                 <span class="c1"># now add the row with the results to the result DF</span>
                 <span class="n">row_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">results_this_row</span><span class="p">)</span>
                     
             <span class="k">else</span><span class="p">:</span> <span class="c1"># combined data is none</span>
-                <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;No combined data for this test.&#39;</span>
+                <span class="c1"># check if there is existing data</span>
+                <span class="n">existing_data</span> <span class="o">=</span> <span class="n">filtered_DF</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">keep</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">result_filter</span><span class="p">,</span> 
+                                                          <span class="n">log_if_empty</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">existing_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;No combined data for this test.&#39;</span>
+                    <span class="n">row_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row_ID</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;no_CD&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_values</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;No data for this test.&#39;</span>
+                    <span class="n">row_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row_ID</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;no_D&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_values</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
                     <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">logging</span><span class="p">:</span>
                     <span class="n">log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
-                <span class="n">row_results</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">row_ID</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;no_CD&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_values</span><span class="p">)</span>
 
     <span class="c1"># create dataframe from list of results</span>
-    <span class="n">results_DF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">row_results</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;test \ &#39;</span> <span class="o">+</span> <span class="n">table_col</span><span class="p">]</span> <span class="o">+</span> <span class="n">values_table</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">table_row</span> <span class="o">==</span> <span class="s1">&#39;</span><span class="se">\a</span><span class="s1">ll&#39;</span><span class="p">:</span>
+        <span class="n">cols_result</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;test \ &#39;</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">column_names</span><span class="p">)[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">column_names</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">values_table</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cols_result</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;test \ &#39;</span> <span class="o">+</span> <span class="n">table_col</span><span class="p">]</span> <span class="o">+</span> <span class="n">values_table</span>
+    <span class="n">results_DF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">row_results</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="n">cols_result</span><span class="p">)</span>
     
     <span class="c1"># save the result</span>
     <span class="c1"># the table</span>

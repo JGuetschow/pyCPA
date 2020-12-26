@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pyCPA.tools package &mdash; pyCPA 0+untagged.29.gcb6bdf8.dirty documentation</title>
+  <title>pyCPA.tools package &mdash; pyCPA 0+untagged.34.gaa789d0.dirty documentation</title>
   
 
   
@@ -172,8 +172,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <p>– _ref.pycpatools:</p>
-<div class="section" id="pycpa-tools-package">
+  <div class="section" id="pycpa-tools-package">
 <h1>pyCPA.tools package<a class="headerlink" href="#pycpa-tools-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="module-pyCPA.tools.conversion">
 <span id="pycpa-tools-conversion-module"></span><span id="ref-pycpaconversion"></span><h2>pyCPA.tools.conversion module<a class="headerlink" href="#module-pyCPA.tools.conversion" title="Permalink to this headline">¶</a></h2>
@@ -271,8 +270,7 @@ The syntax is the same as in conversion.map_data (see example below)</li>
 <li><strong>data_filter</strong> (<em>dict</em>) – filter in scmdata format (a dict) to filter the data before processing</li>
 <li><strong>pass_threshold</strong> (<em>float</em>) – float defining the threshold for a test to pass. It is compared to the realtive deviation
 of the calculated time series from the existing time series.</li>
-<li><strong>table_col</strong> (<em>str</em>) – string defining the data column that is used for the second dimension of the result table.
-Default: variable</li>
+<li><strong>table_col</strong> (<em>str</em>) – string defining the column from the tests file or DataFrame that should be used to identify the rows ofthe result table. If it is ‘index’ the row number of the test will be used. If it is ‘all’ the target value for each column that is defined in the test will be used. Default: ‘index’</li>
 <li><strong>table_row</strong> (<em>str</em>) – string defining the data column that is used for the second dimension of the result table.
 Default: variable</li>
 <li><strong>table_cell</strong> (<em>str</em>) – String defining the data column that is used for the displayed values in the result table cells.

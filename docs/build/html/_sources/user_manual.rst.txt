@@ -13,7 +13,7 @@ Currently the main use cases are
 * analysis of data coverage in, i.e. which combinations of metadata values (region, gas, sectors, ...) have data.
 
 The main functionalities are split into different modules. Some of the moules
-have their individula package, while other are combined into the :ref:`ref.pycpatools`.
+have their individula package, while other are combined into the pyCPa.tools package.
 
 * :ref:`ref.pycpacore`: The core module contains the main functions of pyCPA. For modification of data the main fucntion is `pyCPA.core.combine_rows` which can add and subtract data respecting metadata and units. The remaining fucntions in the module are used to bring data in the format specified by scmdta and pyCPA.
 

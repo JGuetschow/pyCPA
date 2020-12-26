@@ -146,8 +146,7 @@ def check_consistency(input_DF, tests, columns, folder_test: str = '', data_filt
         of the calculated time series from the existing time series.
     
     table\_col : str
-        string defining the data column that is used for the second dimension of the result table. 
-        Default: variable
+        string defining the column from the tests file or DataFrame that should be used to identify the rows ofthe result table. If it is '\\index' the row number of the test will be used. If it is '\\all' the target value for each column that is defined in the test will be used. Default: '\\index'
     
     table\_row : str
         string defining the data column that is used for the second dimension of the result table. 
@@ -215,6 +214,7 @@ def check_consistency(input_DF, tests, columns, folder_test: str = '', data_filt
     
     # prep for tests
     column_names = columns.keys()
+    col_names_target = [item[1] for item in list(columns.values())]
     values_table = filtered_DF.get_unique_meta(table_col)
     n_values = len(values_table)
     all_columns = filtered_DF.meta.columns.values
@@ -236,12 +236,14 @@ def check_consistency(input_DF, tests, columns, folder_test: str = '', data_filt
             print('#########################')
         
         if logging:
-            log.append('Test ' + '{}'.format(iRow) + ': row:' + ', '.join(table_tests.iloc[iRow]))
+            log.append('Test ' + '{}'.format(iRow) + ': row:' + ', '.join(str(table_tests.iloc[iRow])))
             
         if table_row == '\index':
-            row_ID = str(iRow)
+            row_ID = [str(iRow)]
+        elif table_row == '\all':
+            row_ID = list(table_tests[col_names_target].iloc[iRow])
         else:
-            row_ID = table_tests[table_row].iloc[iRow]
+            row_ID = [table_tests[table_row].iloc[iRow]]
         
         # prepare for the combination of data
         combo = {}
@@ -307,7 +309,7 @@ def check_consistency(input_DF, tests, columns, folder_test: str = '', data_filt
                         print(message)
                     if logging:
                         log.append(message)
-                    row_results.append([row_ID] + ['Inc'] * n_values)
+                    row_results.append(row_ID + ['Inc'] * n_values)
                     break
             else:
                 if from_value_current in ['None', '','nan']:
@@ -317,7 +319,7 @@ def check_consistency(input_DF, tests, columns, folder_test: str = '', data_filt
                         print(message)
                     if logging:
                         log.append(message)
-                    row_results.append([row_ID] + ['Inc'] * n_values)
+                    row_results.append(row_ID + ['Inc'] * n_values)
                     break
                 else:
                     combo[column] = [input_values, operator, to_value_current]
@@ -330,7 +332,7 @@ def check_consistency(input_DF, tests, columns, folder_test: str = '', data_filt
                 print(message)
             if logging:
                 log.append(message)
-            row_results.append([row_ID] + ['Empt'] * n_values)
+            row_results.append(row_ID + ['Empt'] * n_values)
         else:
             # prepare and make a call to map the data and combine if necessary
             combined_data = combine_rows(filtered_DF, combo, {}, inplace = False, verbose = False)
@@ -341,87 +343,22 @@ def check_consistency(input_DF, tests, columns, folder_test: str = '', data_filt
                     print(combo)
                 
                 # now loop over the values of the table_col
-                results_this_row = [row_ID]
+                results_this_row = row_ID
                 for value in values_table:
                     combined_data_current = combined_data.filter(keep = True, inplace = False, 
                                                                  **{table_col: value}, log_if_empty = False)
-                    if combined_data_current.shape[0] > 0:
-                        # get the existing data from DF
-                        result_filter_current = result_filter.copy()
-                        result_filter_current[table_col] = value
-                        
-                        existing_data = filtered_DF.filter(keep = True, inplace = False, **result_filter_current, 
+                    
+                    # get the existing data from DF
+                    result_filter_current = result_filter.copy()
+                    result_filter_current[table_col] = value
+                    existing_data = filtered_DF.filter(keep = True, inplace = False, **result_filter_current, 
                                                           log_if_empty = False)
+                    
+                    if combined_data_current.shape[0] > 0:
                         if existing_data.shape[0] > 0:
                             # first step is to check if we have time-series for the same meta data values
                             # columns should be the same for combined and existing data as we work on the 
-                            # same dataframe
-                            group_cols_comb = []
-                            unique_cols_comb = dict()
-                            group_cols_ex = []
-                            unique_cols_ex = dict()
-
-                            for current_column in all_columns_to_check:
-                                values_this_col = combined_data_current.get_unique_meta(current_column)
-                                if len(values_this_col) > 1:
-                                    group_cols_comb.append(current_column)
-                                else:
-                                    unique_cols_comb[current_column] = values_this_col[0]
-
-                                values_this_col = existing_data.get_unique_meta(current_column)
-
-                                if len(values_this_col) > 1:
-                                    group_cols_ex.append(current_column)
-                                else:
-
-                                    unique_cols_ex[current_column] = values_this_col[0]
-                            
-                            # check if group cols and unique cols are the same for combined and result data
-                            # if not we don't compare (it would be possible to compare to e.g. data in different
-                            # GWP specs, but we don't implement that here at this point)
-                            if not group_cols_comb == group_cols_ex:
-                                message = ('Group columns differ for combined and existing data. ' 
-                                           + 'Comparing not implemented for this case. '
-                                           + 'Cols for combined data: ' + ', '.join(group_cols_comb) 
-                                           + '; Cols for existing data'  + ', '.join(group_cols_ex))
-
-                                # output and save information
-                                if verbose:
-                                    print(message)
-                                if logging:
-                                    log.append(message)
-
-                                results_this_row.append('GC_mm')
-                                # move to next value
-                                continue
-                        
-                            if not unique_cols_comb == unique_cols_ex:
-                                message = ('Unique columns differ for combined and existing data. ' 
-                                           + 'Comparing not implemented for this case. '
-                                           + 'Cols for combined data: ' + ', '.join(unique_cols_comb) 
-                                           + '; Cols for existing data'  + ', '.join(unique_cols_ex))
-
-                                # output and save information
-                                if verbose:
-                                    print(message)
-                                if logging:
-                                    log.append(message)
-
-                                results_this_row.append('UC_mm')
-                                # move to next value
-                                continue
-                            else:
-                                message = ('Following columns have unique values: \n'
-                                          + ', '.join(['{0}: {1}'.format(val, combined_data_current.meta[val].iloc[0]) for val in 
-                                                       unique_cols_comb]))
-                                if verbose:
-                                    print(message)
-                                if logging:
-                                    log.append(message)
-                            
-                            # now we know that the same columns have unique and non-unique values for the 
-                            # combined and existing data. we don't know if the same metadata values are 
-                            # present. As we want to be able to compare data in different units and GWP 
+                            # same dataframe. As we want to be able to compare data in different units and GWP 
                             # specification the columns to compare don't contain unit and unit_context
                             comp_col_combinations_ex = existing_data.meta[columns_compare]
                             comp_col_combinations_comb = combined_data_current.meta[columns_compare]
@@ -449,7 +386,7 @@ def check_consistency(input_DF, tests, columns, folder_test: str = '', data_filt
                                                                 
                                 # add the rows containing zero only
                                 if len(rows_ex_not_in_comb) > 0:
-                                    filter_missing = dict(zip(columns_compare, list(rows_ex_not_in_comb.iloc[iRow])));
+                                    filter_missing = dict(zip(columns_compare, list(rows_ex_not_in_comb.iloc[0])));
                                     rows_to_add = existing_data.filter(**filter_missing, inplace = False)
                                 
                                 for iRow in range(1, len(rows_ex_not_in_comb)):
@@ -460,10 +397,16 @@ def check_consistency(input_DF, tests, columns, folder_test: str = '', data_filt
                                 combined_data_current.append(rows_to_add, inplace = True)
                                     
                             if len(rows_comb_not_in_ex) > 0:
+                                message = 'Following rows are in combined data but not in existing data:' 
                                 if verbose:
-                                    print('rows in combined data but not in existing data')
+                                    print(message)
                                     print(rows_comb_not_in_ex)
-
+                                if logging:
+                                    log.append(message)
+                                    for row in rows_comb_not_in_ex:
+                                        log.append(' ,'.join(rows_comb_not_in_ex))
+                                    log.append('---------------')
+                                
                                 # add the rows containing zero only
                                 for iRow in range(len(rows_comb_not_in_ex)):
                                     filter_missing = dict(zip(columns_compare, list(rows_comb_not_in_ex.iloc[iRow])));
@@ -533,14 +476,19 @@ def check_consistency(input_DF, tests, columns, folder_test: str = '', data_filt
                             results_this_row.append('no_ED')    
                     
                     else: #combined_data_current is empty
-                        message = ('no combined data for value ' + value) 
+                        # check if there is existing data
+                        if existing_data.shape[0] > 0:
+                            message = 'No combined data for value ' + value
+                            results_this_row.append('no_CD')
+                        else:
+                            message = 'No data for value ' + value
+                            results_this_row.append('no_D')
                         # output and save information
                         if verbose:
                             print(message)
                         if logging:
                             log.append(message)
-                        results_this_row.append('no_CD')
-
+                        
                 # now add the row with the results to the result DF
                 row_results.append(results_this_row)
                     
@@ -550,17 +498,21 @@ def check_consistency(input_DF, tests, columns, folder_test: str = '', data_filt
                                                           log_if_empty = False)
                 if existing_data.shape[0] > 0:
                     message = 'No combined data for this test.'
-                    row_results.append([row_ID] + ['no_CD'] * n_values)
+                    row_results.append(row_ID + ['no_CD'] * n_values)
                 else:
                     message = 'No data for this test.'
-                    row_results.append([row_ID] + ['no_D'] * n_values)
+                    row_results.append(row_ID + ['no_D'] * n_values)
                 if verbose:
                     print(message)
                 if logging:
                     log.append(message)
 
     # create dataframe from list of results
-    results_DF = pd.DataFrame(data = row_results, columns = ['test \ ' + table_col] + values_table)
+    if table_row == '\all':
+        cols_result = ['test \ ' + list(column_names)[0]] + list(column_names)[1:] + values_table
+    else:
+        cols_result = ['test \ ' + table_col] + values_table
+    results_DF = pd.DataFrame(data = row_results, columns = cols_result)
     
     # save the result
     # the table
