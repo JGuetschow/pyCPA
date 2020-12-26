@@ -6,6 +6,11 @@
 Welcome to pyCPA's documentation!
 =================================
 
+Python-based tool for Climate Policy Analysis.
+
+This is early development status and currently not intended for wider use but only a few special tasks.
+
+
 .. toctree::
    :maxdepth: 2
    :caption: Documentation:

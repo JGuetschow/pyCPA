@@ -1,38 +1,39 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html4" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pyCPA.readData.read_data &mdash; pyCPA 0.0.1 documentation</title>
+  <title>pyCPA.readData.read_data &mdash; pyCPA 0+untagged.34.gaa789d0.dirty documentation</title>
   
-
-  
-  
-  
-  
-
-  
-  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-
-    
 
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
@@ -48,7 +49,7 @@
           
 
           
-            <a href="../../../index.html" class="icon icon-home"> pyCPA
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> pyCPA
           
 
           
@@ -56,6 +57,10 @@
 
           
             
+            
+              <div class="version">
+                0
+              </div>
             
           
 
@@ -71,6 +76,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -81,7 +87,7 @@
               <p class="caption"><span class="caption-text">Documentation:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../user_manual.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual.html">pyCPA User Manual</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../development.html">Development</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API reference</span></p>
@@ -98,6 +104,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -136,7 +143,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
@@ -162,44 +169,465 @@
 <span class="sd">Created on Thu Mar 26 22:12:56 2020</span>
 
 <span class="sd">@author: Johannes Gütschow, mail@johannes-guetschow.de</span>
+<span class="sd">.. highlight:: python</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">scmdata</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
 
-<div class="viewcode-block" id="read_CRF_data"><a class="viewcode-back" href="../../../pyCPA.readData.html#pyCPA.readData.read_CRF_data">[docs]</a><span class="k">def</span> <span class="nf">read_CRF_data</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">folder</span><span class="p">,</span> <span class="n">col_rename</span><span class="p">,</span> <span class="n">col_defaults</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">scmdata</span><span class="o">.</span><span class="n">dataframe</span><span class="o">.</span><span class="n">ScmDataFrame</span><span class="p">:</span>
+
+<div class="viewcode-block" id="read_wide_csv_file"><a class="viewcode-back" href="../../../pyCPA.readData.html#pyCPA.readData.read_wide_csv_file">[docs]</a><span class="k">def</span> <span class="nf">read_wide_csv_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">folder</span><span class="p">,</span> <span class="n">col_rename</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">col_defaults</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{},</span> 
+                       <span class="n">meta_mapping</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">filter_keep</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{},</span> 
+                       <span class="n">filter_remove</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{})</span> <span class="o">-&gt;</span> <span class="n">scmdata</span><span class="o">.</span><span class="n">run</span><span class="o">.</span><span class="n">ScmRun</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function reads a csv file and returns the data as an ScmDataFrame </span>
+<span class="sd">    </span>
+<span class="sd">    Columns can be renamed or filled with default vales to match the pyCPA structure.</span>
+<span class="sd">    The individual files are read using &quot;read_wide_csv_data&quot;</span>
+<span class="sd">    </span>
+<span class="sd">    Currently duplicate datapoint will not be detected</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    </span>
+<span class="sd">    file : str</span>
+<span class="sd">        String containing the file name    </span>
+<span class="sd">    </span>
+<span class="sd">    folder : str</span>
+<span class="sd">        String with folder name to read from</span>
+<span class="sd">    </span>
+<span class="sd">    col\_rename : dict</span>
+<span class="sd">        Dict where the keys are column names in the files to be read and the value is the column file </span>
+<span class="sd">        in the output dataframe. Use &#39;\DROP&#39; as value to remove a column. Default = empty</span>
+<span class="sd">    </span>
+<span class="sd">    col\_defaults : dict</span>
+<span class="sd">        Dict for default values of columns not given in the csv files. The keys are the column names and </span>
+<span class="sd">        the values are the values for the columns. Default: empty</span>
+<span class="sd">    </span>
+<span class="sd">    meta\_mapping : dict</span>
+<span class="sd">        A dict with pyCPA column names as keys. Values are dicts with input values as </span>
+<span class="sd">        keys and output values as values. A standard use case is to map gas names from </span>
+<span class="sd">        input data to the standardized names used in pyCPA / scmdata. Default: empty</span>
+<span class="sd">            </span>
+<span class="sd">    filter\_keep : dict</span>
+<span class="sd">        Dict defining filters of data to keep. Filtering is done after metadata mapping, </span>
+<span class="sd">        so use mapped metadata values to define the filter. Column names are pyCPA columns.</span>
+<span class="sd">        Each entry in the dict defines an individual filter. The names of the filters have no </span>
+<span class="sd">        relevance. Default: empty</span>
+<span class="sd">            </span>
+<span class="sd">    filter\_remove : dict</span>
+<span class="sd">        Dict defining filters of data to remove. Filtering is done after metadata mapping, </span>
+<span class="sd">        so use mapped metadata values to define the filter. Column names are pyCPA columns.</span>
+<span class="sd">        Each entry in the dict defines an individual filter. The names of the filters have no </span>
+<span class="sd">        relevance. Default: empty</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    </span>
+<span class="sd">    :obj:`scmdata.run.ScmRun`</span>
+<span class="sd">        ScmRun with the read data</span>
+<span class="sd">        </span>
+<span class="sd">        </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    </span>
+<span class="sd">    example for meta\_mapping::</span>
+<span class="sd">    </span>
+<span class="sd">        meta_mapping = {</span>
+<span class="sd">            &#39;pyCPA_col_1&#39;: {&#39;col_1_value_1_in&#39;: &#39;col_1_value_1_out&#39;,</span>
+<span class="sd">                            &#39;col_1_value_2_in&#39;: &#39;col_1_value_2_out&#39;,</span>
+<span class="sd">                            },</span>
+<span class="sd">            &#39;pyCPA_col_2&#39;: {&#39;col_2_value_1_in&#39;: &#39;col_2_value_1_out&#39;,</span>
+<span class="sd">                            &#39;col_2_value_2_in&#39;: &#39;col_2_value_2_out&#39;,</span>
+<span class="sd">                            },</span>
+<span class="sd">        }</span>
+<span class="sd">    </span>
+<span class="sd">    example for filter\_keep::</span>
+<span class="sd">        </span>
+<span class="sd">            filter_keep = {</span>
+<span class="sd">                &#39;f_1&#39;: {&#39;variable&#39;: [&#39;CO2&#39;, &#39;CH4&#39;], &#39;region&#39;: &#39;USA&#39;},</span>
+<span class="sd">                &#39;f_2&#39;: {&#39;variable&#39;: &#39;N2O&#39;}        </span>
+<span class="sd">            } # this example filter keeps all CO2 and CH4 data for the USA and N2O data for all countries</span>
+<span class="sd">    </span>
+<span class="sd">    example for filter\_remove::</span>
+<span class="sd">        </span>
+<span class="sd">        filter_remove = {</span>
+<span class="sd">            &#39;f_1&#39;: {&#39;scenario&#39;: &#39;HISTORY&#39;},</span>
+<span class="sd">        } # this filter removes all data with &#39;HISTORY&#39; as scenario</span>
+<span class="sd">        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
     
-    <span class="n">CRF_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span>
-    <span class="n">CRF_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">file</span><span class="p">))</span>
+    <span class="c1">#read_data = pd.DataFrame</span>
+    <span class="n">read_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">file</span><span class="p">))</span>
         
     <span class="c1">## rename headers </span>
     <span class="c1">## include checks and throw errors</span>
-    <span class="n">columns</span> <span class="o">=</span> <span class="n">CRF_data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span> 
+    <span class="n">columns</span> <span class="o">=</span> <span class="n">read_data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span> 
     <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">col_rename</span><span class="p">:</span>
-        <span class="n">columns</span><span class="p">[</span><span class="n">columns</span> <span class="o">==</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">col_rename</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
-
-    <span class="n">CRF_data</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span>
+        <span class="k">if</span> <span class="n">col_rename</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;\DROP&#39;</span><span class="p">:</span>
+            <span class="n">read_data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
     
+    <span class="c1"># columns may have changed!</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="n">read_data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">col_rename</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">col_rename</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;\DROP&#39;</span><span class="p">:</span>
+            <span class="n">columns</span><span class="p">[</span><span class="n">columns</span> <span class="o">==</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">col_rename</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+
     <span class="c1">## add default value columns</span>
     <span class="c1">## TODO include checks if cols already present and throw errors</span>
     <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">col_defaults</span><span class="p">:</span>
-        <span class="n">CRF_data</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">col_defaults</span><span class="p">[</span><span class="n">col</span><span class="p">])</span>
+        <span class="n">read_data</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">col_defaults</span><span class="p">[</span><span class="n">col</span><span class="p">])</span>
     
     <span class="c1">## if class column exists, rename it because that is a python keyword</span>
-    <span class="c1">## if it doesn&#39;t exist initialize with &#39;TOTAL&#39;</span>
-    <span class="k">if</span> <span class="s1">&#39;class&#39;</span> <span class="ow">in</span> <span class="n">CRF_data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
-        <span class="n">CRF_data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">CRF_data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">get_loc</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)]</span> <span class="o">=</span> <span class="s2">&quot;class_t&quot;</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">idx_variable_col</span> <span class="o">=</span> <span class="n">CRF_data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">get_loc</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
-        <span class="n">CRF_data</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">idx_variable_col</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;class_t&#39;</span><span class="p">,</span> <span class="s1">&#39;TOTAL&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">&#39;class&#39;</span> <span class="ow">in</span> <span class="n">read_data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+        <span class="n">read_data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">read_data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">get_loc</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)]</span> <span class="o">=</span> <span class="s2">&quot;classification&quot;</span>
+    
+    <span class="c1">## if classification doesn&#39;t exist initialize with &#39;TOTAL&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;classification&#39;</span> <span class="ow">in</span> <span class="n">read_data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+        <span class="n">idx_variable_col</span> <span class="o">=</span> <span class="n">read_data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">get_loc</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
+        <span class="n">read_data</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">idx_variable_col</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;classification&#39;</span><span class="p">,</span> <span class="s1">&#39;TOTAL&#39;</span><span class="p">)</span>
         
+    <span class="c1">## replace strings with NaN in year columns</span>
+    <span class="n">year_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;\d&#39;</span><span class="p">)</span>
+    <span class="n">year_cols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="n">year_regex</span><span class="o">.</span><span class="n">match</span><span class="p">,</span> <span class="n">read_data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
     
-    <span class="c1">## convert to scmdata dataframe</span>
-    <span class="n">CRF_scm</span> <span class="o">=</span> <span class="n">scmdata</span><span class="o">.</span><span class="n">dataframe</span><span class="o">.</span><span class="n">ScmDataFrame</span><span class="p">(</span><span class="n">CRF_data</span><span class="p">)</span>
+    <span class="c1">## remove all non-numeric values from year columns</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">year_cols</span><span class="p">:</span>
+        <span class="n">read_data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">read_data</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">read_data</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;coerce&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">notnull</span><span class="p">()]</span>
     
-    <span class="c1">## return</span>
-    <span class="k">return</span> <span class="n">CRF_scm</span></div>
+    <span class="c1"># metadata mapping</span>
+    <span class="k">if</span> <span class="n">meta_mapping</span><span class="p">:</span>
+        <span class="n">read_data</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">meta_mapping</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+    
+    <span class="c1"># convert to ScmRum</span>
+    <span class="n">read_data_scm</span> <span class="o">=</span> <span class="n">scmdata</span><span class="o">.</span><span class="n">run</span><span class="o">.</span><span class="n">ScmRun</span><span class="p">(</span><span class="n">read_data</span><span class="p">)</span>
+    
+    <span class="c1"># filter the data</span>
+    <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">filter_keep</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">filter_current</span> <span class="o">=</span> <span class="n">filter_keep</span><span class="p">[</span><span class="n">column</span><span class="p">]</span>
+        <span class="n">read_data_scm</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">keep</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">filter_current</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">filter_remove</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">filter_current</span> <span class="o">=</span> <span class="n">filter_remove</span><span class="p">[</span><span class="n">column</span><span class="p">]</span>
+        <span class="n">read_data_scm</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">keep</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">filter_current</span><span class="p">)</span>
+        
+    <span class="k">return</span> <span class="n">read_data_scm</span></div>
+
+
+<div class="viewcode-block" id="read_wide_csv_file_pd"><a class="viewcode-back" href="../../../pyCPA.readData.html#pyCPA.readData.read_wide_csv_file_pd">[docs]</a><span class="k">def</span> <span class="nf">read_wide_csv_file_pd</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">folder</span><span class="p">,</span> <span class="n">col_rename</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">col_defaults</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{})</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function reads a csv file and returns the data as a pandas Dataframe. It is used by </span>
+<span class="sd">    read_wide_csv_folder and can not do the filtering an meta_mapping done by read_wide_csv_file</span>
+<span class="sd">    </span>
+<span class="sd">    Columns can be renamed or filled with default vales to match the pyCPA structure.</span>
+<span class="sd">        </span>
+<span class="sd">    Currently duplicate datapoints will not be detected</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    </span>
+<span class="sd">    file : str</span>
+<span class="sd">        String containing the file name    </span>
+<span class="sd">    </span>
+<span class="sd">    folder : str</span>
+<span class="sd">        String with folder name to read from</span>
+<span class="sd">    </span>
+<span class="sd">    col\_rename : dict</span>
+<span class="sd">        Dict where the keys are column names in the files to be read and the value is the column file </span>
+<span class="sd">        in the output dataframe. Use &#39;\DROP&#39; as value to remove a column. Default = empty</span>
+<span class="sd">    </span>
+<span class="sd">    col\_defaults : dict</span>
+<span class="sd">        Dict for default values of columns not given in the csv files. The keys are the column names and </span>
+<span class="sd">        the values are the values for the columns. Default: empty</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    </span>
+<span class="sd">    :obj:`pandas.DataFrame`</span>
+<span class="sd">        pandas DataFrame with the read data</span>
+<span class="sd">        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    
+    <span class="c1">#read_data = pd.DataFrame</span>
+    <span class="n">read_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">file</span><span class="p">))</span>
+        
+    <span class="c1">## rename headers </span>
+    <span class="c1">## include checks and throw errors</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="n">read_data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span> 
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">col_rename</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">col_rename</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;\DROP&#39;</span><span class="p">:</span>
+            <span class="n">read_data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+    
+    <span class="c1"># columns may have changed!</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="n">read_data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">col_rename</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">col_rename</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;\DROP&#39;</span><span class="p">:</span>
+            <span class="n">columns</span><span class="p">[</span><span class="n">columns</span> <span class="o">==</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">col_rename</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+
+    <span class="c1">## add default value columns</span>
+    <span class="c1">## TODO include checks if cols already present and throw errors</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">col_defaults</span><span class="p">:</span>
+        <span class="n">read_data</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">col_defaults</span><span class="p">[</span><span class="n">col</span><span class="p">])</span>
+    
+    <span class="c1">## if class column exists, rename it because that is a python keyword</span>
+    <span class="k">if</span> <span class="s1">&#39;class&#39;</span> <span class="ow">in</span> <span class="n">read_data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+        <span class="n">read_data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">read_data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">get_loc</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)]</span> <span class="o">=</span> <span class="s2">&quot;classification&quot;</span>
+    
+    <span class="c1">## if classification doesn&#39;t exist initialize with &#39;TOTAL&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;classification&#39;</span> <span class="ow">in</span> <span class="n">read_data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+        <span class="n">idx_variable_col</span> <span class="o">=</span> <span class="n">read_data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">get_loc</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
+        <span class="n">read_data</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">idx_variable_col</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;classification&#39;</span><span class="p">,</span> <span class="s1">&#39;total&#39;</span><span class="p">)</span>
+        
+    <span class="c1">## replace strings with NaN in year columns</span>
+    <span class="n">year_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;\d&#39;</span><span class="p">)</span>
+    <span class="n">year_cols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="n">year_regex</span><span class="o">.</span><span class="n">match</span><span class="p">,</span> <span class="n">read_data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
+    
+    <span class="c1">## remove all non-numeric values from year columns</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">year_cols</span><span class="p">:</span>
+        <span class="n">read_data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">read_data</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">read_data</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;coerce&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">notnull</span><span class="p">()]</span>
+    
+    <span class="k">return</span> <span class="n">read_data</span></div>
+
+
+<div class="viewcode-block" id="read_wide_csv_folder"><a class="viewcode-back" href="../../../pyCPA.readData.html#pyCPA.readData.read_wide_csv_folder">[docs]</a><span class="k">def</span> <span class="nf">read_wide_csv_folder</span><span class="p">(</span><span class="n">file_regex</span><span class="p">,</span> <span class="n">folder</span><span class="p">,</span> <span class="n">col_rename</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">col_defaults</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{},</span>
+                       <span class="n">meta_mapping</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">filter_keep</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{},</span> 
+                       <span class="n">filter_remove</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{})</span> <span class="o">-&gt;</span> <span class="n">scmdata</span><span class="o">.</span><span class="n">run</span><span class="o">.</span><span class="n">ScmRun</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function reads all csv files that match &quot;file_regex&quot; from folder &quot;folder&quot; and returns </span>
+<span class="sd">    them as a single ScmDataFrame </span>
+<span class="sd">    </span>
+<span class="sd">    Columns can be renamed or filled with default vales to match the pyCPA structure.</span>
+<span class="sd">    The individual files are read using &quot;read_wide_csv_data&quot;</span>
+<span class="sd">    </span>
+<span class="sd">    Currently duplicate datapoint will not be detected</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    </span>
+<span class="sd">    file_regex : str</span>
+<span class="sd">        String containing a regular expression that selects the files to read. </span>
+<span class="sd">        Only files matching this expression will be read.    </span>
+<span class="sd">    </span>
+<span class="sd">    folder : str</span>
+<span class="sd">        String with folder name to read from</span>
+<span class="sd">    </span>
+<span class="sd">    col_rename : dict</span>
+<span class="sd">        Dict where the keys are column names in the files to be read and the value is the column file </span>
+<span class="sd">        in the output dataframe. Use &#39;\DROP&#39; as value to remove a column. Default = empty</span>
+<span class="sd">    </span>
+<span class="sd">    col_defaults : dict</span>
+<span class="sd">        Dict for default values of columns not given in the csv files. The keys are the column names and </span>
+<span class="sd">        the values are the values for the columns. Default: empty</span>
+<span class="sd">    </span>
+<span class="sd">    meta_mapping : dict</span>
+<span class="sd">        A dict with pyCPA column names as keys. Values are dicts with input values as </span>
+<span class="sd">        keys and output values as values. A standard use case is to map gas names from </span>
+<span class="sd">        input data to the standardized names used in pyCPA / scmdata. Default: empty</span>
+<span class="sd">            </span>
+<span class="sd">    filter_keep : dict</span>
+<span class="sd">        Dict defining filters of data to keep. Filtering is done after metadata mapping, </span>
+<span class="sd">        so use mapped metadata values to define the filter. Column names are pyCPA columns.</span>
+<span class="sd">        Each entry in the dict defines an individual filter. The names of the filters have no </span>
+<span class="sd">        relevance. Default: empty</span>
+<span class="sd">            </span>
+<span class="sd">    filter_remove : dict</span>
+<span class="sd">        Dict defining filters of data to remove. Filtering is done after metadata mapping, </span>
+<span class="sd">        so use mapped metadata values to define the filter. Column names are pyCPA columns.</span>
+<span class="sd">        Each entry in the dict defines an individual filter. The names of the filters have no </span>
+<span class="sd">        relevance. Default: empty</span>
+<span class="sd">        </span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    </span>
+<span class="sd">    :obj:`scmdata.run.ScmRun`</span>
+<span class="sd">        ScmRun with the read data</span>
+<span class="sd">        </span>
+<span class="sd">        </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    </span>
+<span class="sd">    example for meta\_mapping::</span>
+<span class="sd">        </span>
+<span class="sd">        meta_mapping = {</span>
+<span class="sd">            &#39;pyCPA_col_1&#39;: {&#39;col_1_value_1_in&#39;: &#39;col_1_value_1_out&#39;,</span>
+<span class="sd">                            &#39;col_1_value_2_in&#39;: &#39;col_1_value_2_out&#39;,</span>
+<span class="sd">                            },</span>
+<span class="sd">            &#39;pyCPA_col_2&#39;: {&#39;col_2_value_1_in&#39;: &#39;col_2_value_1_out&#39;,</span>
+<span class="sd">                            &#39;col_2_value_2_in&#39;: &#39;col_2_value_2_out&#39;,</span>
+<span class="sd">                            },</span>
+<span class="sd">        }</span>
+<span class="sd">            </span>
+<span class="sd">    example for filter\_keep::</span>
+<span class="sd">        </span>
+<span class="sd">        filter_keep = {</span>
+<span class="sd">            &#39;f_1&#39;: {&#39;variable&#39;: [&#39;CO2&#39;, &#39;CH4&#39;], &#39;region&#39;: &#39;USA&#39;},</span>
+<span class="sd">            &#39;f_2&#39;: {&#39;variable&#39;: &#39;N2O&#39;}        </span>
+<span class="sd">        } # this example filter keeps all CO2 and CH4 data for the USA and N2O data for all countries</span>
+<span class="sd">        </span>
+<span class="sd">    example for filter\_remove::</span>
+<span class="sd">        </span>
+<span class="sd">        filter_remove = {</span>
+<span class="sd">            &#39;f_1&#39;: {&#39;scenario&#39;: &#39;HISTORY&#39;},</span>
+<span class="sd">        } # this filter removes all data with &#39;HISTORY&#39; as scenario</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+   
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reading data from folder &quot;</span> <span class="o">+</span> <span class="n">folder</span><span class="p">)</span>
+        
+    <span class="c1"># get list of all files in data_folder</span>
+    <span class="n">files</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span>
+    <span class="c1"># filter file list according to given regular expression    </span>
+    <span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">files</span> <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">file_regex</span><span class="p">,</span> <span class="n">x</span><span class="p">)]</span>
+    
+    <span class="k">if</span> <span class="n">files</span><span class="p">:</span>
+        <span class="n">firstfile</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Reading file &#39;</span> <span class="o">+</span> <span class="n">file</span> <span class="o">+</span> <span class="s1">&#39; using read_wide_csv_data.&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">firstfile</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">read_wide_csv_file_pd</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">folder</span><span class="p">,</span> <span class="n">col_rename</span><span class="p">,</span> <span class="n">col_defaults</span><span class="p">)</span>
+                <span class="n">firstfile</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">new_data</span> <span class="o">=</span> <span class="n">read_wide_csv_file_pd</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">folder</span><span class="p">,</span> <span class="n">col_rename</span><span class="p">,</span> <span class="n">col_defaults</span><span class="p">)</span>
+                <span class="c1">#data.append(new_data, inplace = True)</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_data</span><span class="p">)</span>
+    
+        <span class="c1"># metadata mapping</span>
+        <span class="k">if</span> <span class="n">meta_mapping</span><span class="p">:</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">meta_mapping</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+        
+        <span class="c1"># convert to ScmRun</span>
+        <span class="n">data_scm</span> <span class="o">=</span> <span class="n">scmdata</span><span class="o">.</span><span class="n">run</span><span class="o">.</span><span class="n">ScmRun</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        
+        <span class="c1"># filter the data</span>
+        <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">filter_keep</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">filter_current</span> <span class="o">=</span> <span class="n">filter_keep</span><span class="p">[</span><span class="n">column</span><span class="p">]</span>
+            <span class="n">data_scm</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">keep</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">filter_current</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">filter_remove</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">filter_current</span> <span class="o">=</span> <span class="n">filter_remove</span><span class="p">[</span><span class="n">column</span><span class="p">]</span>
+            <span class="n">data_scm</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">keep</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">filter_current</span><span class="p">)</span>
+                
+        <span class="k">return</span> <span class="n">data_scm</span>
+    <span class="k">else</span><span class="p">:</span> 
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="read_dataset"><a class="viewcode-back" href="../../../pyCPA.readData.html#pyCPA.readData.read_dataset">[docs]</a><span class="k">def</span> <span class="nf">read_dataset</span><span class="p">(</span><span class="n">config_folder</span><span class="p">,</span> <span class="n">config_file</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">scmdata</span><span class="o">.</span><span class="n">run</span><span class="o">.</span><span class="n">ScmRun</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function reads a dataset with function and parameters given in the configuration file.</span>
+<span class="sd">    It is a wrapper function for the different data reading functions.</span>
+<span class="sd">    The possible functions are currently hard coded for security reasons</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    </span>
+<span class="sd">    config_folder : str</span>
+<span class="sd">        Folder holding the config file.</span>
+<span class="sd">    </span>
+<span class="sd">    config_file : str</span>
+<span class="sd">        A yaml file with allparameters for the data reading including folder and function to use</span>
+<span class="sd">        For an example see &#39;example_read_wide_csv_folder.yaml&#39; in &#39;examples/metadata&#39;.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    </span>
+<span class="sd">    :obj:`scmdata.run.ScmRun`</span>
+<span class="sd">        scmdata.run.Scmrun with the read data</span>
+<span class="sd">        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="c1"># read spec YAML file</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config_folder</span><span class="p">,</span> <span class="n">config_file</span><span class="p">))</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">Loader</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">SafeLoader</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">yaml</span><span class="o">.</span><span class="n">YAMLError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span>
+            <span class="k">return</span>
+    
+    <span class="c1"># check input, function first</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;function&#39;</span><span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Key &#39;function&#39; is not defined in yaml config file&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># determine necessary parameters</span>
+    <span class="k">if</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;function&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;read_wide_csv_folder&#39;</span><span class="p">:</span>
+        <span class="n">necessary_paras</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;folder&#39;</span><span class="p">,</span> <span class="s1">&#39;file_regex&#39;</span><span class="p">,</span> <span class="s1">&#39;col_rename&#39;</span><span class="p">,</span> <span class="s1">&#39;col_defaults&#39;</span><span class="p">,</span> <span class="s1">&#39;filter_keep&#39;</span><span class="p">,</span> 
+                          <span class="s1">&#39;filter_remove&#39;</span><span class="p">,</span> <span class="s1">&#39;meta_mapping&#39;</span><span class="p">]</span>
+        <span class="c1"># currently all keys are necessary because no default value handling im implemented.</span>
+        <span class="c1"># In the future moveto a library such as voluptuous to do the input checking and </span>
+        <span class="c1"># handling of default values</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Function &#39;</span> <span class="o">+</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;function&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; is not a known pyCPA data reading function&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># check if all necessary parameters are present</span>
+    <span class="n">present_paras</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">para</span> <span class="ow">in</span> <span class="n">necessary_paras</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">para</span> <span class="ow">in</span> <span class="n">present_paras</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Key &quot;</span> <span class="o">+</span> <span class="n">para</span> <span class="o">+</span> <span class="s2">&quot; is not defined in yaml config file&quot;</span><span class="p">)</span>
+            
+    <span class="c1"># now do the actual reading</span>
+    <span class="k">if</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;function&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;read_wide_csv_folder&#39;</span><span class="p">:</span>
+        <span class="n">read_data</span> <span class="o">=</span> <span class="n">read_wide_csv_folder</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;file_regex&#39;</span><span class="p">],</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;folder&#39;</span><span class="p">],</span> 
+                                         <span class="n">col_rename</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;col_rename&#39;</span><span class="p">],</span> 
+                                         <span class="n">col_defaults</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;col_defaults&#39;</span><span class="p">],</span>
+                                         <span class="n">filter_keep</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;filter_keep&#39;</span><span class="p">],</span> 
+                                         <span class="n">filter_remove</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;filter_remove&#39;</span><span class="p">],</span> 
+                                         <span class="n">meta_mapping</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;meta_mapping&#39;</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># we should not be able to rech this point as this has been checked before</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Function &#39;</span> <span class="o">+</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;function&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; is not a known pyCPA data reading function. &#39;</span> <span class="o">+</span>
+                         <span class="s1">&#39;This point should not be reached as this has been checked before.&#39;</span><span class="p">)</span>
+        
+    <span class="k">return</span> <span class="n">read_data</span></div>
+    
+<span class="c1">#def read_long_file(file, folder, col_rename, col_defaults, **kwargs) -&gt; scmdata.dataframe.ScmDataFrame:</span>
+<span class="c1">#    </span>
+<span class="c1">#    kwarglist = list(kwargs.keys())</span>
+<span class="c1">#    </span>
+<span class="c1">#    # determine filetype from ending</span>
+<span class="c1">#    file_ending = file.split(&#39;.&#39;)[-1]</span>
+<span class="c1">#    if file_ending == &#39;csv&#39;:</span>
+<span class="c1">#        if &quot;encoding&quot; in kwarglist:    </span>
+<span class="c1">#            data_long = pd.read_csv(os.path.join(folder, file), encoding = kwargs[&quot;encoding&quot;]) #,skiprows = specs[&#39;skiprows&#39;])</span>
+<span class="c1">#        else:</span>
+<span class="c1">#            data_long = pd.read_csv(os.path.join(folder, file))#, skiprows = specs[&#39;skiprows&#39;])</span>
+<span class="c1">#    elif file_ending == &#39;parquet&#39;:</span>
+<span class="c1">#        data_long = pd.read_parquet(os.path.join(folder, file))</span>
+<span class="c1">#    else:</span>
+<span class="c1">#        print(&#39;unknown file type: &#39; + file_ending)</span>
+<span class="c1">#        return</span>
+<span class="c1">#    </span>
+<span class="c1">#        </span>
+<span class="c1">#    ## rename headers </span>
+<span class="c1">#    ## include checks and throw errors</span>
+<span class="c1">#    columns = read_data.columns.values </span>
+<span class="c1">#    for col in col_rename:</span>
+<span class="c1">#        columns[columns == col] = col_rename[col]</span>
+<span class="c1">#</span>
+<span class="c1">#    read_data.columns = columns</span>
+<span class="c1">#    </span>
+<span class="c1">#    ## add default value columns</span>
+<span class="c1">#    ## TODO include checks if cols already present and throw errors</span>
+<span class="c1">#    for col in col_defaults:</span>
+<span class="c1">#        read_data.insert(0, col, col_defaults[col])</span>
+<span class="c1">#    </span>
+<span class="c1">#    ## if class column exists, rename it because that is a python keyword</span>
+<span class="c1">#    ## if it doesn&#39;t exist initialize with &#39;TOTAL&#39;</span>
+<span class="c1">#    if &#39;class&#39; in read_data.columns.values:</span>
+<span class="c1">#        read_data.columns.values[read_data.columns.get_loc(&quot;class&quot;)] = &quot;class_t&quot;</span>
+<span class="c1">#    else:</span>
+<span class="c1">#        idx_variable_col = read_data.columns.get_loc(&quot;variable&quot;)</span>
+<span class="c1">#        read_data.insert(idx_variable_col + 1, &#39;class_t&#39;, &#39;TOTAL&#39;)</span>
+<span class="c1">#        </span>
+<span class="c1">#    </span>
+<span class="c1">#    ## convert to scmdata dataframe</span>
+<span class="c1">#    read_scm = scmdata.dataframe.ScmDataFrame(read_data)</span>
+<span class="c1">#    </span>
+<span class="c1">#    ## return</span>
+<span class="c1">#    return read_scm</span>
 </pre></div>
 
            </div>
@@ -212,11 +640,19 @@
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2020, Johannes Gütschow
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -227,7 +663,6 @@
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

@@ -1,0 +1,18 @@
+CODE2006,CODENAME2006,FULLNAME2006,CODE1996,CODENAME1996,FULLNAME1996
+0,NationalTotal,Total emissions,0,NationalTotal,Total emissions
+1,Energy,Energy,1,TotalEnergy,Total Energy
+1.A,FuelCombustionActivities,Fuel Combustion Activities (Sectoral Approach),1.A,FuelCombustionActivities,Fuel Combustion Activities (Sectoral Approach)
+1.A.1,EnergyIndustries,Energy Industries,1.A.1,EnergyIndustries,Energy Industries
+1.A.1.a,MainActivityElectricityAndHeatProduction,Main Activity Electricity and Heat Production,1.A.1.a,PublicElectricityAndHeatProduction,Public Electricity and Heat Production
+1.A.1.a.i,ElectricityGeneration,ElectricityGeneration,1.A.1.a.i,PublicElectricityGeneration,Public Electricity Generation
+1.A.1.a.ii,CombinedHeatAndPowerGeneration,Combined Heat and Power Generation (CHP),1.A.1.a.ii,PublicCombinedHeatAndPowerGeneration ,Public Combined Heat and Power Generation (CHP)
+1.A.1.a.iii,HeatPlants,Heat Plants,1.A.1.a.iii,PublicHeatPlants,Public Heat Plants
+1.A.1.b,PetroleumRefining,Petroleum Refining,1.A.1.b,PetroleumRefining,Petroleum Refining
+1.A.1.c,ManufactureOfSolidFuelsAndOtherEnergyIndustries,Manufacture of Solid Fuels and Other Energy Industries,1.A.1.c,ManufactureOfSolidFuelsAndOtherEnergyIndustries,Manufacture of Solid Fuels and Other Energy Industries
+1.A.2,ManufacturingIndustriesAndConstruction,Manufacturing Industries and Construction,1.A.2,ManufacturingIndustriesAndConstruction,Manufacturing Industries and Construction
+1.A.2.a,IronAndSteel,Iron and Steel,1.A.2.a,IronAndSteel,Iron and Steel
+1.A.2.b,NonFerrousMetals,Non-Ferrous Metals,1.A.2.b,NonFerrousMetals,Non-Ferrous Metals
+1.A.2.c,Chemicals,Chemicals,1.A.2.c,Chemicals,Chemicals
+1.A.2.d,PulpPaperPrint,"Pulp, Paper and Print",1.A.2.d,PulpPaperPrint,"Pulp, Paper and Print"
+1.A.2.e,FoodProcessingBeveragesAndTobacco,"Food Processing, Beverages and Tobacco",1.A.2.e,FoodProcessingBeveragesTobacco,"Food Processing, Beverages and Tobacco"
+1.A.2.f + 1.A.2.g + 1.A.2.h + 1.A.2.i + 1.A.2.j + 1.A.2.k + 1.A.2.l + 1.A.2.m,ManufacturingFtoM,Manufacturing Industries and Construction subsections F to M,1.A.2.f,Other,Other

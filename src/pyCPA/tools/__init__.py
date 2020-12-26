@@ -9,6 +9,6 @@ Created on Fri Apr  3 21:42:01 2020
 # import function from files to make them available without a further nesting level
 # TODO: it might make sense to introduce a structure here as tools will be a large module
 from . import conversion
-from . import data_analysis
+from . import dataAnalysis
 
-__all__ = ['conversion', 'data_analysis']
+__all__ = ['conversion', 'dataAnalysis']

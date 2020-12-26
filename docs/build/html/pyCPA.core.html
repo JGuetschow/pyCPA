@@ -1,38 +1,39 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html4" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pyCPA.core package &mdash; pyCPA 0.0.1 documentation</title>
+  <title>pyCPA.core package &mdash; pyCPA 0+untagged.34.gaa789d0.dirty documentation</title>
   
-
-  
-  
-  
-  
-
-  
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-
-    
 
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="pyCPA.readData package" href="pyCPA.readData.html" />
@@ -50,7 +51,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> pyCPA
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> pyCPA
           
 
           
@@ -58,6 +59,10 @@
 
           
             
+            
+              <div class="version">
+                0
+              </div>
             
           
 
@@ -73,6 +78,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -83,13 +89,13 @@
               <p class="caption"><span class="caption-text">Documentation:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="user_manual.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_manual.html">pyCPA User Manual</a></li>
 <li class="toctree-l1"><a class="reference internal" href="development.html">Development</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API reference</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">pyCPA.core package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-pyCPA.core">pyCPA.core module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pycpa-core-module">pyCPA.core module</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="pyCPA.readData.html">pyCPA.readData package</a></li>
@@ -103,6 +109,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -141,7 +148,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>pyCPA.core package</li>
     
@@ -166,29 +173,135 @@
             
   <div class="section" id="pycpa-core-package">
 <h1>pyCPA.core package<a class="headerlink" href="#pycpa-core-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="module-pyCPA.core">
-<span id="pycpa-core-module"></span><h2>pyCPA.core module<a class="headerlink" href="#module-pyCPA.core" title="Permalink to this headline">¶</a></h2>
-<p>Created on Fri Apr  3 21:50:02 2020</p>
+<div class="section" id="pycpa-core-module">
+<span id="ref-pycpacore"></span><h2>pyCPA.core module<a class="headerlink" href="#pycpa-core-module" title="Permalink to this headline">¶</a></h2>
+<p>The core module contains the main functions of pyCPA. For modification of data the main fucntion is <cite>pyCPA.core.combine_rows</cite> which can add and subtract data respecting metadata and units. The remaining fucntions in the module are used to bring data in the format specified by scmdta and pyCPA.</p>
+<span class="target" id="module-pyCPA.core"></span><p>Created on Fri Apr  3 21:50:02 2020</p>
 <p>&#64;author: Johannes Gütschow, <a class="reference external" href="mailto:mail&#37;&#52;&#48;johannes-guetschow&#46;de">mail<span>&#64;</span>johannes-guetschow<span>&#46;</span>de</a></p>
 <dl class="function">
 <dt id="pyCPA.core.combine_rows">
-<code class="sig-prename descclassname">pyCPA.core.</code><code class="sig-name descname">combine_rows</code><span class="sig-paren">(</span><em class="sig-param">data_frame</em>, <em class="sig-param">column</em>, <em class="sig-param">values_to_combine</em>, <em class="sig-param">new_value</em>, <em class="sig-param">other_cols</em>, <em class="sig-param">operator</em>, <em class="sig-param">cols_to_remove: list = []</em>, <em class="sig-param">inplace: bool = True</em>, <em class="sig-param">verbose: bool = False</em><span class="sig-paren">)</span> &#x2192; scmdata.dataframe.ScmDataFrame<a class="reference internal" href="_modules/pyCPA/core/core.html#combine_rows"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyCPA.core.combine_rows" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descclassname">pyCPA.core.</code><code class="descname">combine_rows</code><span class="sig-paren">(</span><em>data_frame</em>, <em>mapping</em>, <em>other_cols</em>, <em>cols_to_remove: list = []</em>, <em>inplace: bool = True</em>, <em>verbose: bool = False</em><span class="sig-paren">)</span> &#x2192; scmdata.run.ScmRun<a class="reference internal" href="_modules/pyCPA/core/core.html#combine_rows"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyCPA.core.combine_rows" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function combines rows for given values of a meta data columns where all other values coincide
+with other_cols (a dict) a subset of the dataset can be defined which the function operates on.
+operator will be used for all but the first values_to_combine (first always has positive sign)</p>
+<p># currently only add and substract operators are implemented
+# TODO iplement checks for operator</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data_frame</strong> (<em>scmdata.run.ScmRun</em>) – data_frame to work on</li>
+<li><strong>mapping</strong> (<em>dict</em>) – a dict which has column names as keys. Each entry is a list where the first item is a
+list of values for the column (the values to be mapped), the second item is the operator
+(or list of operators), and the third item is the target value</li>
+<li><strong>other_cols</strong> (<em>dict</em>) – a dict with column: value pairs specifying to only work on a subset of the dataframe
+defined by the column: value pairs</li>
+<li><strong>cols_to_remove</strong> (<em>list</em>) – list with column names that should be removed from the result dataframe. Default: empty list</li>
+<li><strong>inplace</strong> (<em>bool</em>) – bool defining if operation takes place on input DF (True) or if newly generated data will be returned
+as an individual DF while the input DF remains unchanged (False). Default: True</li>
+<li><strong>verbose</strong> (<em>bool</em>) – bool. If True a lot of debug information is written to the terminal. Default: False</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">ScmRun with the mapped data. Only the newly generated data will be returned</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scmdata.run.ScmRun</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>Example for mapping:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;category&quot;</span><span class="p">:</span> <span class="p">[[</span><span class="s1">&#39;1.A&#39;</span><span class="p">,</span> <span class="s1">&#39;1.B&#39;</span><span class="p">,</span> <span class="s1">&#39;1.C&#39;</span><span class="p">],</span> <span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">],</span>
+    <span class="s2">&quot;type_t&quot;</span><span class="p">:</span> <span class="p">[[</span><span class="s1">&#39;ACT&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;+&#39;</span><span class="p">],</span> <span class="s1">&#39;NET&#39;</span><span class="p">],</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>The example would combine categories 1.A, 1.B, and 1.C for type ACT to category 1, type NET
+Operators can be used on all columns but be careful with using them on more than one column.
+Tey will be applied after each other, so if a time series gets a ‘-‘ operator from two columns
+the result will be ‘+’.</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="pyCPA.core.convert_unit_PRIMAP_to_scmdata">
-<code class="sig-prename descclassname">pyCPA.core.</code><code class="sig-name descname">convert_unit_PRIMAP_to_scmdata</code><span class="sig-paren">(</span><em class="sig-param">data_frame</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCPA/core/core.html#convert_unit_PRIMAP_to_scmdata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyCPA.core.convert_unit_PRIMAP_to_scmdata" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descclassname">pyCPA.core.</code><code class="descname">convert_unit_PRIMAP_to_scmdata</code><span class="sig-paren">(</span><em>data_frame</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCPA/core/core.html#convert_unit_PRIMAP_to_scmdata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyCPA.core.convert_unit_PRIMAP_to_scmdata" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function converts the emissions module style units which usually neither carry information about the
+substance nor about the time to pyCPA/openscm units. The function also handles the exeption cases where
+PRIMAP units do contain information about the substance (e.g. GtC).</p>
+<p>The function operates in a ScmRun dataframe which is alteed in place.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data_frame</strong> (<em>scmdata.run.ScmRun</em>) – data_frame with IPCC category codes in in PRIMAP format (IPCC1996 and IPCC2006 can be converted)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ScmRun with the converted data</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scmdata.run.ScmRun</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="pyCPA.core.add_GWP_information">
-<code class="sig-prename descclassname">pyCPA.core.</code><code class="sig-name descname">add_GWP_information</code><span class="sig-paren">(</span><em class="sig-param">data_frame</em>, <em class="sig-param">defaultGWP</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCPA/core/core.html#add_GWP_information"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyCPA.core.add_GWP_information" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descclassname">pyCPA.core.</code><code class="descname">add_GWP_information</code><span class="sig-paren">(</span><em>data_frame</em>, <em>defaultGWP</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCPA/core/core.html#add_GWP_information"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyCPA.core.add_GWP_information" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function takes GWP information from the variable name (if present) and uses the default given otherwise.
+The default is given as “AR4”, “SAR”, “AR5” etc (as in the unit names). GWP information is stored in the
+metadata column “unit_context”</p>
+<p>Attention: the function has to be used before “convert_unit_PRIMAP_to_scmdata”</p>
+<p>Currently the fucntion uses a limited set of GWP values (SAR, AR4, AR5) and works on a limited
+set of variables (KYOTOGHG, HFCS, PFCS, FGASES).</p>
+<p>TODO: integrate check for converted units (or integrate this function in the unit conversion)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data_frame</strong> (<em>scmdata.run.ScmRun</em>) – data_frame with IPCC category codes in in PRIMAP format (IPCC1996 and IPCC2006 can be converted)</li>
+<li><strong>defaultGWP</strong> (<em>string</em>) – Default GWP value to be used if no GWP can be inferred from the variable name</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">ScmRun with the converted data</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scmdata.run.ScmRun</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="pyCPA.core.convert_IPCC_categories_PRIMAP_to_pyCPA">
-<code class="sig-prename descclassname">pyCPA.core.</code><code class="sig-name descname">convert_IPCC_categories_PRIMAP_to_pyCPA</code><span class="sig-paren">(</span><em class="sig-param">data_frame</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCPA/core/core.html#convert_IPCC_categories_PRIMAP_to_pyCPA"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyCPA.core.convert_IPCC_categories_PRIMAP_to_pyCPA" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descclassname">pyCPA.core.</code><code class="descname">convert_IPCC_categories_PRIMAP_to_pyCPA</code><span class="sig-paren">(</span><em>data_frame</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCPA/core/core.html#convert_IPCC_categories_PRIMAP_to_pyCPA"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyCPA.core.convert_IPCC_categories_PRIMAP_to_pyCPA" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function converts all IPCC emissions category codes in the input data frame
+from the PRIMAP-format to the pyCPA format which is closer to the original
+(but without all the dots)</p>
+<p>The PRIMAP format codes consist of upper case letters and numvers only. These are converted
+back to the original formatting which includes lower case letters and roman numerals.
+The dots are omitted in both farmattings (ToDo maybe change and add them back in)</p>
+<p>Codes that are not part of the official hierarchy (starting with IPCM or CATM)
+are not converted but returned without the ‘CAT’ or ‘IPC’ prefix unless the conversion is
+explicitly defined in the code_mapping dict defined in convert_IPCC_code_PRIMAP_to_pyCPA().</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data_frame</strong> (<em>scmdata.run.ScmRun</em>) – data_frame with IPCC category codes in in PRIMAP format (IPCC1996 and IPCC2006 can be converted)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ScmRun with the converted data</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scmdata.run.ScmRun</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </div>
 </div>
@@ -213,11 +326,19 @@
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2020, Johannes Gütschow
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -228,7 +349,6 @@
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

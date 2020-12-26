@@ -35,11 +35,12 @@ CLASSIFIERS = [
 #    "Programming Language :: Python :: 3.5", # needs testing 
     "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
 ]
 
-REQUIREMENTS = ["scmdata>=0.4", "pyam-iamc>=0.4.1"]
+REQUIREMENTS = ["scmdata>=0.7.3", "pyam-iamc>=0.7.0"]
 #REQUIREMENTS_TESTS = ["codecov", "nbval", "pytest-cov", "pytest>=5.0.0"]
-REQUIREMENTS_DOCS = ["sphinx"]
+REQUIREMENTS_DOCS = ["sphinx", "sphinx_rtd_theme"]
 REQUIREMENTS_DEPLOY = ["setuptools"]
 
 REQUIREMENTS_DEV = [

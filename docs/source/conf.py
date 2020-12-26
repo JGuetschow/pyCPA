@@ -10,10 +10,10 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
-# import sys
+import os
+import sys
 # sys.path.insert(0, os.path.abspath('.'))
-import versioneer
+
 
 # -- Project information -----------------------------------------------------
 
@@ -22,10 +22,17 @@ copyright = '2020, Johannes Gütschow'
 author = 'Johannes Gütschow'
 
 # The full version, including alpha/beta/rc tags
-release = versioneer.get_version()
-
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), os.path.pardir))
+from pyCPA._version import get_versions
+# The short X.Y version
+version = get_versions()["version"].split("+")[0]
+# The full version, including alpha/beta/rc tags
+release = get_versions()["version"]
+del get_versions
 
 # -- General configuration ---------------------------------------------------
+
+master_doc = 'index'
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
