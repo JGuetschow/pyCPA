@@ -14,6 +14,7 @@ import os
 from datetime import datetime
 import re
 from pyCPA.core import combine_rows
+import scmdata
 
 
 def check_coverage(input_DF, data_filter, axes_variables, folder: str = '\default', 
@@ -436,18 +437,24 @@ def check_consistency(input_DF, tests, columns, folder_test: str = '', data_filt
                             
                             if len(rows_ex_not_in_comb) > 0:
                                 # temp: print some info
+                                message = 'Following rows are in existing data but not in combined data:' 
                                 if verbose:
-                                    print('rows in existing data but not in combined data')
+                                    print(message)
                                     print(rows_ex_not_in_comb)
-                                #### TODO: add logging
-                                
+                                if logging:
+                                    log.append(message)
+                                    for row in rows_ex_not_in_comb:
+                                        log.append(' ,'.join(rows_in_ex_not_in_comb))
+                                    log.append('---------------')
+                                                                
                                 # add the rows containing zero only
-                                for iRow in range(len(rows_ex_not_in_comb)):
+                                if len(rows_ex_not_in_comb) > 0:
                                     filter_missing = dict(zip(columns_compare, list(rows_ex_not_in_comb.iloc[iRow])));
-                                    if iRow > 0:
-                                        rows_to_add.append(existing_data.filter(**filter_missing, inplace = False), inplace = True)
-                                    else:
-                                        rows_to_add = existing_data.filter(**filter_missing, inplace = False)
+                                    rows_to_add = existing_data.filter(**filter_missing, inplace = False)
+                                
+                                for iRow in range(1, len(rows_ex_not_in_comb)):
+                                    filter_missing = dict(zip(columns_compare, list(rows_ex_not_in_comb.iloc[iRow])));
+                                    rows_to_add.append(existing_data.filter(**filter_missing, inplace = False), inplace = True)
                                     
                                 rows_to_add = rows_to_add * 0
                                 combined_data_current.append(rows_to_add, inplace = True)
