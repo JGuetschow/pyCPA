@@ -4,6 +4,7 @@
 Created on Mon Mar 16 14:17:57 2020
 
 @author: Johannes Gütschow, mail@johannes-guetschow.de
+.. highlight:: python
 """
 
 import scmdata
@@ -23,40 +24,33 @@ def map_data(input_DF, mapping_file, folder, conversion, onlynew: bool = True, a
     Parameters
     ----------
     
-    input\_DF
+    input\_DF : scmdata.run.Scmrun
         ScmDataFrame with data to be mapped
-    mapping\_file
-        csv file that contains the mapping rules. 
-    folder
-        the folder the mapping file resides in
-    conversion
-        a dict defining the rows to use in the input\_DF the mapping\_file and the output DF
-        either of the form
-        conversion = {
-            "category": ["CRFcategory", "IPCCcategory"], 
-            "categoryName": ["*", "IPCCcategoryName"], 
-            "classification": ["CRFclass", "IPCCclass"]
-        }
-        or of the simplified form
-        conversion = {
-            'from_code_mapping': 'categoryCode',
-            'column_data': 'category', #tell it that it's working on the category column
-            'to_code_mapping': 'CODE1996',
-        }
+    
+    mapping\_file : str
+        csv file that contains the mapping rules.
         
-    onlynew
+    folder : str
+        the folder the mapping file resides in
+        
+    conversion : dict
+        a dict defining the rows to use in the input\_DF the mapping\_file and the output DF. there are two 
+        forms for the dict lined out on the examples section
+        
+    onlynew : bool
         bool. If True only aggregated data will be returned. Else aggregated data added 
         will be added to the input DF and the resulting DF will be returned. Default True
-    add\_fields
+    
+    add\_fields : dict
         a dict defining metadata columns to add and the column in the conversion file 
         defining their value: default is an empty dict
         Do not use with the generalized conversion format because the information can 
         be integrated into the conversion
-        Example:
-            add\_fields = {"type_t": "type"}
-    cols\_to\_remove
+                    
+    cols\_to\_remove : list
         a list defining columns that will be removed: default is an empty list
-    verbose
+    
+    verbose : bool
         bool: if set to true a lot of debug output will be written to the terminal
     
     Returns
@@ -65,7 +59,33 @@ def map_data(input_DF, mapping_file, folder, conversion, onlynew: bool = True, a
     :obj:`scmdata.run.ScmRun`
         scmRun with the converted data
         
+    Examples
+    --------
+    
+    conversion dict complex form::
+        
+        conversion = {
+            "category": ["CRFcategory", "IPCCcategory"], 
+            "categoryName": ["*", "IPCCcategoryName"], 
+            "classification": ["CRFclass", "IPCCclass"]
+        }
+        
+    conversion dict simplified form::
+        
+        conversion = {
+            'from_code_mapping': 'categoryCode',
+            'column_data': 'category', #tell it that it's working on the category column
+            'to_code_mapping': 'CODE1996',
+        }
+    
+    add\_fields example::
+        
+        add_fields = {"type_t": "type"}
+    
+    
     """
+    
+    
     
     # check if parameters make sense
     if add_fields and not onlynew:

@@ -4,9 +4,9 @@
 Created on Mon Mar 16 14:02:19 2020
 
 @author: johannes
+.. highlight:: python
 """
 
-import pandas as pd
 import scmdata
 #import os
 import itertools
@@ -21,7 +21,8 @@ def convert_IPCC_code_PRIMAP_to_pyCPA(code) -> str:
     the pyCPA format which is closer to the original (but without all the dots)
     
     Codes that are not part of the official hierarchy (starting with IPCM or CATM) 
-    are not converted but returned without the 'CAT' or 'IPC' prefix.
+    are not converted but returned without the 'CAT' or 'IPC' prefix unless the conversion is
+    explicitly defined in the code_mapping dict.
     
     Parameters
     ----------
@@ -147,19 +148,20 @@ def convert_IPCC_categories_PRIMAP_to_pyCPA(data_frame):
     The dots are omitted in both farmattings (ToDo maybe change and add them back in)    
         
     Codes that are not part of the official hierarchy (starting with IPCM or CATM) 
-    are not converted but returned without the 'CAT' or 'IPC' prefix.
+    are not converted but returned without the 'CAT' or 'IPC' prefix unless the conversion is
+    explicitly defined in the code_mapping dict defined in convert_IPCC_code_PRIMAP_to_pyCPA().
     
     Parameters
     ----------
     
-    data_frame
+    data_frame : scmdata.run.ScmRun
         data_frame with IPCC category codes in in PRIMAP format (IPCC1996 and IPCC2006 can be converted)
             
     Returns
     -------
     
-    :obj:`scmdata.dataframe.ScmDataFrame`
-        scmDataFrame with the converted data
+    :obj:`scmdata.run.ScmRun`
+        ScmRun with the converted data
 
         
     """
@@ -179,11 +181,35 @@ def convert_IPCC_categories_PRIMAP_to_pyCPA(data_frame):
 #### function to add GWP column from variable names
 ########
 def add_GWP_information(data_frame, defaultGWP):
-    # this function takes GWP information from the variable name (if present) and uses the default given otherwise
-    # the default is given as "AR4", "SAR","AR5" etc (as in the unit names)
-    # the function has to be used before "convert_unit_PRIMAP_to_scmdata"
-    # TODO integrate check for converted units (or integrate this function in the unit conversion)
-
+    """
+    This function takes GWP information from the variable name (if present) and uses the default given otherwise.
+    The default is given as "AR4", "SAR", "AR5" etc (as in the unit names). GWP information is stored in the
+    metadata column "unit_context"
+    
+    Attention: the function has to be used before "convert_unit_PRIMAP_to_scmdata"
+    
+    Currently the fucntion uses a limited set of GWP values (SAR, AR4, AR5) and works on a limited 
+    set of variables (KYOTOGHG, HFCS, PFCS, FGASES).
+    
+    TODO: integrate check for converted units (or integrate this function in the unit conversion)
+    
+    Parameters
+    ----------
+    
+    data_frame : scmdata.run.ScmRun
+        data_frame with IPCC category codes in in PRIMAP format (IPCC1996 and IPCC2006 can be converted)
+    
+    defaultGWP : string
+        Default GWP value to be used if no GWP can be inferred from the variable name
+        
+    Returns
+    -------
+    
+    :obj:`scmdata.run.ScmRun`
+        ScmRun with the converted data
+        
+    """
+    
     units_GWP = ['KYOTOGHG', 'HFCS', 'PFCS', 'FGASES']
 
     # define the mapping of PRIMAP GWP scefications to scmdata GWP specification
@@ -253,10 +279,28 @@ def add_GWP_information(data_frame, defaultGWP):
 #### function to bring units in scmdata format
 ########
 def convert_unit_PRIMAP_to_scmdata(data_frame):
-    ## the entity has to be part of the unit and also the time frame
-    ## as the emissions module output can also have units which contain a substance (e.g. GtC)
-    ## we need to detect those
-
+    """
+    This function converts the emissions module style units which usually neither carry information about the 
+    substance nor about the time to pyCPA/openscm units. The function also handles the exeption cases where
+    PRIMAP units do contain information about the substance (e.g. GtC).
+    
+    The function operates in a ScmRun dataframe which is alteed in place.
+    
+    Parameters
+    ----------
+    
+    data_frame : scmdata.run.ScmRun
+        data_frame with IPCC category codes in in PRIMAP format (IPCC1996 and IPCC2006 can be converted)
+    
+    Returns
+    -------
+    
+    :obj:`scmdata.run.ScmRun`
+        ScmRun with the converted data
+        
+    """
+    
+    
     # define exceptions
     ## specialities
     exception_units = {
@@ -324,59 +368,62 @@ def convert_unit_PRIMAP_to_scmdata(data_frame):
 ########    
 #### function to combine data for different values of metadata
 ########
-def combine_rows(data_frame, mapping, other_cols, 
-                 cols_to_remove: list = [], inplace: bool = True, verbose: bool = False) -> scmdata.run.ScmRun:
+def combine_rows(data_frame, mapping, other_cols, cols_to_remove: list = [], inplace: bool = True, 
+                 verbose: bool = False) -> scmdata.run.ScmRun:
     """
-    this function combines rows for given values of a meta data columns where all other values coincide
-    with other_cols (a dict) a subset of the dataset can be defined which the function oeprates on
+    This function combines rows for given values of a meta data columns where all other values coincide 
+    with other_cols (a dict) a subset of the dataset can be defined which the function operates on. 
     operator will be used for all but the first values_to_combine (first always has positive sign)
     
     # currently only add and substract operators are implemented
     # TODO iplement checks for operator
-    
+
     Parameters
-    ----------
-    
-    data_frame
+    ----------    
+    data_frame : scmdata.run.ScmRun
         data_frame to work on
         
-    mapping
+    mapping : dict
         a dict which has column names as keys. Each entry is a list where the first item is a 
         list of values for the column (the values to be mapped), the second item is the operator 
         (or list of operators), and the third item is the target value
-        Example:
-        mapping = {
-            "category": [['1.A', '1.B', '1.C'], '+', '1'],
-            "type_t": [['ACT'], ['+'], 'NET'],
-            }
-        The example would combine categories 1.A, 1.B, and 1.C for type ACT to category 1, type NET
-        Operators can be used on all columns but be careful with using them on more than one column.
-        Tey will be applied after each other, so if a time series gets a '-' operator from two columns
-        the result will be '+'.
-        
-    other_cols
+               
+    other_cols : dict
         a dict with column: value pairs specifying to only work on a subset of the dataframe 
         defined by the column: value pairs
         
-    cols_to_remove
+    cols_to_remove : list
         list with column names that should be removed from the result dataframe. Default: empty list
         
-    inplace
+    inplace : bool
         bool defining if operation takes place on input DF (True) or if newly generated data will be returned
         as an individual DF while the input DF remains unchanged (False). Default: True
     
-    verbose
+    verbose : bool
         bool. If True a lot of debug information is written to the terminal. Default: False 
     
     Returns
     -------
     
-    :obj:`scmdata.dataframe.ScmDataFrame`
-        scmDataFrame with the mapped data. Only the newly generated data will be returned
-
+    :obj:`scmdata.run.ScmRun`
+        ScmRun with the mapped data. Only the newly generated data will be returned
         
+    Examples
+    --------
+    
+    Example for mapping::
+        
+        mapping = {
+            "category": [['1.A', '1.B', '1.C'], '+', '1'],
+            "type_t": [['ACT'], ['+'], 'NET'],
+            }
+    
+    The example would combine categories 1.A, 1.B, and 1.C for type ACT to category 1, type NET
+    Operators can be used on all columns but be careful with using them on more than one column.
+    Tey will be applied after each other, so if a time series gets a '-' operator from two columns
+    the result will be '+'.    
+    
     """    
-
           
     # first filter the dataset such that we only work on the data defined by other_cols and other_col_values
     # we also don't need the rows which have vales of "column" which are not in values_to_combine

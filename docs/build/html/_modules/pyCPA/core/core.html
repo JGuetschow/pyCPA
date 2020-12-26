@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pyCPA.core.core &mdash; pyCPA 0+untagged.22.gb54d30c.dirty documentation</title>
+  <title>pyCPA.core.core &mdash; pyCPA 0+untagged.29.gcb6bdf8.dirty documentation</title>
   
 
   
@@ -87,7 +87,7 @@
               <p class="caption"><span class="caption-text">Documentation:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../user_manual.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual.html">pyCPA User Manual</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../development.html">Development</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API reference</span></p>
@@ -169,9 +169,9 @@
 <span class="sd">Created on Mon Mar 16 14:02:19 2020</span>
 
 <span class="sd">@author: johannes</span>
+<span class="sd">.. highlight:: python</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="c1">#import pandas as pd</span>
 <span class="kn">import</span> <span class="nn">scmdata</span>
 <span class="c1">#import os</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
@@ -186,7 +186,8 @@
 <span class="sd">    the pyCPA format which is closer to the original (but without all the dots)</span>
 <span class="sd">    </span>
 <span class="sd">    Codes that are not part of the official hierarchy (starting with IPCM or CATM) </span>
-<span class="sd">    are not converted but returned without the &#39;CAT&#39; or &#39;IPC&#39; prefix.</span>
+<span class="sd">    are not converted but returned without the &#39;CAT&#39; or &#39;IPC&#39; prefix unless the conversion is</span>
+<span class="sd">    explicitly defined in the code_mapping dict.</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -225,6 +226,18 @@
         <span class="s1">&#39;9&#39;</span><span class="p">:</span> <span class="s1">&#39;viiii&#39;</span>
     <span class="p">}</span>
     
+    <span class="n">code_mapping</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;MAG&#39;</span><span class="p">:</span> <span class="s1">&#39;M.AG&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;MAGELV&#39;</span><span class="p">:</span> <span class="s1">&#39;M.AG.ELV&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;MBK&#39;</span><span class="p">:</span> <span class="s1">&#39;M.BK&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;MBKA&#39;</span><span class="p">:</span> <span class="s1">&#39;M.BK.A&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;MBKM&#39;</span><span class="p">:</span> <span class="s1">&#39;M.BK.M&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;M1A2M&#39;</span><span class="p">:</span> <span class="s1">&#39;M.1.A.2.m&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;MLULUCF&#39;</span><span class="p">:</span> <span class="s1">&#39;M.LULUCF&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;MMULTIOP&#39;</span><span class="p">:</span> <span class="s1">&#39;M.MULTIOP&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;M0EL&#39;</span><span class="p">:</span> <span class="s1">&#39;M.0.EL&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+    
     <span class="c1"># TODO: checks at all levels (currently only a few)</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">code</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
@@ -236,18 +249,22 @@
         <span class="c1"># check if it&#39;s a custom code (beginning with &#39;M&#39;). Currently these are the same in pyCPA as in PRIMAP</span>
         <span class="k">if</span> <span class="n">code</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span><span class="s1">&#39;M&#39;</span><span class="p">:</span>
             <span class="n">new_code</span> <span class="o">=</span> <span class="n">code</span><span class="p">[</span><span class="mi">3</span> <span class="p">:]</span>
+            <span class="k">if</span> <span class="n">new_code</span> <span class="ow">in</span> <span class="n">code_mapping</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">new_code</span> <span class="o">=</span> <span class="n">code_mapping</span><span class="p">[</span><span class="n">new_code</span><span class="p">]</span>
+            
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># actual conversion happening here</span>
             <span class="c1">## only work with the part without &#39;IPC&#39; or &#39;CAT&#39;</span>
             <span class="n">code_remaining</span> <span class="o">=</span> <span class="n">code</span><span class="p">[</span><span class="mi">3</span> <span class="p">:]</span>
 
-            <span class="c1">## first two chars are unchanged</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">code</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]:</span>
+            <span class="c1">## first two chars are unchanged but a dot is added</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">code_remaining</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">new_code</span> <span class="o">=</span> <span class="n">code_remaining</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">code_remaining</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">new_code</span> <span class="o">=</span> <span class="n">code_remaining</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">code_remaining</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span> 
-                <span class="n">new_code</span> <span class="o">=</span> <span class="n">code_remaining</span><span class="p">[</span><span class="mi">0</span> <span class="p">:</span> <span class="mi">2</span><span class="p">]</span>
+                <span class="n">new_code</span> <span class="o">=</span> <span class="n">code_remaining</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">code_remaining</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
                 <span class="n">code_remaining</span> <span class="o">=</span> <span class="n">code_remaining</span><span class="p">[</span><span class="mi">2</span> <span class="p">:</span> <span class="p">]</span> 
-                <span class="c1">#print(&#39;code=&#39; + new_code + &#39; code_remaining=&#39; + code_remaining)</span>
                 <span class="c1"># the next part is a number. match by regexp to also match 2 digit numbers (just in case there are any, currently not needed)</span>
                 <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s1">&#39;[0-9]*&#39;</span><span class="p">,</span> <span class="n">code_remaining</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -256,26 +273,23 @@
                     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Category code &#39;</span> <span class="o">+</span> <span class="n">code</span> <span class="o">+</span> <span class="s1">&#39; does not obey spcifications. No number found on third level&#39;</span><span class="p">)</span>
                     <span class="n">new_code</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
                 <span class="k">else</span><span class="p">:</span>    
-                    <span class="n">new_code</span> <span class="o">=</span> <span class="n">new_code</span> <span class="o">+</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">new_code</span> <span class="o">=</span> <span class="n">new_code</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
                     <span class="n">code_remaining</span> <span class="o">=</span> <span class="n">code_remaining</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="p">:</span> <span class="p">]</span>
-                    <span class="c1">#print(&#39;code=&#39; + new_code + &#39; code_remaining=&#39; + code_remaining)</span>
-
+                    
                     <span class="c1"># fourth level is a char. Has to be transformed to lower case</span>
                     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">code_remaining</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                        <span class="n">new_code</span> <span class="o">=</span> <span class="n">new_code</span> <span class="o">+</span> <span class="n">code_remaining</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+                        <span class="n">new_code</span> <span class="o">=</span> <span class="n">new_code</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">code_remaining</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
                         <span class="n">code_remaining</span> <span class="o">=</span> <span class="n">code_remaining</span><span class="p">[</span><span class="mi">1</span> <span class="p">:</span> <span class="p">]</span>
-                        <span class="c1">#print(&#39;code=&#39; + new_code + &#39; code_remaining=&#39; + code_remaining)</span>
-
+                        
                         <span class="c1"># now we have an arabic numeral in the PRIMAP-format but a roman numeral in pyCPA</span>
                         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">code_remaining</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                            <span class="n">new_code</span> <span class="o">=</span> <span class="n">new_code</span> <span class="o">+</span> <span class="n">arabic_to_roman</span><span class="p">[</span><span class="n">code_remaining</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+                            <span class="n">new_code</span> <span class="o">=</span> <span class="n">new_code</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">arabic_to_roman</span><span class="p">[</span><span class="n">code_remaining</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
                             <span class="n">code_remaining</span> <span class="o">=</span> <span class="n">code_remaining</span><span class="p">[</span><span class="mi">1</span> <span class="p">:]</span>
-                            <span class="c1">#print(&#39;code=&#39; + new_code + &#39; code_remaining=&#39; + code_remaining)</span>
-
-                            <span class="c1"># now we have a number again. An it&#39;s the end of the code. So just copy the rest</span>
-                            <span class="n">new_code</span> <span class="o">=</span> <span class="n">new_code</span> <span class="o">+</span> <span class="n">code_remaining</span>
-                            <span class="c1">#print(&#39;code=&#39; + new_code + &#39; code_remaining=&#39; + code_remaining)</span>
-
+                            
+                            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">code_remaining</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                                <span class="c1"># now we have a number again. An it&#39;s the end of the code. So just copy the rest</span>
+                                <span class="n">new_code</span> <span class="o">=</span> <span class="n">new_code</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">code_remaining</span>
+                                
         <span class="k">return</span> <span class="n">new_code</span>
     
     <span class="k">else</span><span class="p">:</span>
@@ -299,19 +313,20 @@
 <span class="sd">    The dots are omitted in both farmattings (ToDo maybe change and add them back in)    </span>
 <span class="sd">        </span>
 <span class="sd">    Codes that are not part of the official hierarchy (starting with IPCM or CATM) </span>
-<span class="sd">    are not converted but returned without the &#39;CAT&#39; or &#39;IPC&#39; prefix.</span>
+<span class="sd">    are not converted but returned without the &#39;CAT&#39; or &#39;IPC&#39; prefix unless the conversion is</span>
+<span class="sd">    explicitly defined in the code_mapping dict defined in convert_IPCC_code_PRIMAP_to_pyCPA().</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    </span>
-<span class="sd">    data_frame</span>
+<span class="sd">    data_frame : scmdata.run.ScmRun</span>
 <span class="sd">        data_frame with IPCC category codes in in PRIMAP format (IPCC1996 and IPCC2006 can be converted)</span>
 <span class="sd">            </span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    </span>
-<span class="sd">    :obj:`scmdata.dataframe.ScmDataFrame`</span>
-<span class="sd">        scmDataFrame with the converted data</span>
+<span class="sd">    :obj:`scmdata.run.ScmRun`</span>
+<span class="sd">        ScmRun with the converted data</span>
 
 <span class="sd">        </span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -323,18 +338,43 @@
     <span class="k">for</span> <span class="n">code</span> <span class="ow">in</span> <span class="n">all_codes</span><span class="p">:</span>
         <span class="n">replacements</span><span class="p">[</span><span class="n">code</span><span class="p">]</span> <span class="o">=</span> <span class="n">convert_IPCC_code_PRIMAP_to_pyCPA</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
     
-    <span class="n">data_frame</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="n">replacements</span><span class="p">},</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span></div>
-    
+    <span class="c1"># make the replacement</span>
+    <span class="n">data_frame</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_frame</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">replacements</span><span class="p">)</span></div>
+
 
 <span class="c1">########</span>
 <span class="c1">#### function to add GWP column from variable names</span>
 <span class="c1">########</span>
 <div class="viewcode-block" id="add_GWP_information"><a class="viewcode-back" href="../../../pyCPA.core.html#pyCPA.core.add_GWP_information">[docs]</a><span class="k">def</span> <span class="nf">add_GWP_information</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">defaultGWP</span><span class="p">):</span>
-    <span class="c1"># this function takes GWP information from the variable name (if present) and uses the default given otherwise</span>
-    <span class="c1"># the default is given as &quot;AR4&quot;, &quot;SAR&quot;,&quot;AR5&quot; etc (as in the unit names)</span>
-    <span class="c1"># the function has to be used before &quot;convert_unit_PRIMAP_to_scmdata&quot;</span>
-    <span class="c1"># TODO integrate check for converted units (or integrate this function in the unit conversion)</span>
-
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function takes GWP information from the variable name (if present) and uses the default given otherwise.</span>
+<span class="sd">    The default is given as &quot;AR4&quot;, &quot;SAR&quot;, &quot;AR5&quot; etc (as in the unit names). GWP information is stored in the</span>
+<span class="sd">    metadata column &quot;unit_context&quot;</span>
+<span class="sd">    </span>
+<span class="sd">    Attention: the function has to be used before &quot;convert_unit_PRIMAP_to_scmdata&quot;</span>
+<span class="sd">    </span>
+<span class="sd">    Currently the fucntion uses a limited set of GWP values (SAR, AR4, AR5) and works on a limited </span>
+<span class="sd">    set of variables (KYOTOGHG, HFCS, PFCS, FGASES).</span>
+<span class="sd">    </span>
+<span class="sd">    TODO: integrate check for converted units (or integrate this function in the unit conversion)</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    </span>
+<span class="sd">    data_frame : scmdata.run.ScmRun</span>
+<span class="sd">        data_frame with IPCC category codes in in PRIMAP format (IPCC1996 and IPCC2006 can be converted)</span>
+<span class="sd">    </span>
+<span class="sd">    defaultGWP : string</span>
+<span class="sd">        Default GWP value to be used if no GWP can be inferred from the variable name</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    </span>
+<span class="sd">    :obj:`scmdata.run.ScmRun`</span>
+<span class="sd">        ScmRun with the converted data</span>
+<span class="sd">        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
     <span class="n">units_GWP</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;KYOTOGHG&#39;</span><span class="p">,</span> <span class="s1">&#39;HFCS&#39;</span><span class="p">,</span> <span class="s1">&#39;PFCS&#39;</span><span class="p">,</span> <span class="s1">&#39;FGASES&#39;</span><span class="p">]</span>
 
     <span class="c1"># define the mapping of PRIMAP GWP scefications to scmdata GWP specification</span>
@@ -353,10 +393,8 @@
         <span class="n">all_variables</span> <span class="o">=</span> <span class="n">data_frame</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="s1">&#39;variable&#39;</span><span class="p">)</span>
 
         <span class="c1"># copy the unit col to &quot;unit_context&quot; to then work with replacements</span>
-        <span class="n">idx_unit_col</span> <span class="o">=</span> <span class="n">data_frame</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">get_loc</span><span class="p">(</span><span class="s2">&quot;unit&quot;</span><span class="p">)</span>
-        <span class="n">data_frame</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">idx_unit_col</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;unit_context&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-        <span class="n">data_frame</span><span class="o">.</span><span class="n">_meta</span><span class="p">[</span><span class="s2">&quot;unit_context&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_frame</span><span class="o">.</span><span class="n">_meta</span><span class="p">[</span><span class="s2">&quot;variable&quot;</span><span class="p">]</span> <span class="c1"># + &#39; &#39; + defaultGWP</span>
-
+        <span class="n">data_frame</span><span class="p">[</span><span class="s2">&quot;unit_context&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_frame</span><span class="p">[</span><span class="s2">&quot;variable&quot;</span><span class="p">]</span> <span class="c1"># + &#39; &#39; + defaultGWP</span>
+        
         <span class="c1"># build regexp to match the GWP conversion variables</span>
         <span class="n">regexp_str</span> <span class="o">=</span> <span class="s1">&#39;(&#39;</span>
         <span class="k">for</span> <span class="n">unit</span> <span class="ow">in</span> <span class="n">units_GWP</span><span class="p">:</span>
@@ -398,17 +436,36 @@
             <span class="n">GWP_replacements</span><span class="p">[</span><span class="n">variable</span><span class="p">]</span> <span class="o">=</span> <span class="n">GWP_mapping</span><span class="p">[</span><span class="n">currentGWP</span><span class="p">]</span>
 
         <span class="c1"># make the replacement</span>
-        <span class="n">data_frame</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="n">variable_replacements</span><span class="p">,</span> <span class="s1">&#39;unit_context&#39;</span><span class="p">:</span> <span class="n">GWP_replacements</span><span class="p">},</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span></div>
-    
+        <span class="n">data_frame</span><span class="p">[</span><span class="s1">&#39;variable&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_frame</span><span class="p">[</span><span class="s1">&#39;variable&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">variable_replacements</span><span class="p">)</span>
+        <span class="n">data_frame</span><span class="p">[</span><span class="s1">&#39;unit_context&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_frame</span><span class="p">[</span><span class="s1">&#39;unit_context&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">GWP_replacements</span><span class="p">)</span></div>
+
 
 <span class="c1">########</span>
 <span class="c1">#### function to bring units in scmdata format</span>
 <span class="c1">########</span>
 <div class="viewcode-block" id="convert_unit_PRIMAP_to_scmdata"><a class="viewcode-back" href="../../../pyCPA.core.html#pyCPA.core.convert_unit_PRIMAP_to_scmdata">[docs]</a><span class="k">def</span> <span class="nf">convert_unit_PRIMAP_to_scmdata</span><span class="p">(</span><span class="n">data_frame</span><span class="p">):</span>
-    <span class="c1">## the entity has to be part of the unit and also the time frame</span>
-    <span class="c1">## as the emissions module output can also have units which contain a substance (e.g. GtC)</span>
-    <span class="c1">## we need to detect those</span>
-
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function converts the emissions module style units which usually neither carry information about the </span>
+<span class="sd">    substance nor about the time to pyCPA/openscm units. The function also handles the exeption cases where</span>
+<span class="sd">    PRIMAP units do contain information about the substance (e.g. GtC).</span>
+<span class="sd">    </span>
+<span class="sd">    The function operates in a ScmRun dataframe which is alteed in place.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    </span>
+<span class="sd">    data_frame : scmdata.run.ScmRun</span>
+<span class="sd">        data_frame with IPCC category codes in in PRIMAP format (IPCC1996 and IPCC2006 can be converted)</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    </span>
+<span class="sd">    :obj:`scmdata.run.ScmRun`</span>
+<span class="sd">        ScmRun with the converted data</span>
+<span class="sd">        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    
     <span class="c1"># define exceptions</span>
     <span class="c1">## specialities</span>
     <span class="n">exception_units</span> <span class="o">=</span> <span class="p">{</span>
@@ -436,11 +493,10 @@
         <span class="n">regexp_str</span> <span class="o">=</span> <span class="n">regexp_str</span> <span class="o">+</span> <span class="n">unit</span>  <span class="o">+</span> <span class="s1">&#39;|&#39;</span> 
     <span class="n">regexp_str</span> <span class="o">=</span> <span class="n">regexp_str</span><span class="p">[</span><span class="mi">0</span> <span class="p">:</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span> <span class="c1">#&#39;(.*)&#39;</span>
     
+    
     <span class="c1"># add variable_unit column with replaced units.</span>
     <span class="c1">## special units will be replaced later</span>
-    <span class="n">idx_unit_col</span> <span class="o">=</span> <span class="n">data_frame</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">get_loc</span><span class="p">(</span><span class="s2">&quot;unit&quot;</span><span class="p">)</span>
-    <span class="n">data_frame</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">idx_unit_col</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;variable_unit&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-    <span class="n">data_frame</span><span class="o">.</span><span class="n">_meta</span><span class="p">[</span><span class="s2">&quot;variable_unit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_frame</span><span class="o">.</span><span class="n">_meta</span><span class="p">[</span><span class="s2">&quot;unit&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">data_frame</span><span class="o">.</span><span class="n">_meta</span><span class="p">[</span><span class="s2">&quot;variable&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">time_frame_str</span>
+    <span class="n">data_frame</span><span class="p">[</span><span class="s2">&quot;variable_unit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_frame</span><span class="p">[</span><span class="s2">&quot;unit&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">data_frame</span><span class="p">[</span><span class="s2">&quot;variable&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> <span class="n">time_frame_str</span>
     
     <span class="c1"># get unique units</span>
     <span class="c1">#unit_values = data_frame.get_unique_meta(&#39;unit&#39;)</span>
@@ -469,73 +525,72 @@
             <span class="c1"># add the variable if necessary</span>
             <span class="n">replacements</span><span class="p">[</span><span class="n">current_var_unit</span><span class="p">]</span> <span class="o">=</span> <span class="n">replacement_str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&lt;variable&gt;&#39;</span><span class="p">,</span> <span class="n">variable</span><span class="p">)</span> <span class="c1"># untested as N replacement not tested yet</span>
     
-    <span class="c1"># now do the replacement</span>
-    <span class="n">data_frame</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s1">&#39;variable_unit&#39;</span><span class="p">:</span> <span class="n">replacements</span><span class="p">},</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-
-    <span class="c1"># delete unit col</span>
-    <span class="n">data_frame</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;unit&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-
-    <span class="c1"># rename column &#39;variable_unit&#39; to &#39;unit&#39;</span>
-    <span class="n">data_frame</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">data_frame</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">get_loc</span><span class="p">(</span><span class="s2">&quot;variable_unit&quot;</span><span class="p">)]</span> <span class="o">=</span> <span class="s1">&#39;unit&#39;</span></div>
+    <span class="n">data_frame</span><span class="p">[</span><span class="s1">&#39;variable_unit&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_frame</span><span class="p">[</span><span class="s1">&#39;variable_unit&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">replacements</span><span class="p">)</span>
+    <span class="n">data_frame</span><span class="p">[</span><span class="s1">&#39;unit&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_frame</span><span class="p">[</span><span class="s1">&#39;variable_unit&#39;</span><span class="p">]</span>
+    <span class="n">data_frame</span><span class="o">.</span><span class="n">drop_meta</span><span class="p">({</span><span class="s1">&#39;variable_unit&#39;</span><span class="p">},</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span></div>
+    
 
 <span class="c1">########    </span>
 <span class="c1">#### function to combine data for different values of metadata</span>
 <span class="c1">########</span>
-<div class="viewcode-block" id="combine_rows"><a class="viewcode-back" href="../../../pyCPA.core.html#pyCPA.core.combine_rows">[docs]</a><span class="k">def</span> <span class="nf">combine_rows</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">mapping</span><span class="p">,</span> <span class="n">other_cols</span><span class="p">,</span> 
-                 <span class="n">cols_to_remove</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[],</span> <span class="n">inplace</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">scmdata</span><span class="o">.</span><span class="n">run</span><span class="o">.</span><span class="n">ScmRun</span><span class="p">:</span>
+<div class="viewcode-block" id="combine_rows"><a class="viewcode-back" href="../../../pyCPA.core.html#pyCPA.core.combine_rows">[docs]</a><span class="k">def</span> <span class="nf">combine_rows</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">mapping</span><span class="p">,</span> <span class="n">other_cols</span><span class="p">,</span> <span class="n">cols_to_remove</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[],</span> <span class="n">inplace</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> 
+                 <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">scmdata</span><span class="o">.</span><span class="n">run</span><span class="o">.</span><span class="n">ScmRun</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    this function combines rows for given values of a meta data columns where all other values coincide</span>
-<span class="sd">    with other_cols (a dict) a subset of the dataset can be defined which the function oeprates on</span>
+<span class="sd">    This function combines rows for given values of a meta data columns where all other values coincide </span>
+<span class="sd">    with other_cols (a dict) a subset of the dataset can be defined which the function operates on. </span>
 <span class="sd">    operator will be used for all but the first values_to_combine (first always has positive sign)</span>
 <span class="sd">    </span>
 <span class="sd">    # currently only add and substract operators are implemented</span>
 <span class="sd">    # TODO iplement checks for operator</span>
-<span class="sd">    </span>
+
 <span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    </span>
-<span class="sd">    data_frame</span>
+<span class="sd">    ----------    </span>
+<span class="sd">    data_frame : scmdata.run.ScmRun</span>
 <span class="sd">        data_frame to work on</span>
 <span class="sd">        </span>
-<span class="sd">    mapping</span>
+<span class="sd">    mapping : dict</span>
 <span class="sd">        a dict which has column names as keys. Each entry is a list where the first item is a </span>
 <span class="sd">        list of values for the column (the values to be mapped), the second item is the operator </span>
 <span class="sd">        (or list of operators), and the third item is the target value</span>
-<span class="sd">        Example:</span>
-<span class="sd">        mapping = {</span>
-<span class="sd">            &quot;category&quot;: [[&#39;1.A&#39;, &#39;1.B&#39;, &#39;1.C&#39;], [&#39;+&#39;] &#39;1&#39;],</span>
-<span class="sd">            &quot;type_t&quot;: [[&#39;ACT&#39;], [&#39;+&#39;], &#39;NET&#39;],</span>
-<span class="sd">            }</span>
-<span class="sd">        The example would combine categories 1.A, 1.B, and 1.C for type ACT to category 1, type NET</span>
-<span class="sd">        Operators can be used on all columns but be careful with using them on more than one column.</span>
-<span class="sd">        Tey will be applied after each other, so if a time series gets a &#39;-&#39; operator from two columns</span>
-<span class="sd">        the result will be &#39;+&#39;.</span>
-<span class="sd">        </span>
-<span class="sd">    other_cols</span>
+<span class="sd">               </span>
+<span class="sd">    other_cols : dict</span>
 <span class="sd">        a dict with column: value pairs specifying to only work on a subset of the dataframe </span>
 <span class="sd">        defined by the column: value pairs</span>
 <span class="sd">        </span>
-<span class="sd">    cols_to_remove</span>
+<span class="sd">    cols_to_remove : list</span>
 <span class="sd">        list with column names that should be removed from the result dataframe. Default: empty list</span>
 <span class="sd">        </span>
-<span class="sd">    inplace</span>
+<span class="sd">    inplace : bool</span>
 <span class="sd">        bool defining if operation takes place on input DF (True) or if newly generated data will be returned</span>
 <span class="sd">        as an individual DF while the input DF remains unchanged (False). Default: True</span>
 <span class="sd">    </span>
-<span class="sd">    verbose</span>
+<span class="sd">    verbose : bool</span>
 <span class="sd">        bool. If True a lot of debug information is written to the terminal. Default: False </span>
 <span class="sd">    </span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    </span>
-<span class="sd">    :obj:`scmdata.dataframe.ScmDataFrame`</span>
-<span class="sd">        scmDataFrame with the mapped data. Only the newly generated data will be returned</span>
-
+<span class="sd">    :obj:`scmdata.run.ScmRun`</span>
+<span class="sd">        ScmRun with the mapped data. Only the newly generated data will be returned</span>
 <span class="sd">        </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    </span>
+<span class="sd">    Example for mapping::</span>
+<span class="sd">        </span>
+<span class="sd">        mapping = {</span>
+<span class="sd">            &quot;category&quot;: [[&#39;1.A&#39;, &#39;1.B&#39;, &#39;1.C&#39;], &#39;+&#39;, &#39;1&#39;],</span>
+<span class="sd">            &quot;type_t&quot;: [[&#39;ACT&#39;], [&#39;+&#39;], &#39;NET&#39;],</span>
+<span class="sd">            }</span>
+<span class="sd">    </span>
+<span class="sd">    The example would combine categories 1.A, 1.B, and 1.C for type ACT to category 1, type NET</span>
+<span class="sd">    Operators can be used on all columns but be careful with using them on more than one column.</span>
+<span class="sd">    Tey will be applied after each other, so if a time series gets a &#39;-&#39; operator from two columns</span>
+<span class="sd">    the result will be &#39;+&#39;.    </span>
+<span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>    
-
           
-        <span class="c1"># first filter the dataset such that we only work on the data defined by other_cols and other_col_values</span>
+    <span class="c1"># first filter the dataset such that we only work on the data defined by other_cols and other_col_values</span>
     <span class="c1"># we also don&#39;t need the rows which have vales of &quot;column&quot; which are not in values_to_combine</span>
     <span class="n">col_filter</span> <span class="o">=</span> <span class="n">other_cols</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -546,6 +601,9 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">col_filter</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">[</span><span class="n">column</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
         
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;col_filter = &#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">col_filter</span><span class="p">)</span>   
     <span class="n">data_to_work_with</span> <span class="o">=</span> <span class="n">data_frame</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">keep</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">col_filter</span><span class="p">,</span> <span class="n">log_if_empty</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
     
     <span class="k">if</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">timeseries</span><span class="p">()</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
@@ -574,16 +632,35 @@
             
     <span class="c1"># get the data to combine</span>
     <span class="n">col_filter</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="c1">#zero_cols = {}</span>
     <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+<span class="c1">#        if mapping[column][0] == &#39;\\ZERO&#39;:</span>
+<span class="c1">#            to_zero = True</span>
+<span class="c1">#            #zero_cols[column] = mapping[column][2]</span>
+<span class="c1">#        else:</span>
+<span class="c1">#            to_zero = False</span>
+<span class="c1">#            col_filter[column] = mapping[column][0]</span>
         <span class="n">col_filter</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">[</span><span class="n">column</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">keep</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">col_filter</span><span class="p">,</span> <span class="n">log_if_empty</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
     <span class="c1">#if verbose:</span>
     <span class="c1">#    print(data_to_work_with.head())</span>
        
+<span class="c1">#    if to_zero:</span>
+<span class="c1">#        # create zero rows for all combinations of metadata values (except the cols operated on)</span>
+<span class="c1">#        </span>
+<span class="c1">#        # get all combinations of metadata values</span>
+<span class="c1">#        all_columns = data_to_work_with.meta.columns.values</span>
+<span class="c1">#        ignore_cols = [&#39;unit&#39;, &#39;unit_context&#39;]</span>
+<span class="c1">#        relevant_cols = list(set(all_columns) - set(mapping.keys()) - )</span>
+<span class="c1">#        group_col_combinations = data_this_var.meta[group_cols]</span>
+<span class="c1">#        unique_GCC = group_col_combinations.drop_duplicates()</span>
+    
     <span class="c1"># check if all units are the same</span>
     <span class="n">all_units</span> <span class="o">=</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="s1">&#39;unit&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_units</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="c1"># we need unit conversion</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;unit conversion needed. units are &#39;</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">all_units</span><span class="p">))</span>
         <span class="c1"># check if all variables are the same</span>
         <span class="n">all_vars</span> <span class="o">=</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="s1">&#39;variable&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_vars</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
@@ -600,6 +677,8 @@
                     <span class="c1"># somebody does it we should add the code for that here</span>
             
             <span class="k">if</span> <span class="n">CO2eq_needed</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Need CO2 equivalence as variables are combined&#39;</span><span class="p">)</span>
                 <span class="c1"># 1) CO2 equivalence is needed</span>
                 <span class="n">unit_to</span> <span class="o">=</span> <span class="s1">&#39;Mt CO2 / yr&#39;</span>
                 <span class="c1"># get all contexts present</span>
@@ -610,7 +689,7 @@
                     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
                         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;converting for context &#39;</span> <span class="o">+</span> <span class="n">current_context</span><span class="p">)</span>
                         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;unit_to: &#39;</span> <span class="o">+</span> <span class="n">unit_to</span><span class="p">)</span>
-                    <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">convert_unit</span><span class="p">(</span><span class="n">unit_to</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="n">current_context</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> 
+                    <span class="n">data_to_work_with</span> <span class="o">=</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">convert_unit</span><span class="p">(</span><span class="n">unit_to</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="n">current_context</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
                                                   <span class="o">**</span><span class="p">{</span><span class="s1">&#39;unit_context&#39;</span><span class="p">:</span> <span class="n">current_context</span><span class="p">})</span>
                     <span class="c1">#print(data_to_work_with.head())</span>
                     
@@ -651,20 +730,19 @@
                             <span class="c1"># possible. We get all possible combinations and work on</span>
                             <span class="c1"># tme one by one</span>
                             <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-                                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Checking unit conversion for vombinations of cols &#39;</span> <span class="o">+</span> 
+                                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Checking unit conversion for combinations of cols &#39;</span> <span class="o">+</span> 
                                       <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">group_cols</span><span class="p">))</span>
                                 
                             <span class="n">group_col_combinations</span> <span class="o">=</span> <span class="n">data_this_var</span><span class="o">.</span><span class="n">meta</span><span class="p">[</span><span class="n">group_cols</span><span class="p">]</span>
                             <span class="n">unique_GCC</span> <span class="o">=</span> <span class="n">group_col_combinations</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
                             
-                            <span class="k">for</span> <span class="n">GCC</span> <span class="ow">in</span> <span class="n">unique_GCC</span><span class="p">:</span>
+                            <span class="k">for</span> <span class="n">iRow</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">unique_GCC</span><span class="p">)):</span>
+                                <span class="n">value_list_GCC</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">unique_GCC</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">iRow</span><span class="p">])</span>
                                 <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-                                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Value combination :&#39;</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">GCC</span><span class="p">))</span>
+                                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Value combination :&#39;</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">value_list_GCC</span><span class="p">))</span>
                                 <span class="c1"># build filter</span>
-                                <span class="n">filter_GCC</span> <span class="o">=</span> <span class="p">{}</span>
-                                <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">group_cols</span><span class="p">):</span>
-                                    <span class="n">filter_GCC</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">GCC</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
-                                
+                                <span class="n">filter_GCC</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">group_cols</span><span class="p">,</span> <span class="n">value_list_GCC</span><span class="p">))</span>
+                                                                
                                 <span class="c1"># check if we have several units</span>
                                 <span class="n">data_this_GCC</span> <span class="o">=</span> <span class="n">data_this_var</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">keep</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
                                                              <span class="o">**</span><span class="n">filter_GCC</span><span class="p">,</span> <span class="n">log_if_empty</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
@@ -679,8 +757,9 @@
                                     <span class="c1"># get all contexts</span>
                                     <span class="n">current_contexts</span> <span class="o">=</span> <span class="n">data_this_GCC</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="s1">&#39;unit_context&#39;</span><span class="p">)</span>
                                     <span class="k">for</span> <span class="n">context</span> <span class="ow">in</span> <span class="n">current_contexts</span><span class="p">:</span>
-                                        <span class="n">filter_GCC</span><span class="p">[</span><span class="s1">&#39;context&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">context</span>
-                                        <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">convert_unit</span><span class="p">(</span><span class="n">unit_to</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="n">context</span><span class="p">,</span> <span class="o">**</span><span class="n">filter_GCC</span><span class="p">)</span>
+                                        <span class="n">filter_GCC</span><span class="p">[</span><span class="s1">&#39;unit_context&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">context</span>
+                                        <span class="n">data_to_work_with</span> <span class="o">=</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">convert_unit</span><span class="p">(</span><span class="n">unit_to</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+                                                                                           <span class="n">context</span> <span class="o">=</span> <span class="n">context</span><span class="p">,</span> <span class="o">**</span><span class="n">filter_GCC</span><span class="p">)</span>
                                 <span class="k">else</span><span class="p">:</span>
                                     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
                                         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;No conversion needed&#39;</span><span class="p">)</span>
@@ -692,7 +771,8 @@
                             <span class="c1"># get all contexts</span>
                             <span class="n">current_contexts</span> <span class="o">=</span> <span class="n">data_this_var</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="s1">&#39;unit_context&#39;</span><span class="p">)</span>
                             <span class="k">for</span> <span class="n">context</span> <span class="ow">in</span> <span class="n">current_contexts</span><span class="p">:</span>
-                                <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">convert_unit</span><span class="p">(</span><span class="n">unit_to</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="n">context</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span><span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="n">variable</span><span class="p">,</span> <span class="s1">&#39;context&#39;</span><span class="p">:</span> <span class="n">context</span><span class="p">})</span>
+                                <span class="n">data_to_work_with</span> <span class="o">=</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">convert_unit</span><span class="p">(</span><span class="n">unit_to</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="n">context</span><span class="p">,</span> 
+                                                               <span class="o">**</span><span class="p">{</span><span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="n">variable</span><span class="p">,</span> <span class="s1">&#39;unit_context&#39;</span><span class="p">:</span> <span class="n">context</span><span class="p">})</span>
                     <span class="k">elif</span> <span class="n">verbose</span><span class="p">:</span>
                         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;No conversion needed&#39;</span><span class="p">)</span>
                     
@@ -702,8 +782,9 @@
             <span class="c1"># get all contexts</span>
             <span class="n">current_contexts</span> <span class="o">=</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="s1">&#39;unit_context&#39;</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">context</span> <span class="ow">in</span> <span class="n">current_contexts</span><span class="p">:</span>
-                <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">convert_unit</span><span class="p">(</span><span class="n">unit_to</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="n">context</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span><span class="s1">&#39;context&#39;</span><span class="p">:</span> <span class="n">context</span><span class="p">})</span>
-
+                <span class="n">data_to_work_with</span> <span class="o">=</span> <span class="n">data_to_work_with</span><span class="o">.</span><span class="n">convert_unit</span><span class="p">(</span><span class="n">unit_to</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="n">context</span><span class="p">,</span> 
+                                                                   <span class="o">**</span><span class="p">{</span><span class="s1">&#39;unit_context&#39;</span><span class="p">:</span> <span class="n">context</span><span class="p">})</span>
+                
     <span class="c1"># prepare data in case of subtractions</span>
     <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="c1"># first check if we have individual operators for all values_to_combine</span>

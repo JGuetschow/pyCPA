@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pyCPA.readData package &mdash; pyCPA 0+untagged.22.gb54d30c.dirty documentation</title>
+  <title>pyCPA.readData package &mdash; pyCPA 0+untagged.29.gcb6bdf8.dirty documentation</title>
   
 
   
@@ -89,14 +89,14 @@
               <p class="caption"><span class="caption-text">Documentation:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="user_manual.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_manual.html">pyCPA User Manual</a></li>
 <li class="toctree-l1"><a class="reference internal" href="development.html">Development</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API reference</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="pyCPA.core.html">pyCPA.core package</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">pyCPA.readData package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-pyCPA.readData">pyCPA.readData module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pycpa-readdata-module">pyCPA.readData module</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="pyCPA.tools.html">pyCPA.tools package</a></li>
@@ -173,9 +173,10 @@
             
   <div class="section" id="pycpa-readdata-package">
 <h1>pyCPA.readData package<a class="headerlink" href="#pycpa-readdata-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="module-pyCPA.readData">
-<span id="pycpa-readdata-module"></span><h2>pyCPA.readData module<a class="headerlink" href="#module-pyCPA.readData" title="Permalink to this headline">¶</a></h2>
-<p>Created on Fri Apr  3 21:57:09 2020</p>
+<div class="section" id="pycpa-readdata-module">
+<span id="ref-pycpareaddata"></span><h2>pyCPA.readData module<a class="headerlink" href="#pycpa-readdata-module" title="Permalink to this headline">¶</a></h2>
+<p>This module contains functions for data reading. It can read individual files or all files within a given folder. Currently only wide format csv files are suppported. More file formats will be added.</p>
+<span class="target" id="module-pyCPA.readData"></span><p>Created on Fri Apr  3 21:57:09 2020</p>
 <p>&#64;author: Johannes Gütschow, <a class="reference external" href="mailto:mail&#37;&#52;&#48;johannes-guetschow&#46;de">mail<span>&#64;</span>johannes-guetschow<span>&#46;</span>de</a></p>
 <dl class="function">
 <dt id="pyCPA.readData.read_wide_csv_file">
@@ -189,81 +190,78 @@ The individual files are read using “read_wide_csv_data”</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>file</strong> – String containing the file name</li>
-<li><strong>folder</strong> – String with folder name to read from</li>
-<li><strong>col_rename</strong> – Dict where the keys are column names in the files to be read and the value is the column file
+<li><strong>file</strong> (<em>str</em>) – String containing the file name</li>
+<li><strong>folder</strong> (<em>str</em>) – String with folder name to read from</li>
+<li><strong>col_rename</strong> (<em>dict</em>) – Dict where the keys are column names in the files to be read and the value is the column file
 in the output dataframe. Use ‘DROP’ as value to remove a column. Default = empty</li>
-<li><strong>col_defaults</strong> – Dict for default values of columns not given in the csv files. The keys are the column names and
+<li><strong>col_defaults</strong> (<em>dict</em>) – Dict for default values of columns not given in the csv files. The keys are the column names and
 the values are the values for the columns. Default: empty</li>
-<li><strong>meta_mapping</strong> – <p>A dict with pyCPA column names as keys. Values are dicts with input values as
+<li><strong>meta_mapping</strong> (<em>dict</em>) – A dict with pyCPA column names as keys. Values are dicts with input values as
 keys and output values as values. A standard use case is to map gas names from
-input data to the standardized names used in pyCPA / scmdata. Default: empty
-Example:
-meta_mapping = {</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>’pyCPA_col_1’: {‘col_1_value_1_in’: ‘col_1_value_1_out’,</dt>
-<dd>’col_1_value_2_in’: ‘col_1_value_2_out’,
-},</dd>
-<dt>’pyCPA_col_2’: {‘col_2_value_1_in’: ‘col_2_value_1_out’,</dt>
-<dd>’col_2_value_2_in’: ‘col_2_value_2_out’,
-},</dd>
-</dl>
-</div></blockquote>
-<p>}</p>
-</li>
-<li><strong>filter_keep</strong> – <p>Dict defining filters of data to keep. Filtering is done after metadata mapping,
+input data to the standardized names used in pyCPA / scmdata. Default: empty</li>
+<li><strong>filter_keep</strong> (<em>dict</em>) – Dict defining filters of data to keep. Filtering is done after metadata mapping,
 so use mapped metadata values to define the filter. Column names are pyCPA columns.
 Each entry in the dict defines an individual filter. The names of the filters have no
-relevance. Default: empty
-Example:
-filter_keep = {</p>
-<blockquote>
-<div>’f_1’: {‘variable’: [‘CO2’, ‘CH4’], ‘region’: ‘USA’},
-‘f_2’: {‘variable’: ‘N2O’}
-} # this example filter keeps all CO2 and CH4 data for the USA and N2O data for all countries</div></blockquote>
-</li>
-<li><strong>filter_remove</strong> – <p>Dict defining filters of data to remove. Filtering is done after metadata mapping,
+relevance. Default: empty</li>
+<li><strong>filter_remove</strong> (<em>dict</em>) – Dict defining filters of data to remove. Filtering is done after metadata mapping,
 so use mapped metadata values to define the filter. Column names are pyCPA columns.
 Each entry in the dict defines an individual filter. The names of the filters have no
-relevance. Default: empty
-Example:
-filter_remove = {</p>
-<blockquote>
-<div>’f_1’: {‘scenario’: ‘HISTORY’},</div></blockquote>
-<p>} # this filter removes all data with ‘HISTORY’ as scenario</p>
-</li>
+relevance. Default: empty</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">scmDataFrame with the read data</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">ScmRun with the read data</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scmdata.dataframe.ScmDataFrame</span></code></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scmdata.run.ScmRun</span></code></p>
 </td>
 </tr>
 </tbody>
 </table>
+<p class="rubric">Examples</p>
+<p>example for meta_mapping:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">meta_mapping</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;pyCPA_col_1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;col_1_value_1_in&#39;</span><span class="p">:</span> <span class="s1">&#39;col_1_value_1_out&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;col_1_value_2_in&#39;</span><span class="p">:</span> <span class="s1">&#39;col_1_value_2_out&#39;</span><span class="p">,</span>
+                    <span class="p">},</span>
+    <span class="s1">&#39;pyCPA_col_2&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;col_2_value_1_in&#39;</span><span class="p">:</span> <span class="s1">&#39;col_2_value_1_out&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;col_2_value_2_in&#39;</span><span class="p">:</span> <span class="s1">&#39;col_2_value_2_out&#39;</span><span class="p">,</span>
+                    <span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>example for filter_keep:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">filter_keep</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;f_1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;CO2&#39;</span><span class="p">,</span> <span class="s1">&#39;CH4&#39;</span><span class="p">],</span> <span class="s1">&#39;region&#39;</span><span class="p">:</span> <span class="s1">&#39;USA&#39;</span><span class="p">},</span>
+    <span class="s1">&#39;f_2&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="s1">&#39;N2O&#39;</span><span class="p">}</span>
+<span class="p">}</span> <span class="c1"># this example filter keeps all CO2 and CH4 data for the USA and N2O data for all countries</span>
+</pre></div>
+</div>
+<p>example for filter_remove:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">filter_remove</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;f_1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;scenario&#39;</span><span class="p">:</span> <span class="s1">&#39;HISTORY&#39;</span><span class="p">},</span>
+<span class="p">}</span> <span class="c1"># this filter removes all data with &#39;HISTORY&#39; as scenario</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="pyCPA.readData.read_wide_csv_file_pd">
-<code class="descclassname">pyCPA.readData.</code><code class="descname">read_wide_csv_file_pd</code><span class="sig-paren">(</span><em>file</em>, <em>folder</em>, <em>col_rename: dict = {}</em>, <em>col_defaults: dict = {}</em>, <em>filter_keep: dict = {}</em>, <em>filter_remove: dict = {}</em>, <em>meta_mapping: dict = {}</em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="reference internal" href="_modules/pyCPA/readData/read_data.html#read_wide_csv_file_pd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyCPA.readData.read_wide_csv_file_pd" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function reads a csv file and returns the data as a pamdas Dataframe. It is used by
+<code class="descclassname">pyCPA.readData.</code><code class="descname">read_wide_csv_file_pd</code><span class="sig-paren">(</span><em>file</em>, <em>folder</em>, <em>col_rename: dict = {}</em>, <em>col_defaults: dict = {}</em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="reference internal" href="_modules/pyCPA/readData/read_data.html#read_wide_csv_file_pd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyCPA.readData.read_wide_csv_file_pd" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function reads a csv file and returns the data as a pandas Dataframe. It is used by
 read_wide_csv_folder and can not do the filtering an meta_mapping done by read_wide_csv_file</p>
-<p>Columns can be renamed or filled with default vales to match the pyCPA structure.
-The individual files are read using “read_wide_csv_data”</p>
-<p>Currently duplicate datapoint will not be detected</p>
+<p>Columns can be renamed or filled with default vales to match the pyCPA structure.</p>
+<p>Currently duplicate datapoints will not be detected</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>file</strong> – String containing the file name</li>
-<li><strong>folder</strong> – String with folder name to read from</li>
-<li><strong>col_rename</strong> – Dict where the keys are column names in the files to be read and the value is the column file
+<li><strong>file</strong> (<em>str</em>) – String containing the file name</li>
+<li><strong>folder</strong> (<em>str</em>) – String with folder name to read from</li>
+<li><strong>col_rename</strong> (<em>dict</em>) – Dict where the keys are column names in the files to be read and the value is the column file
 in the output dataframe. Use ‘DROP’ as value to remove a column. Default = empty</li>
-<li><strong>col_defaults</strong> – Dict for default values of columns not given in the csv files. The keys are the column names and
+<li><strong>col_defaults</strong> (<em>dict</em>) – Dict for default values of columns not given in the csv files. The keys are the column names and
 the values are the values for the columns. Default: empty</li>
 </ul>
 </td>
@@ -291,62 +289,60 @@ The individual files are read using “read_wide_csv_data”</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>file_regex</strong> – String containing a regular expression that selects the files to read.
+<li><strong>file_regex</strong> (<em>str</em>) – String containing a regular expression that selects the files to read.
 Only files matching this expression will be read.</li>
-<li><strong>folder</strong> – String with folder name to read from</li>
-<li><strong>col_rename</strong> – Dict where the keys are column names in the files to be read and the value is the column file
+<li><strong>folder</strong> (<em>str</em>) – String with folder name to read from</li>
+<li><strong>col_rename</strong> (<em>dict</em>) – Dict where the keys are column names in the files to be read and the value is the column file
 in the output dataframe. Use ‘DROP’ as value to remove a column. Default = empty</li>
-<li><strong>col_defaults</strong> – Dict for default values of columns not given in the csv files. The keys are the column names and
+<li><strong>col_defaults</strong> (<em>dict</em>) – Dict for default values of columns not given in the csv files. The keys are the column names and
 the values are the values for the columns. Default: empty</li>
-<li><strong>meta_mapping</strong> – <p>A dict with pyCPA column names as keys. Values are dicts with input values as
+<li><strong>meta_mapping</strong> (<em>dict</em>) – A dict with pyCPA column names as keys. Values are dicts with input values as
 keys and output values as values. A standard use case is to map gas names from
-input data to the standardized names used in pyCPA / scmdata. Default: empty
-Example:
-meta_mapping = {</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>’pyCPA_col_1’: {‘col_1_value_1_in’: ‘col_1_value_1_out’,</dt>
-<dd>’col_1_value_2_in’: ‘col_1_value_2_out’,
-},</dd>
-<dt>’pyCPA_col_2’: {‘col_2_value_1_in’: ‘col_2_value_1_out’,</dt>
-<dd>’col_2_value_2_in’: ‘col_2_value_2_out’,
-},</dd>
-</dl>
-</div></blockquote>
-<p>}</p>
-</li>
-<li><strong>filter_keep</strong> – <p>Dict defining filters of data to keep. Filtering is done after metadata mapping,
+input data to the standardized names used in pyCPA / scmdata. Default: empty</li>
+<li><strong>filter_keep</strong> (<em>dict</em>) – Dict defining filters of data to keep. Filtering is done after metadata mapping,
 so use mapped metadata values to define the filter. Column names are pyCPA columns.
 Each entry in the dict defines an individual filter. The names of the filters have no
-relevance. Default: empty
-Example:
-filter_keep = {</p>
-<blockquote>
-<div>’f_1’: {‘variable’: [‘CO2’, ‘CH4’], ‘region’: ‘USA’},
-‘f_2’: {‘variable’: ‘N2O’}
-} # this example filter keeps all CO2 and CH4 data for the USA and N2O data for all countries</div></blockquote>
-</li>
-<li><strong>filter_remove</strong> – <p>Dict defining filters of data to remove. Filtering is done after metadata mapping,
+relevance. Default: empty</li>
+<li><strong>filter_remove</strong> (<em>dict</em>) – Dict defining filters of data to remove. Filtering is done after metadata mapping,
 so use mapped metadata values to define the filter. Column names are pyCPA columns.
 Each entry in the dict defines an individual filter. The names of the filters have no
-relevance. Default: empty
-Example:
-filter_remove = {</p>
-<blockquote>
-<div>’f_1’: {‘scenario’: ‘HISTORY’},</div></blockquote>
-<p>} # this filter removes all data with ‘HISTORY’ as scenario</p>
-</li>
+relevance. Default: empty</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">scmDataFrame with the read data</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">ScmRun with the read data</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scmdata.dataframe.ScmDataFrame</span></code></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scmdata.run.ScmRun</span></code></p>
 </td>
 </tr>
 </tbody>
 </table>
+<p class="rubric">Examples</p>
+<p>example for meta_mapping:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">meta_mapping</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;pyCPA_col_1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;col_1_value_1_in&#39;</span><span class="p">:</span> <span class="s1">&#39;col_1_value_1_out&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;col_1_value_2_in&#39;</span><span class="p">:</span> <span class="s1">&#39;col_1_value_2_out&#39;</span><span class="p">,</span>
+                    <span class="p">},</span>
+    <span class="s1">&#39;pyCPA_col_2&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;col_2_value_1_in&#39;</span><span class="p">:</span> <span class="s1">&#39;col_2_value_1_out&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;col_2_value_2_in&#39;</span><span class="p">:</span> <span class="s1">&#39;col_2_value_2_out&#39;</span><span class="p">,</span>
+                    <span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>example for filter_keep:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">filter_keep</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;f_1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;CO2&#39;</span><span class="p">,</span> <span class="s1">&#39;CH4&#39;</span><span class="p">],</span> <span class="s1">&#39;region&#39;</span><span class="p">:</span> <span class="s1">&#39;USA&#39;</span><span class="p">},</span>
+    <span class="s1">&#39;f_2&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="s1">&#39;N2O&#39;</span><span class="p">}</span>
+<span class="p">}</span> <span class="c1"># this example filter keeps all CO2 and CH4 data for the USA and N2O data for all countries</span>
+</pre></div>
+</div>
+<p>example for filter_remove:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">filter_remove</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;f_1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;scenario&#39;</span><span class="p">:</span> <span class="s1">&#39;HISTORY&#39;</span><span class="p">},</span>
+<span class="p">}</span> <span class="c1"># this filter removes all data with &#39;HISTORY&#39; as scenario</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
@@ -359,12 +355,18 @@ The possible functions are currently hard coded for security reasons</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config_file</strong> – A yaml file with allparameters for the data reading including folder and function to use
-For an example see ‘example_read_wide_csv_folder.yaml’ in ‘examples/metadata’.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>config_folder</strong> (<em>str</em>) – Folder holding the config file.</li>
+<li><strong>config_file</strong> (<em>str</em>) – A yaml file with allparameters for the data reading including folder and function to use
+For an example see ‘example_read_wide_csv_folder.yaml’ in ‘examples/metadata’.</li>
+</ul>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">scmDataFrame with the read data</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">scmdata.run.Scmrun with the read data</p>
+</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scmdata.dataframe.ScmDataFrame</span></code></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scmdata.run.ScmRun</span></code></p>
+</td>
 </tr>
 </tbody>
 </table>

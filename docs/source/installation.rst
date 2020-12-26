@@ -3,11 +3,9 @@
 Installation
 ============
 
-ToDo: expand
-
-This package is still in early alpha status and not indented for general
-use in this version. However, it can be installed using pip including
-automatical installation of dependencies.
+This package is not yet available from online package repositories.
+However, it can be installed from source using pip including
+automatical installation of dependencies. 
 
 To get the code either clone the git repository
 

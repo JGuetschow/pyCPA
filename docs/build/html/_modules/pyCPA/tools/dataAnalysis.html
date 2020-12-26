@@ -1,0 +1,801 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html4" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pyCPA.tools.dataAnalysis &mdash; pyCPA 0+untagged.29.gcb6bdf8.dirty documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> pyCPA
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual.html">pyCPA User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development.html">Development</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../pyCPA.core.html">pyCPA.core package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pyCPA.readData.html">pyCPA.readData package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pyCPA.tools.html">pyCPA.tools package</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pyCPA</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>pyCPA.tools.dataAnalysis</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pyCPA.tools.dataAnalysis</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Created on Tue Jun  9 08:39:51 2020</span>
+
+<span class="sd">@author: Johannes Gütschow, mail@johannes-guetschow.de</span>
+<span class="sd">.. highlight:: python</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">pyCPA.core</span> <span class="k">import</span> <span class="n">combine_rows</span>
+
+
+<div class="viewcode-block" id="check_coverage"><a class="viewcode-back" href="../../../pyCPA.tools.html#pyCPA.tools.dataAnalysis.check_coverage">[docs]</a><span class="k">def</span> <span class="nf">check_coverage</span><span class="p">(</span><span class="n">input_DF</span><span class="p">,</span> <span class="n">data_filter</span><span class="p">,</span> <span class="n">axes_variables</span><span class="p">,</span> <span class="n">folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;\default&#39;</span><span class="p">,</span> 
+                   <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;\default&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a table showing how many rows exist for a certain combination of axes\_variables. </span>
+<span class="sd">    The axes of the table are defined by axes_variables (e.g. category and entity or country </span>
+<span class="sd">    and source). data\_filter can be used to filter the dataframe before the analysis. </span>
+<span class="sd">    Currently year coverage is not analyzed (ToDo).</span>
+<span class="sd">    Resulting data will be saved as a csv file and also returned as a pandas DataFrame</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    </span>
+<span class="sd">    input\_DF : ScmRun</span>
+<span class="sd">        ScmRun data frame with data to be analyzed</span>
+<span class="sd">    </span>
+<span class="sd">    data\_filter : dict</span>
+<span class="sd">        filter in scmdata format to filter the data before processing</span>
+<span class="sd">    </span>
+<span class="sd">    axes\_variables : list</span>
+<span class="sd">        list with two entries for x and y axis. Each a variable from the metadata cols of the input\_DF</span>
+
+<span class="sd">    folder : str</span>
+<span class="sd">        the folder where the result will be saved. If not given or set to &quot;\\default&quot; the default output </span>
+<span class="sd">        folder will be used. If set to &quot;\\none&quot; no file will be written.</span>
+<span class="sd">    </span>
+<span class="sd">    filename : str</span>
+<span class="sd">        filename for the result. If not given or set to &quot;\\default&quot; a filename will be generated. </span>
+<span class="sd">        If set to &quot;\\none&quot; no file will be written.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    </span>
+<span class="sd">    :obj:`pandas.DataFrame`</span>
+<span class="sd">        pandas DataFrame with the coverage information</span>
+<span class="sd">        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="c1"># filter the input dataframe</span>
+    <span class="n">filtered_DF</span> <span class="o">=</span> <span class="n">input_DF</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">keep</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">data_filter</span><span class="p">,</span> <span class="n">log_if_empty</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+    
+    <span class="c1"># now loop over rows and filter for each row variable. In a nested loop do the same for cols</span>
+    <span class="c1"># the coverage count is just the number of rows in the filtered dataframe</span>
+    
+    <span class="c1"># get the values for columns</span>
+    <span class="n">values_col</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">filtered_DF</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="n">axes_variables</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    
+    <span class="c1"># get the values for rows</span>
+    <span class="n">values_rows</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">filtered_DF</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="n">axes_variables</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    
+        
+    <span class="c1"># list to collect rows</span>
+    <span class="n">all_rows</span> <span class="o">=</span> <span class="p">[]</span> 
+    
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">values_rows</span><span class="p">:</span>
+        <span class="c1"># ToDo: check if first filtering for rows and then for each col is really faster than </span>
+        <span class="c1"># filtering for both for each cell</span>
+        <span class="n">current_DF</span> <span class="o">=</span> <span class="n">filtered_DF</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">keep</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span><span class="n">axes_variables</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="n">row</span><span class="p">},</span>
+                                                                         <span class="n">log_if_empty</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+        
+        <span class="n">results_this_row</span> <span class="o">=</span> <span class="p">[</span><span class="n">row</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">values_col</span><span class="p">:</span>
+            <span class="n">DF_this_cell</span> <span class="o">=</span> <span class="n">current_DF</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">keep</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span><span class="n">axes_variables</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">col</span><span class="p">},</span>
+                                                                              <span class="n">log_if_empty</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="n">shape_DF</span> <span class="o">=</span> <span class="n">DF_this_cell</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">shape</span>
+            <span class="n">results_this_row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">shape_DF</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            
+        <span class="n">all_rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">results_this_row</span><span class="p">)</span>
+        
+    <span class="c1"># create coverage_DF</span>
+    <span class="n">coverage_DF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">all_rows</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">axes_variables</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; \ &#39;</span> <span class="o">+</span> <span class="n">axes_variables</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span> <span class="n">values_col</span><span class="p">)</span>
+        
+    <span class="c1"># save the result</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">folder</span> <span class="o">==</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">one&#39;</span> <span class="ow">or</span> <span class="n">filename</span> <span class="o">==</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">one&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">filename</span> <span class="o">==</span> <span class="s1">&#39;\default&#39;</span><span class="p">:</span>
+            <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+            <span class="c1"># the filename could contain more information on the other metadata to identify the content from the name</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;coverage_&#39;</span> <span class="o">+</span> <span class="n">axes_variables</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">axes_variables</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%m_</span><span class="si">%d</span><span class="s2">_%Y&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.csv&#39;</span>
+        <span class="k">if</span> <span class="n">folder</span> <span class="o">==</span> <span class="s1">&#39;\default&#39;</span><span class="p">:</span>
+            <span class="c1">#TODO make configurable</span>
+            <span class="n">folder</span> <span class="o">=</span> <span class="s1">&#39;output&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">folder</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="mo">0o755</span><span class="p">)</span>
+            
+        <span class="n">coverage_DF</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">filename</span><span class="p">),</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+   
+    <span class="k">return</span> <span class="n">coverage_DF</span></div>
+
+
+<div class="viewcode-block" id="check_consistency"><a class="viewcode-back" href="../../../pyCPA.tools.html#pyCPA.tools.dataAnalysis.check_consistency">[docs]</a><span class="k">def</span> <span class="nf">check_consistency</span><span class="p">(</span><span class="n">input_DF</span><span class="p">,</span> <span class="n">tests</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">folder_test</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">data_filter</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{},</span> 
+                      <span class="n">pass_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.001</span><span class="p">,</span> <span class="n">table_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;variable&#39;</span><span class="p">,</span>
+                      <span class="n">table_row</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;\index&#39;</span><span class="p">,</span> <span class="n">table_cell</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;region&#39;</span><span class="p">,</span> 
+                      <span class="n">folder_output</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;\default&#39;</span><span class="p">,</span> <span class="n">filename_table</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;\default&#39;</span><span class="p">,</span> 
+                      <span class="n">filename_log</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;\default&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Testing data consistency. Results are saved to a csv file, a log file is written, and the csv </span>
+<span class="sd">    file contents are also returned as a pandas DataFrame. The rows of the csv file correspond to</span>
+<span class="sd">    the tests while the columns are defined by the values available in the data column given in</span>
+<span class="sd">    table\_col. Each cell contains a list of values from table\_cell for which the test fails.</span>
+<span class="sd">    If several rows in the input_DF correspond to a test, table\_col, and table\_cell value, the</span>
+<span class="sd">    value is displayed if th etest failes for at least on of the rows. </span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    </span>
+<span class="sd">    input\_DF : scmdata.run.ScmRun</span>
+<span class="sd">        ScmDataFrame with data to be analyzed</span>
+<span class="sd">        </span>
+<span class="sd">    tests : DataFrame or str</span>
+<span class="sd">        a pandas DataFrame containing the tests in a column structure as defined by conversion.             </span>
+<span class="sd">        The values of each source column have to be of the format that combine_rows understands, i.e. </span>
+<span class="sd">        value1_whitespace_operator_whitespace_value2 ...</span>
+<span class="sd">        or a string with the name of a csv file which has the column structure described below</span>
+<span class="sd">            </span>
+<span class="sd">    columns : dict</span>
+<span class="sd">        a dict defining the rows to use in the input\_DF the tests DF. Keys are pyCPA column names</span>
+<span class="sd">        while the values are source and target column names in the tests dataframe/file.</span>
+<span class="sd">        The syntax is the same as in conversion.map_data (see example below)</span>
+<span class="sd">           </span>
+<span class="sd">    folder\_test : str</span>
+<span class="sd">        String with the folder where the tests file resides. Default: &#39;&#39;</span>
+<span class="sd">        </span>
+<span class="sd">    data\_filter : dict</span>
+<span class="sd">        filter in scmdata format (a dict) to filter the data before processing</span>
+<span class="sd">        </span>
+<span class="sd">    pass\_threshold : float</span>
+<span class="sd">        float defining the threshold for a test to pass. It is compared to the realtive deviation </span>
+<span class="sd">        of the calculated time series from the existing time series.</span>
+<span class="sd">    </span>
+<span class="sd">    table\_col : str</span>
+<span class="sd">        string defining the data column that is used for the second dimension of the result table. </span>
+<span class="sd">        Default: variable</span>
+<span class="sd">    </span>
+<span class="sd">    table\_row : str</span>
+<span class="sd">        string defining the data column that is used for the second dimension of the result table. </span>
+<span class="sd">        Default: variable</span>
+<span class="sd">    </span>
+<span class="sd">    table\_cell : str</span>
+<span class="sd">        String defining the data column that is used for the displayed values in the result table cells.</span>
+<span class="sd">        Default: region</span>
+<span class="sd">    </span>
+<span class="sd">    folder\_output : str</span>
+<span class="sd">        the folder where the result will be saved. If not given or set to &quot;\\default&quot; the default output </span>
+<span class="sd">        folder will be used. If set to &quot;\\none&quot; or &#39;&#39; no file will be written.</span>
+<span class="sd">        </span>
+<span class="sd">    filename\_table : str</span>
+<span class="sd">        filename for the resulting table in csv format. If not given or set to &quot;\\default&quot; </span>
+<span class="sd">        a filename will be generated. If set to &quot;\\none&quot; or &#39;&#39; no file will be written.</span>
+<span class="sd">        Default: \\default</span>
+<span class="sd">        </span>
+<span class="sd">    filename\_log : str</span>
+<span class="sd">        filename for the log file. If not given or set to &quot;\\default&quot; </span>
+<span class="sd">        a filename will be generated. If set to &quot;\\none&quot; or &#39;&#39; no file will be written. </span>
+<span class="sd">        Default: \\default </span>
+<span class="sd">        </span>
+<span class="sd">    verbose : bool</span>
+<span class="sd">        if set to true all output and additional debugging information will be written to terminal</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    </span>
+<span class="sd">    :obj:`pandas.DataFrame`</span>
+<span class="sd">        pandas DataFrame with the table containing information on failed tests </span>
+<span class="sd">        </span>
+<span class="sd">    </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    </span>
+<span class="sd">    example for columns::</span>
+<span class="sd">        </span>
+<span class="sd">        columns = {</span>
+<span class="sd">            &quot;category&quot;: [&quot;category&quot;, &quot;categoryAgg&quot;], </span>
+<span class="sd">            &quot;categoryName&quot;: [&quot;*&quot;, &quot;categoryNameAgg&quot;], </span>
+<span class="sd">        }</span>
+<span class="sd">        </span>
+<span class="sd">        In this example the categories given in column &quot;category&quot; will be aggregated and tested against the</span>
+<span class="sd">        category given in categoryAgg. categoryNameAgg is the category name of the aggregated data and must </span>
+<span class="sd">        be given for the comparison to work. (alternatively categoryName metadata could be dropped before the</span>
+<span class="sd">        checks are performed)</span>
+<span class="sd">        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="c1"># filter the input dataframe (copy to not change the original dataframe in the calling code)</span>
+    <span class="n">filtered_DF</span> <span class="o">=</span> <span class="n">input_DF</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">keep</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">data_filter</span><span class="p">,</span> <span class="n">log_if_empty</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+    
+    <span class="c1"># prepare tests </span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tests</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="c1"># read the table</span>
+        <span class="n">table_tests</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder_test</span><span class="p">,</span> <span class="n">tests</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">table_tests</span> <span class="o">=</span> <span class="n">tests</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+   
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">folder_output</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">one&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">filename_log</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">one&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">]:</span>
+        <span class="n">logging</span> <span class="o">=</span> <span class="kc">True</span>
+    
+    <span class="n">allowed_operators</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">]</span>
+    
+    <span class="c1"># prep for tests</span>
+    <span class="n">column_names</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+    <span class="n">values_table</span> <span class="o">=</span> <span class="n">filtered_DF</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="n">table_col</span><span class="p">)</span>
+    <span class="n">n_values</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">values_table</span><span class="p">)</span>
+    <span class="n">all_columns</span> <span class="o">=</span> <span class="n">filtered_DF</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">all_columns_to_check</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">all_columns</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">column_names</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">([</span><span class="n">table_col</span><span class="p">]))</span>
+    <span class="n">columns_compare</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">all_columns</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">column_names</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;unit&#39;</span><span class="p">,</span> <span class="s1">&#39;unit_context&#39;</span><span class="p">]))</span>
+    <span class="n">available_years_str</span> <span class="o">=</span> <span class="n">input_DF</span><span class="o">.</span><span class="n">time_points</span><span class="o">.</span><span class="n">years</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+    <span class="n">available_years</span> <span class="o">=</span> <span class="n">input_DF</span><span class="o">.</span><span class="n">time_points</span><span class="o">.</span><span class="n">values</span>
+    
+    <span class="k">if</span> <span class="n">logging</span><span class="p">:</span>
+        <span class="n">log</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Test table header:&#39;</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">table_tests</span><span class="o">.</span><span class="n">columns</span><span class="p">)]</span>
+    <span class="n">row_results</span> <span class="o">=</span> <span class="p">[]</span>
+        
+    <span class="c1"># loop over entires of mapping table</span>
+    <span class="k">for</span> <span class="n">iRow</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">table_tests</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;#########################&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Working on row &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">iRow</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">table_tests</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">iRow</span><span class="p">])</span> 
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;#########################&#39;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">logging</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Test &#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iRow</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;: row:&#39;</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">table_tests</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">iRow</span><span class="p">]))</span>
+            
+        <span class="k">if</span> <span class="n">table_row</span> <span class="o">==</span> <span class="s1">&#39;\index&#39;</span><span class="p">:</span>
+            <span class="n">row_ID</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">iRow</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">row_ID</span> <span class="o">=</span> <span class="n">table_tests</span><span class="p">[</span><span class="n">table_row</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">iRow</span><span class="p">]</span>
+        
+        <span class="c1"># prepare for the combination of data</span>
+        <span class="n">combo</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">result_filter</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">column_names</span><span class="p">:</span>
+            <span class="c1"># for each column create the entry in the combination dict</span>
+            <span class="c1"># first get input values</span>
+            <span class="k">if</span> <span class="n">columns</span><span class="p">[</span><span class="n">column</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;*&#39;</span><span class="p">:</span>
+                <span class="n">input_values</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;*&#39;</span><span class="p">]</span>
+                <span class="n">operator</span> <span class="o">=</span> <span class="s1">&#39;+&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># get source_code from test table and analyze it</span>
+                <span class="n">from_value_current</span> <span class="o">=</span> <span class="n">table_tests</span><span class="p">[</span><span class="n">columns</span><span class="p">[</span><span class="n">column</span><span class="p">][</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">iRow</span><span class="p">]</span>
+                <span class="c1"># convert to str if it&#39;s not</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">from_value_current</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                    <span class="c1"># convert to str</span>
+                    <span class="n">from_value_current</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">from_value_current</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">from_value_current</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;nan&#39;</span><span class="p">]:</span>
+                    <span class="n">input_values</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;\s[\+-]\s&#39;</span><span class="p">,</span> <span class="n">from_value_current</span><span class="p">)</span>
+                    <span class="n">operator</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s1">&#39;(?&lt;=\s)[\+-](?=\s)&#39;</span><span class="p">,</span> <span class="n">from_value_current</span><span class="p">)</span>
+                    <span class="n">first_op</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s1">&#39;^[\+-](?=\s)&#39;</span><span class="p">,</span> <span class="n">input_values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="k">if</span> <span class="n">first_op</span><span class="p">:</span>
+                        <span class="n">operator</span> <span class="o">=</span> <span class="n">first_op</span> <span class="o">+</span> <span class="n">operator</span>
+                        <span class="n">input_values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">input_values</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">:]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">operator</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;+&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">operator</span>
+
+                    <span class="c1"># check if operator only consists of allowed operators</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">op</span> <span class="ow">in</span> <span class="n">allowed_operators</span> <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">operator</span><span class="p">):</span>
+                        <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Illegal operator found for column &#39;</span> <span class="o">+</span> <span class="n">column</span> <span class="o">+</span> <span class="s1">&#39; in &#39;</span> 
+                        <span class="o">+</span> <span class="n">from_value_current</span> <span class="o">+</span> <span class="s1">&#39;, row </span><span class="si">{:d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iRow</span><span class="p">)</span>
+
+                        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">logging</span><span class="p">:</span>
+                            <span class="n">log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+                        <span class="k">break</span>
+
+            <span class="c1"># get the output value</span>
+            <span class="n">to_value_current</span> <span class="o">=</span> <span class="n">table_tests</span><span class="p">[</span><span class="n">columns</span><span class="p">[</span><span class="n">column</span><span class="p">][</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">iRow</span><span class="p">]</span>
+            <span class="c1"># convert to str if it&#39;s not</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">to_value_current</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="c1"># convert to str</span>
+                <span class="n">to_value_current</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">to_value_current</span><span class="p">)</span>
+
+            <span class="c1"># check if conversion for column makes sense     </span>
+            <span class="k">if</span> <span class="n">to_value_current</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;nan&#39;</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">from_value_current</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;nan&#39;</span><span class="p">]:</span>
+                    <span class="c1"># from also empty, then ignore column</span>
+                    <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Test for column &#39;</span> <span class="o">+</span> <span class="n">column</span> <span class="o">+</span> <span class="s1">&#39; empty for row </span><span class="si">{:d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iRow</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">logging</span><span class="p">:</span>
+                        <span class="n">log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+                    <span class="n">row_results</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">row_ID</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;Inc&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_values</span><span class="p">)</span>
+                    <span class="k">break</span>
+                        
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># to is empty, from not. That is an error in the mapping table</span>
+                    <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Inconsistent test table for &#39;</span> <span class="o">+</span> <span class="n">column</span> <span class="o">+</span> <span class="s1">&#39;, row </span><span class="si">{:d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iRow</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">logging</span><span class="p">:</span>
+                        <span class="n">log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+                    <span class="n">row_results</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">row_ID</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;Inc&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_values</span><span class="p">)</span>
+                    <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">from_value_current</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span><span class="s1">&#39;nan&#39;</span><span class="p">]:</span>
+                    <span class="c1"># from is empty, to not. That is an error in the mapping table</span>
+                    <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Inconsistent test table for &#39;</span> <span class="o">+</span> <span class="n">column</span> <span class="o">+</span> <span class="s1">&#39;, row </span><span class="si">{:d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iRow</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">logging</span><span class="p">:</span>
+                        <span class="n">log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+                    <span class="n">row_results</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">row_ID</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;Inc&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_values</span><span class="p">)</span>
+                    <span class="k">break</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">combo</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">input_values</span><span class="p">,</span> <span class="n">operator</span><span class="p">,</span> <span class="n">to_value_current</span><span class="p">]</span>
+                    <span class="n">result_filter</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">to_value_current</span>
+        
+        <span class="c1"># check if the resulting cobination dict is not empty</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">combo</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Combination dict is empty for row </span><span class="si">{:d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iRow</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">logging</span><span class="p">:</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+            <span class="n">row_results</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">row_ID</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;Empt&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_values</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># prepare and make a call to map the data and combine if necessary</span>
+            <span class="n">combined_data</span> <span class="o">=</span> <span class="n">combine_rows</span><span class="p">(</span><span class="n">filtered_DF</span><span class="p">,</span> <span class="n">combo</span><span class="p">,</span> <span class="p">{},</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">combined_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Generated data for row </span><span class="si">{:d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iRow</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;. combo dict:&#39;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">combo</span><span class="p">)</span>
+                
+                <span class="c1"># now loop over the values of the table_col</span>
+                <span class="n">results_this_row</span> <span class="o">=</span> <span class="p">[</span><span class="n">row_ID</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">values_table</span><span class="p">:</span>
+                    <span class="n">combined_data_current</span> <span class="o">=</span> <span class="n">combined_data</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">keep</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+                                                                 <span class="o">**</span><span class="p">{</span><span class="n">table_col</span><span class="p">:</span> <span class="n">value</span><span class="p">},</span> <span class="n">log_if_empty</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">combined_data_current</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="c1"># get the existing data from DF</span>
+                        <span class="n">result_filter_current</span> <span class="o">=</span> <span class="n">result_filter</span>
+                        <span class="n">result_filter_current</span><span class="p">[</span><span class="n">table_col</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+                        
+                        <span class="n">existing_data</span> <span class="o">=</span> <span class="n">filtered_DF</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">keep</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">result_filter</span><span class="p">,</span> 
+                                                          <span class="n">log_if_empty</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">existing_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="c1"># first step is to check if we have time-series for the same meta data values</span>
+                            <span class="c1"># columns should be the same for combined and existing data as we work on the </span>
+                            <span class="c1"># same dataframe</span>
+                            <span class="n">group_cols_comb</span> <span class="o">=</span> <span class="p">[]</span>
+                            <span class="n">unique_cols_comb</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+                            <span class="n">group_cols_ex</span> <span class="o">=</span> <span class="p">[]</span>
+                            <span class="n">unique_cols_ex</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+                            <span class="k">for</span> <span class="n">current_column</span> <span class="ow">in</span> <span class="n">all_columns_to_check</span><span class="p">:</span>
+                                <span class="n">values_this_col</span> <span class="o">=</span> <span class="n">combined_data_current</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="n">current_column</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values_this_col</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                                    <span class="n">group_cols_comb</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_column</span><span class="p">)</span>
+                                <span class="k">else</span><span class="p">:</span>
+                                    <span class="n">unique_cols_comb</span><span class="p">[</span><span class="n">current_column</span><span class="p">]</span> <span class="o">=</span> <span class="n">values_this_col</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+                                <span class="n">values_this_col</span> <span class="o">=</span> <span class="n">existing_data</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="n">current_column</span><span class="p">)</span>
+
+                                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values_this_col</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                                    <span class="n">group_cols_ex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_column</span><span class="p">)</span>
+                                <span class="k">else</span><span class="p">:</span>
+
+                                    <span class="n">unique_cols_ex</span><span class="p">[</span><span class="n">current_column</span><span class="p">]</span> <span class="o">=</span> <span class="n">values_this_col</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                            
+                            <span class="c1"># check if group cols and unique cols are the same for combined and result data</span>
+                            <span class="c1"># if not we don&#39;t compare (it would be possible to compare to e.g. data in different</span>
+                            <span class="c1"># GWP specs, but we don&#39;t implement that here at this point)</span>
+                            <span class="k">if</span> <span class="ow">not</span> <span class="n">group_cols_comb</span> <span class="o">==</span> <span class="n">group_cols_ex</span><span class="p">:</span>
+                                <span class="n">message</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Group columns differ for combined and existing data. &#39;</span> 
+                                           <span class="o">+</span> <span class="s1">&#39;Comparing not implemented for this case. &#39;</span>
+                                           <span class="o">+</span> <span class="s1">&#39;Cols for combined data: &#39;</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">group_cols_comb</span><span class="p">)</span> 
+                                           <span class="o">+</span> <span class="s1">&#39;; Cols for existing data&#39;</span>  <span class="o">+</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">group_cols_ex</span><span class="p">))</span>
+
+                                <span class="c1"># output and save information</span>
+                                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                                    <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="n">logging</span><span class="p">:</span>
+                                    <span class="n">log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+                                <span class="n">results_this_row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;GC_mm&#39;</span><span class="p">)</span>
+                                <span class="c1"># move to next value</span>
+                                <span class="k">continue</span>
+                        
+                            <span class="k">if</span> <span class="ow">not</span> <span class="n">unique_cols_comb</span> <span class="o">==</span> <span class="n">unique_cols_ex</span><span class="p">:</span>
+                                <span class="n">message</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Unique columns differ for combined and existing data. &#39;</span> 
+                                           <span class="o">+</span> <span class="s1">&#39;Comparing not implemented for this case. &#39;</span>
+                                           <span class="o">+</span> <span class="s1">&#39;Cols for combined data: &#39;</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">unique_cols_comb</span><span class="p">)</span> 
+                                           <span class="o">+</span> <span class="s1">&#39;; Cols for existing data&#39;</span>  <span class="o">+</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">unique_cols_ex</span><span class="p">))</span>
+
+                                <span class="c1"># output and save information</span>
+                                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                                    <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="n">logging</span><span class="p">:</span>
+                                    <span class="n">log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+                                <span class="n">results_this_row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;UC_mm&#39;</span><span class="p">)</span>
+                                <span class="c1"># move to next value</span>
+                                <span class="k">continue</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">message</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Following columns have unique values: </span><span class="se">\n</span><span class="s1">&#39;</span>
+                                          <span class="o">+</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">: </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">combined_data_current</span><span class="o">.</span><span class="n">meta</span><span class="p">[</span><span class="n">val</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> 
+                                                       <span class="n">unique_cols_comb</span><span class="p">]))</span>
+                                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                                    <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="n">logging</span><span class="p">:</span>
+                                    <span class="n">log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+                            
+                            <span class="c1"># now we know that the same columns have unique and non-unique values for the </span>
+                            <span class="c1"># combined and existing data. we don&#39;t know if the same metadata values are </span>
+                            <span class="c1"># present. As we want to be able to compare data in different units and GWP </span>
+                            <span class="c1"># specification the columns to compare don&#39;t contain unit and unit_context</span>
+                            <span class="n">comp_col_combinations_ex</span> <span class="o">=</span> <span class="n">existing_data</span><span class="o">.</span><span class="n">meta</span><span class="p">[</span><span class="n">columns_compare</span><span class="p">]</span>
+                            <span class="n">comp_col_combinations_comb</span> <span class="o">=</span> <span class="n">combined_data_current</span><span class="o">.</span><span class="n">meta</span><span class="p">[</span><span class="n">columns_compare</span><span class="p">]</span>
+                            <span class="n">unique_CC_ex</span> <span class="o">=</span> <span class="n">comp_col_combinations_ex</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
+                            <span class="n">unique_CC_comb</span> <span class="o">=</span> <span class="n">comp_col_combinations_comb</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
+                            
+                            <span class="c1"># create a merged dataframe to find the rows that exist only on one side</span>
+                            <span class="n">merged_DF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">unique_CC_ex</span><span class="p">,</span> <span class="n">unique_CC_comb</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;outer&#39;</span><span class="p">,</span> <span class="n">suffixes</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="s1">&#39;_y&#39;</span><span class="p">),</span> 
+                                                 <span class="n">indicator</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                            
+                            <span class="n">rows_ex_not_in_comb</span> <span class="o">=</span> <span class="n">merged_DF</span><span class="p">[</span><span class="n">merged_DF</span><span class="p">[</span><span class="s1">&#39;_merge&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;left_only&#39;</span><span class="p">][</span><span class="n">unique_CC_ex</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+                            <span class="n">rows_comb_not_in_ex</span> <span class="o">=</span> <span class="n">merged_DF</span><span class="p">[</span><span class="n">merged_DF</span><span class="p">[</span><span class="s1">&#39;_merge&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;right_only&#39;</span><span class="p">][</span><span class="n">unique_CC_comb</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+                            
+                            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rows_ex_not_in_comb</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                                <span class="c1"># temp: print some info</span>
+                                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;rows in existing data but not in combined data&#39;</span><span class="p">)</span>
+                                    <span class="nb">print</span><span class="p">(</span><span class="n">rows_ex_not_in_comb</span><span class="p">)</span>
+                                <span class="c1">#### TODO: add logging</span>
+                                
+                                <span class="c1"># add the rows containing zero only</span>
+                                <span class="k">for</span> <span class="n">iRow</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rows_ex_not_in_comb</span><span class="p">)):</span>
+                                    <span class="n">filter_missing</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">columns_compare</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">rows_ex_not_in_comb</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">iRow</span><span class="p">])));</span>
+                                    <span class="k">if</span> <span class="n">iRow</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                                        <span class="n">rows_to_add</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">existing_data</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="o">**</span><span class="n">filter_missing</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">),</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+                                    <span class="k">else</span><span class="p">:</span>
+                                        <span class="n">rows_to_add</span> <span class="o">=</span> <span class="n">existing_data</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="o">**</span><span class="n">filter_missing</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+                                    
+                                <span class="n">rows_to_add</span> <span class="o">=</span> <span class="n">rows_to_add</span> <span class="o">*</span> <span class="mi">0</span>
+                                <span class="n">combined_data_current</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rows_to_add</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+                                    
+                            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rows_comb_not_in_ex</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;rows in combined data but not in existing data&#39;</span><span class="p">)</span>
+                                    <span class="nb">print</span><span class="p">(</span><span class="n">rows_comb_not_in_ex</span><span class="p">)</span>
+
+                                <span class="c1"># add the rows containing zero only</span>
+                                <span class="k">for</span> <span class="n">iRow</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rows_comb_not_in_ex</span><span class="p">)):</span>
+                                    <span class="n">filter_missing</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">columns_compare</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">rows_comb_not_in_ex</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">iRow</span><span class="p">])));</span>
+                                    <span class="k">if</span> <span class="n">iRow</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                                        <span class="n">rows_to_add</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">combined_data_current</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="o">**</span><span class="n">filter_missing</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">),</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+                                    <span class="k">else</span><span class="p">:</span>
+                                        <span class="n">rows_to_add</span> <span class="o">=</span> <span class="n">combined_data_current</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="o">**</span><span class="n">filter_missing</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+                                    
+                                <span class="n">rows_to_add</span> <span class="o">=</span> <span class="n">rows_to_add</span> <span class="o">*</span> <span class="mi">0</span>
+                                <span class="n">existing_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rows_to_add</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+                                
+                            
+                            <span class="c1"># now we have the same metadata, so we can compare the two sets</span>
+                            <span class="n">data_diff</span> <span class="o">=</span> <span class="n">existing_data</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">combined_data_current</span><span class="p">,</span> <span class="p">{})</span>
+                            <span class="n">data_sum</span> <span class="o">=</span> <span class="n">existing_data</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">combined_data_current</span><span class="p">,</span> <span class="p">{})</span>
+                            <span class="n">rel_deviation</span> <span class="o">=</span> <span class="n">data_diff</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">data_sum</span><span class="p">,</span> <span class="p">{})</span>
+                            
+                            <span class="c1"># find unique cols to hide them in log messages for readability</span>
+                            <span class="n">group_cols_comb</span> <span class="o">=</span> <span class="p">[]</span>
+                            <span class="n">unique_cols_comb</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+                            <span class="k">for</span> <span class="n">current_column</span> <span class="ow">in</span> <span class="n">all_columns_to_check</span><span class="p">:</span>
+                                <span class="n">values_this_col</span> <span class="o">=</span> <span class="n">combined_data_current</span><span class="o">.</span><span class="n">get_unique_meta</span><span class="p">(</span><span class="n">current_column</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values_this_col</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                                    <span class="n">group_cols_comb</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_column</span><span class="p">)</span>
+                                <span class="k">else</span><span class="p">:</span>
+                                    <span class="n">unique_cols_comb</span><span class="p">[</span><span class="n">current_column</span><span class="p">]</span> <span class="o">=</span> <span class="n">values_this_col</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                            
+                            <span class="n">failed</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">rel_deviation</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">pass_threshold</span> <span class="o">/</span> <span class="mi">2</span>
+                            <span class="k">if</span> <span class="n">failed</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+                                <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Test failed&#39;</span> 
+                                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                                    <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="n">logging</span><span class="p">:</span>
+                                    <span class="n">log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+                                <span class="c1"># we have failed tests now we have to go row by row</span>
+                                <span class="n">failed_row_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">apply_along_axis</span><span class="p">(</span><span class="nb">any</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">failed</span><span class="p">)</span>
+                                <span class="n">failed_rows_failed</span> <span class="o">=</span> <span class="n">failed</span><span class="p">[</span><span class="n">failed_row_idx</span><span class="p">]</span>
+                                <span class="n">failed_rows_deviation</span> <span class="o">=</span> <span class="n">rel_deviation</span><span class="o">.</span><span class="n">timeseries</span><span class="p">()</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">failed_row_idx</span><span class="p">]</span>
+                                <span class="n">idx_reduced</span> <span class="o">=</span> <span class="n">failed_rows_deviation</span><span class="o">.</span><span class="n">droplevel</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">unique_cols_comb</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span> 
+                                <span class="n">results_this_cell</span> <span class="o">=</span> <span class="p">[]</span>
+                                <span class="k">for</span> <span class="n">iRow</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">failed_rows_failed</span><span class="p">)):</span>
+                                    <span class="c1"># table_cell metadata values</span>
+                                    <span class="n">results_this_cell</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">failed_rows_deviation</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">get_level_values</span><span class="p">(</span><span class="n">table_cell</span><span class="p">)[</span><span class="n">iRow</span><span class="p">])</span>
+                                    <span class="c1"># now the detailed output for log and verbose</span>
+                                    <span class="n">message</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">idx_reduced</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">iRow</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;:</span><span class="se">\n</span><span class="s1">&#39;</span> 
+                                               <span class="o">+</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">: </span><span class="si">{1:0.2f}</span><span class="s1">%&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">200</span><span class="p">)</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> 
+                                                            <span class="nb">zip</span><span class="p">(</span><span class="n">available_years_str</span><span class="p">[</span><span class="n">failed_rows_failed</span><span class="p">[</span><span class="n">iRow</span><span class="p">]],</span> 
+                                                                <span class="nb">abs</span><span class="p">(</span><span class="n">failed_rows_deviation</span><span class="p">[</span><span class="n">available_years</span><span class="p">[</span><span class="n">failed_rows_failed</span><span class="p">[</span><span class="n">iRow</span><span class="p">]]]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">iRow</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">))]))</span>
+                                               
+                                    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                                        <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+                                    <span class="k">if</span> <span class="n">logging</span><span class="p">:</span>
+                                        <span class="n">log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">results_this_cell</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;-&#39;</span><span class="p">]</span>
+
+                            <span class="n">results_this_row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">results_this_cell</span><span class="p">))</span>
+                        
+                        <span class="k">else</span><span class="p">:</span> <span class="c1"># existing_data is empty</span>
+                            <span class="n">message</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;no existing data for value &#39;</span> <span class="o">+</span> <span class="n">value</span><span class="p">)</span> 
+                            <span class="c1"># output and save information</span>
+                            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                                <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">logging</span><span class="p">:</span>
+                                <span class="n">log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+                            <span class="n">results_this_row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;no_ED&#39;</span><span class="p">)</span>    
+                    
+                    <span class="k">else</span><span class="p">:</span> <span class="c1">#combined_data_current is empty</span>
+                        <span class="n">message</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;no combined data for value &#39;</span> <span class="o">+</span> <span class="n">value</span><span class="p">)</span> 
+                        <span class="c1"># output and save information</span>
+                        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">logging</span><span class="p">:</span>
+                            <span class="n">log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+                        <span class="n">results_this_row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;no_CD&#39;</span><span class="p">)</span>
+
+                <span class="c1"># now add the row with the results to the result DF</span>
+                <span class="n">row_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">results_this_row</span><span class="p">)</span>
+                    
+            <span class="k">else</span><span class="p">:</span> <span class="c1"># combined data is none</span>
+                <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;No combined data for this test.&#39;</span>
+                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">logging</span><span class="p">:</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+                <span class="n">row_results</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">row_ID</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;no_CD&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_values</span><span class="p">)</span>
+
+    <span class="c1"># create dataframe from list of results</span>
+    <span class="n">results_DF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">row_results</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;test \ &#39;</span> <span class="o">+</span> <span class="n">table_col</span><span class="p">]</span> <span class="o">+</span> <span class="n">values_table</span><span class="p">)</span>
+    
+    <span class="c1"># save the result</span>
+    <span class="c1"># the table</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">folder_output</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">one&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">filename_table</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">one&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">filename_table</span> <span class="o">==</span> <span class="s1">&#39;\default&#39;</span><span class="p">:</span>
+            <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+            <span class="c1"># the filename could contain more information on the other metadata to identify the content from the name</span>
+            <span class="n">filename_table</span> <span class="o">=</span> <span class="s1">&#39;test_&#39;</span> <span class="o">+</span> <span class="n">table_col</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">table_cell</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%m_</span><span class="si">%d</span><span class="s2">_%Y&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.csv&#39;</span>
+        <span class="k">if</span> <span class="n">folder_output</span> <span class="o">==</span> <span class="s1">&#39;\default&#39;</span><span class="p">:</span>
+            <span class="c1">#TODO make configurable</span>
+            <span class="n">folder_output</span> <span class="o">=</span> <span class="s1">&#39;output&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">folder_output</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">folder_output</span><span class="p">,</span> <span class="mo">0o755</span><span class="p">)</span>
+            
+        <span class="n">results_DF</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder_output</span><span class="p">,</span> <span class="n">filename_table</span><span class="p">),</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+    
+    <span class="c1"># the log</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">folder_output</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">one&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">filename_log</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">one&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">filename_log</span> <span class="o">==</span> <span class="s1">&#39;\default&#39;</span><span class="p">:</span>
+            <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+            <span class="c1"># the filename could contain more information on the other metadata to identify the content from the name</span>
+            <span class="n">filename_log</span> <span class="o">=</span> <span class="s1">&#39;log_test_&#39;</span> <span class="o">+</span> <span class="n">table_col</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">table_cell</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%m_</span><span class="si">%d</span><span class="s2">_%Y&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.log&#39;</span>
+        <span class="k">if</span> <span class="n">folder_output</span> <span class="o">==</span> <span class="s1">&#39;\default&#39;</span><span class="p">:</span>
+            <span class="c1">#TODO make configurable</span>
+            <span class="n">folder_output</span> <span class="o">=</span> <span class="s1">&#39;output&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">folder_output</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">folder_output</span><span class="p">,</span> <span class="mo">0o755</span><span class="p">)</span>
+    
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder_output</span><span class="p">,</span> <span class="n">filename_log</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+            <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">log</span><span class="p">))</span>
+        
+    <span class="k">return</span> <span class="n">results_DF</span></div>
+    
+    
+
+    
+    
+    
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Johannes Gütschow
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

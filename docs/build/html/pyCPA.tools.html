@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pyCPA.tools package &mdash; pyCPA 0+untagged.22.gb54d30c.dirty documentation</title>
+  <title>pyCPA.tools package &mdash; pyCPA 0+untagged.29.gcb6bdf8.dirty documentation</title>
   
 
   
@@ -89,7 +89,7 @@
               <p class="caption"><span class="caption-text">Documentation:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="user_manual.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_manual.html">pyCPA User Manual</a></li>
 <li class="toctree-l1"><a class="reference internal" href="development.html">Development</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API reference</span></p>
@@ -98,6 +98,7 @@
 <li class="toctree-l1"><a class="reference internal" href="pyCPA.readData.html">pyCPA.readData package</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">pyCPA.tools package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-pyCPA.tools.conversion">pyCPA.tools.conversion module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pycpa-tools-dataanalysis-module">pyCPA.tools.dataAnalysis module</a></li>
 </ul>
 </li>
 </ul>
@@ -171,12 +172,14 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="pycpa-tools-package">
+  <p>– _ref.pycpatools:</p>
+<div class="section" id="pycpa-tools-package">
 <h1>pyCPA.tools package<a class="headerlink" href="#pycpa-tools-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="module-pyCPA.tools.conversion">
-<span id="pycpa-tools-conversion-module"></span><h2>pyCPA.tools.conversion module<a class="headerlink" href="#module-pyCPA.tools.conversion" title="Permalink to this headline">¶</a></h2>
+<span id="pycpa-tools-conversion-module"></span><span id="ref-pycpaconversion"></span><h2>pyCPA.tools.conversion module<a class="headerlink" href="#module-pyCPA.tools.conversion" title="Permalink to this headline">¶</a></h2>
 <p>Created on Mon Mar 16 14:17:57 2020</p>
-<p>&#64;author: Johannes Gütschow, <a class="reference external" href="mailto:mail&#37;&#52;&#48;johannes-guetschow&#46;de">mail<span>&#64;</span>johannes-guetschow<span>&#46;</span>de</a></p>
+<p>&#64;author: Johannes Gütschow, <a class="reference external" href="mailto:mail&#37;&#52;&#48;johannes-guetschow&#46;de">mail<span>&#64;</span>johannes-guetschow<span>&#46;</span>de</a>
+.. highlight:: python</p>
 <dl class="function">
 <dt id="pyCPA.tools.conversion.map_data">
 <code class="descclassname">pyCPA.tools.conversion.</code><code class="descname">map_data</code><span class="sig-paren">(</span><em>input_DF</em>, <em>mapping_file</em>, <em>folder</em>, <em>conversion</em>, <em>onlynew: bool = True</em>, <em>add_fields: dict = {}</em>, <em>cols_to_remove: list = []</em>, <em>verbose: bool = False</em><span class="sig-paren">)</span> &#x2192; scmdata.run.ScmRun<a class="reference internal" href="_modules/pyCPA/tools/conversion.html#map_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyCPA.tools.conversion.map_data" title="Permalink to this definition">¶</a></dt>
@@ -187,37 +190,19 @@ to map data from one categorization into another one, or for data preprocessing.
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>input_DF</strong> – ScmDataFrame with data to be mapped</li>
-<li><strong>mapping_file</strong> – csv file that contains the mapping rules.</li>
-<li><strong>folder</strong> – the folder the mapping file resides in</li>
-<li><strong>conversion</strong> – <p>a dict defining the rows to use in the input_DF the mapping_file and the output DF
-either of the form
-conversion = {</p>
-<blockquote>
-<div>”category”: [“CRFcategory”, “IPCCcategory”],
-“categoryName”: [“*”, “IPCCcategoryName”],
-“classification”: [“CRFclass”, “IPCCclass”]</div></blockquote>
-<p>}
-or of the simplified form
-conversion = {</p>
-<blockquote>
-<div>’from_code_mapping’: ‘categoryCode’,
-‘column_data’: ‘category’, #tell it that it’s working on the category column
-‘to_code_mapping’: ‘CODE1996’,</div></blockquote>
-<p>}</p>
-</li>
-<li><strong>onlynew</strong> – bool. If True only aggregated data will be returned. Else aggregated data added
+<li><strong>input_DF</strong> (<em>scmdata.run.Scmrun</em>) – ScmDataFrame with data to be mapped</li>
+<li><strong>mapping_file</strong> (<em>str</em>) – csv file that contains the mapping rules.</li>
+<li><strong>folder</strong> (<em>str</em>) – the folder the mapping file resides in</li>
+<li><strong>conversion</strong> (<em>dict</em>) – a dict defining the rows to use in the input_DF the mapping_file and the output DF. there are two
+forms for the dict lined out on the examples section</li>
+<li><strong>onlynew</strong> (<em>bool</em>) – bool. If True only aggregated data will be returned. Else aggregated data added
 will be added to the input DF and the resulting DF will be returned. Default True</li>
-<li><strong>add_fields</strong> – <p>a dict defining metadata columns to add and the column in the conversion file
+<li><strong>add_fields</strong> (<em>dict</em>) – a dict defining metadata columns to add and the column in the conversion file
 defining their value: default is an empty dict
 Do not use with the generalized conversion format because the information can
-be integrated into the conversion
-Example:</p>
-<blockquote>
-<div>add_fields = {“type_t”: “type”}</div></blockquote>
-</li>
-<li><strong>cols_to_remove</strong> – a list defining columns that will be removed: default is an empty list</li>
-<li><strong>verbose</strong> – bool: if set to true a lot of debug output will be written to the terminal</li>
+be integrated into the conversion</li>
+<li><strong>cols_to_remove</strong> (<em>list</em>) – a list defining columns that will be removed: default is an empty list</li>
+<li><strong>verbose</strong> (<em>bool</em>) – bool: if set to true a lot of debug output will be written to the terminal</li>
 </ul>
 </td>
 </tr>
@@ -225,6 +210,135 @@ Example:</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scmdata.run.ScmRun</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>conversion dict complex form:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conversion</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;category&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;CRFcategory&quot;</span><span class="p">,</span> <span class="s2">&quot;IPCCcategory&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;categoryName&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="s2">&quot;IPCCcategoryName&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;classification&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;CRFclass&quot;</span><span class="p">,</span> <span class="s2">&quot;IPCCclass&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>conversion dict simplified form:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conversion</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;from_code_mapping&#39;</span><span class="p">:</span> <span class="s1">&#39;categoryCode&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;column_data&#39;</span><span class="p">:</span> <span class="s1">&#39;category&#39;</span><span class="p">,</span> <span class="c1">#tell it that it&#39;s working on the category column</span>
+    <span class="s1">&#39;to_code_mapping&#39;</span><span class="p">:</span> <span class="s1">&#39;CODE1996&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>add_fields example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">add_fields</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;type_t&quot;</span><span class="p">:</span> <span class="s2">&quot;type&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<p>This module contains fucntion for conversion of data beweeen metadata hierarchies, e.g. from one sector classification to another.</p>
+</div>
+<div class="section" id="pycpa-tools-dataanalysis-module">
+<span id="ref-pycpadataanalysis"></span><h2>pyCPA.tools.dataAnalysis module<a class="headerlink" href="#pycpa-tools-dataanalysis-module" title="Permalink to this headline">¶</a></h2>
+<p>Currently functions for analyzing data coverage and data consistency are included here.</p>
+<span class="target" id="module-pyCPA.tools.dataAnalysis"></span><p>Created on Tue Jun  9 08:39:51 2020</p>
+<p>&#64;author: Johannes Gütschow, <a class="reference external" href="mailto:mail&#37;&#52;&#48;johannes-guetschow&#46;de">mail<span>&#64;</span>johannes-guetschow<span>&#46;</span>de</a>
+.. highlight:: python</p>
+<dl class="function">
+<dt id="pyCPA.tools.dataAnalysis.check_consistency">
+<code class="descclassname">pyCPA.tools.dataAnalysis.</code><code class="descname">check_consistency</code><span class="sig-paren">(</span><em>input_DF</em>, <em>tests</em>, <em>columns</em>, <em>folder_test: str = ''</em>, <em>data_filter: dict = {}</em>, <em>pass_threshold: float = 0.001</em>, <em>table_col: str = 'variable'</em>, <em>table_row: str = '\\index'</em>, <em>table_cell: str = 'region'</em>, <em>folder_output: str = '\\default'</em>, <em>filename_table: str = '\\default'</em>, <em>filename_log: str = '\\default'</em>, <em>verbose: bool = False</em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="reference internal" href="_modules/pyCPA/tools/dataAnalysis.html#check_consistency"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyCPA.tools.dataAnalysis.check_consistency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Testing data consistency. Results are saved to a csv file, a log file is written, and the csv
+file contents are also returned as a pandas DataFrame. The rows of the csv file correspond to
+the tests while the columns are defined by the values available in the data column given in
+table_col. Each cell contains a list of values from table_cell for which the test fails.
+If several rows in the input_DF correspond to a test, table_col, and table_cell value, the
+value is displayed if th etest failes for at least on of the rows.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>input_DF</strong> (<em>scmdata.run.ScmRun</em>) – ScmDataFrame with data to be analyzed</li>
+<li><strong>tests</strong> (<em>DataFrame</em><em> or </em><em>str</em>) – a pandas DataFrame containing the tests in a column structure as defined by conversion.
+The values of each source column have to be of the format that combine_rows understands, i.e.
+value1_whitespace_operator_whitespace_value2 …
+or a string with the name of a csv file which has the column structure described below</li>
+<li><strong>columns</strong> (<em>dict</em>) – a dict defining the rows to use in the input_DF the tests DF. Keys are pyCPA column names
+while the values are source and target column names in the tests dataframe/file.
+The syntax is the same as in conversion.map_data (see example below)</li>
+<li><strong>folder_test</strong> (<em>str</em>) – String with the folder where the tests file resides. Default: ‘’</li>
+<li><strong>data_filter</strong> (<em>dict</em>) – filter in scmdata format (a dict) to filter the data before processing</li>
+<li><strong>pass_threshold</strong> (<em>float</em>) – float defining the threshold for a test to pass. It is compared to the realtive deviation
+of the calculated time series from the existing time series.</li>
+<li><strong>table_col</strong> (<em>str</em>) – string defining the data column that is used for the second dimension of the result table.
+Default: variable</li>
+<li><strong>table_row</strong> (<em>str</em>) – string defining the data column that is used for the second dimension of the result table.
+Default: variable</li>
+<li><strong>table_cell</strong> (<em>str</em>) – String defining the data column that is used for the displayed values in the result table cells.
+Default: region</li>
+<li><strong>folder_output</strong> (<em>str</em>) – the folder where the result will be saved. If not given or set to “default” the default output
+folder will be used. If set to “none” or ‘’ no file will be written.</li>
+<li><strong>filename_table</strong> (<em>str</em>) – filename for the resulting table in csv format. If not given or set to “default”
+a filename will be generated. If set to “none” or ‘’ no file will be written.
+Default: default</li>
+<li><strong>filename_log</strong> (<em>str</em>) – filename for the log file. If not given or set to “default”
+a filename will be generated. If set to “none” or ‘’ no file will be written.
+Default: default</li>
+<li><strong>verbose</strong> (<em>bool</em>) – if set to true all output and additional debugging information will be written to terminal</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">pandas DataFrame with the table containing information on failed tests</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>example for columns:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">columns</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;category&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">,</span> <span class="s2">&quot;categoryAgg&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;categoryName&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="s2">&quot;categoryNameAgg&quot;</span><span class="p">],</span>
+<span class="p">}</span>
+
+<span class="n">In</span> <span class="n">this</span> <span class="n">example</span> <span class="n">the</span> <span class="n">categories</span> <span class="n">given</span> <span class="ow">in</span> <span class="n">column</span> <span class="s2">&quot;category&quot;</span> <span class="n">will</span> <span class="n">be</span> <span class="n">aggregated</span> <span class="ow">and</span> <span class="n">tested</span> <span class="n">against</span> <span class="n">the</span>
+<span class="n">category</span> <span class="n">given</span> <span class="ow">in</span> <span class="n">categoryAgg</span><span class="o">.</span> <span class="n">categoryNameAgg</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">category</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">aggregated</span> <span class="n">data</span> <span class="ow">and</span> <span class="n">must</span>
+<span class="n">be</span> <span class="n">given</span> <span class="k">for</span> <span class="n">the</span> <span class="n">comparison</span> <span class="n">to</span> <span class="n">work</span><span class="o">.</span> <span class="p">(</span><span class="n">alternatively</span> <span class="n">categoryName</span> <span class="n">metadata</span> <span class="n">could</span> <span class="n">be</span> <span class="n">dropped</span> <span class="n">before</span> <span class="n">the</span>
+<span class="n">checks</span> <span class="n">are</span> <span class="n">performed</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyCPA.tools.dataAnalysis.check_coverage">
+<code class="descclassname">pyCPA.tools.dataAnalysis.</code><code class="descname">check_coverage</code><span class="sig-paren">(</span><em>input_DF</em>, <em>data_filter</em>, <em>axes_variables</em>, <em>folder: str = '\\default'</em>, <em>filename: str = '\\default'</em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="reference internal" href="_modules/pyCPA/tools/dataAnalysis.html#check_coverage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyCPA.tools.dataAnalysis.check_coverage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a table showing how many rows exist for a certain combination of axes_variables.
+The axes of the table are defined by axes_variables (e.g. category and entity or country
+and source). data_filter can be used to filter the dataframe before the analysis.
+Currently year coverage is not analyzed (ToDo).
+Resulting data will be saved as a csv file and also returned as a pandas DataFrame</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>input_DF</strong> (<em>ScmRun</em>) – ScmRun data frame with data to be analyzed</li>
+<li><strong>data_filter</strong> (<em>dict</em>) – filter in scmdata format to filter the data before processing</li>
+<li><strong>axes_variables</strong> (<em>list</em>) – list with two entries for x and y axis. Each a variable from the metadata cols of the input_DF</li>
+<li><strong>folder</strong> (<em>str</em>) – the folder where the result will be saved. If not given or set to “default” the default output
+folder will be used. If set to “none” no file will be written.</li>
+<li><strong>filename</strong> (<em>str</em>) – filename for the result. If not given or set to “default” a filename will be generated.
+If set to “none” no file will be written.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">pandas DataFrame with the coverage information</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></p>
 </td>
 </tr>
 </tbody>

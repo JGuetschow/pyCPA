@@ -4,6 +4,7 @@
 Created on Tue Jun  9 08:39:51 2020
 
 @author: Johannes Gütschow, mail@johannes-guetschow.de
+.. highlight:: python
 """
 
 
@@ -18,7 +19,7 @@ from pyCPA.core import combine_rows
 def check_coverage(input_DF, data_filter, axes_variables, folder: str = '\default', 
                    filename: str = '\default') -> pd.DataFrame:
     """
-    Create a table showing how many rows exist for a certain combination of axes_variables. 
+    Create a table showing how many rows exist for a certain combination of axes\_variables. 
     The axes of the table are defined by axes_variables (e.g. category and entity or country 
     and source). data\_filter can be used to filter the dataframe before the analysis. 
     Currently year coverage is not analyzed (ToDo).
@@ -27,22 +28,22 @@ def check_coverage(input_DF, data_filter, axes_variables, folder: str = '\defaul
     Parameters
     ----------
     
-    input\_DF
-        ScmDataFrame with data to be analyzed
-        
-    data\_filter
-        filter in scmdata format (a dict) to filter the data before processing
-        
-    axes\_variables
-        list with two entries for x and y axis. Each a variable from thew metadata cols of the input\_DF
-        
-    folder
-        the folder where the result will be saved. If not given or set to "\defaukt" the default output 
-        folder will be used. If set to "\none" no file will be written.
-        
-    filename
-        filename for the result. If not given or set to "\default" a filename will be generated. 
-        If set to "\none" no file will be written.
+    input\_DF : ScmRun
+        ScmRun data frame with data to be analyzed
+    
+    data\_filter : dict
+        filter in scmdata format to filter the data before processing
+    
+    axes\_variables : list
+        list with two entries for x and y axis. Each a variable from the metadata cols of the input\_DF
+
+    folder : str
+        the folder where the result will be saved. If not given or set to "\\default" the default output 
+        folder will be used. If set to "\\none" no file will be written.
+    
+    filename : str
+        filename for the result. If not given or set to "\\default" a filename will be generated. 
+        If set to "\\none" no file will be written.
     
     Returns
     -------
@@ -109,82 +110,90 @@ def check_consistency(input_DF, tests, columns, folder_test: str = '', data_filt
                       folder_output: str = '\default', filename_table: str = '\default', 
                       filename_log: str = '\default', verbose: bool = False) -> pd.DataFrame:
     """
-    
-    Testing data consistency. Results are saved to a csv file, a log file is written and the csv 
-    file contents are also returned as a pandas DataFrame. The rows of the csv fiel correspond to
+    Testing data consistency. Results are saved to a csv file, a log file is written, and the csv 
+    file contents are also returned as a pandas DataFrame. The rows of the csv file correspond to
     the tests while the columns are defined by the values available in the data column given in
     table\_col. Each cell contains a list of values from table\_cell for which the test fails.
-    If several rows in the input_DF correspond to a test,table\_col, and table\_cell value the
+    If several rows in the input_DF correspond to a test, table\_col, and table\_cell value, the
     value is displayed if th etest failes for at least on of the rows. 
-
     
     Parameters
     ----------
     
-    input\_DF
+    input\_DF : scmdata.run.ScmRun
         ScmDataFrame with data to be analyzed
         
-    tests
-        either: 
-            1: pandas DataFrame containing the tests in a column structure as defined by conversion.             
-            The values of each source column have to be of the format that combine_rows understands, i.e. 
-            value1_whitespace_operator_whitespace_value2 ...
-        or:
-            string with the name of a csv file which has the column structure described below
+    tests : DataFrame or str
+        a pandas DataFrame containing the tests in a column structure as defined by conversion.             
+        The values of each source column have to be of the format that combine_rows understands, i.e. 
+        value1_whitespace_operator_whitespace_value2 ...
+        or a string with the name of a csv file which has the column structure described below
             
-    columns
+    columns : dict
         a dict defining the rows to use in the input\_DF the tests DF. Keys are pyCPA column names
         while the values are source and target column names in the tests dataframe/file.
-        The syntax is the same as in conversion.map_data
-        columns = {
-            "category": ["category", "categoryAgg"], 
-            "categoryName": ["*", "categoryNameAgg"], 
-        }
-        In this example the categories given in column "category" will be aggregated and tested against the
-        category given in categoryAgg. categoryNameAgg is the category name of the aggregated data and must 
-        be given for the comparison to work. (alternatively categoryName metadata could be dropped before the
-        checks are performed) 
-    
-    folder\_test
+        The syntax is the same as in conversion.map_data (see example below)
+           
+    folder\_test : str
         String with the folder where the tests file resides. Default: ''
         
-    data\_filter
+    data\_filter : dict
         filter in scmdata format (a dict) to filter the data before processing
         
-    pass\_threshold
+    pass\_threshold : float
         float defining the threshold for a test to pass. It is compared to the realtive deviation 
         of the calculated time series from the existing time series.
     
-    table\_col
+    table\_col : str
         string defining the data column that is used for the second dimension of the result table. 
         Default: variable
     
-    table\_cell
+    table\_row : str
+        string defining the data column that is used for the second dimension of the result table. 
+        Default: variable
+    
+    table\_cell : str
         String defining the data column that is used for the displayed values in the result table cells.
         Default: region
     
-    folder\_output
-        the folder where the result will be saved. If not given or set to "\default" the default output 
-        folder will be used. If set to "\none" or '' no file will be written.
+    folder\_output : str
+        the folder where the result will be saved. If not given or set to "\\default" the default output 
+        folder will be used. If set to "\\none" or '' no file will be written.
         
-    filename\_table
-        filename for the resulting table in csv format. If not given or set to "\default" 
-        a filename will be generated. If set to "\none" or '' no file will be written.
-        Default: \default
+    filename\_table : str
+        filename for the resulting table in csv format. If not given or set to "\\default" 
+        a filename will be generated. If set to "\\none" or '' no file will be written.
+        Default: \\default
         
-    filename\_log
-        filename for the log file. If not given or set to "\default" 
-        a filename will be generated. If set to "\none" or '' no file will be written. 
-        Default: \default 
+    filename\_log : str
+        filename for the log file. If not given or set to "\\default" 
+        a filename will be generated. If set to "\\none" or '' no file will be written. 
+        Default: \\default 
         
-    verbose
-        bool: if set to true all output and additional debugging information will be written to terminal
+    verbose : bool
+        if set to true all output and additional debugging information will be written to terminal
     
     Returns
     -------
     
     :obj:`pandas.DataFrame`
         pandas DataFrame with the table containing information on failed tests 
+        
+    
+    Examples
+    --------
+    
+    example for columns::
+        
+        columns = {
+            "category": ["category", "categoryAgg"], 
+            "categoryName": ["*", "categoryNameAgg"], 
+        }
+        
+        In this example the categories given in column "category" will be aggregated and tested against the
+        category given in categoryAgg. categoryNameAgg is the category name of the aggregated data and must 
+        be given for the comparison to work. (alternatively categoryName metadata could be dropped before the
+        checks are performed)
         
     """
     
@@ -337,10 +346,10 @@ def check_consistency(input_DF, tests, columns, folder_test: str = '', data_filt
                                                                  **{table_col: value}, log_if_empty = False)
                     if combined_data_current.shape[0] > 0:
                         # get the existing data from DF
-                        result_filter_current = result_filter
+                        result_filter_current = result_filter.copy()
                         result_filter_current[table_col] = value
                         
-                        existing_data = filtered_DF.filter(keep = True, inplace = False, **result_filter, 
+                        existing_data = filtered_DF.filter(keep = True, inplace = False, **result_filter_current, 
                                                           log_if_empty = False)
                         if existing_data.shape[0] > 0:
                             # first step is to check if we have time-series for the same meta data values
@@ -529,12 +538,19 @@ def check_consistency(input_DF, tests, columns, folder_test: str = '', data_filt
                 row_results.append(results_this_row)
                     
             else: # combined data is none
-                message = 'No combined data for this test.'
+                # check if there is existing data
+                existing_data = filtered_DF.filter(keep = True, inplace = False, **result_filter, 
+                                                          log_if_empty = False)
+                if existing_data.shape[0] > 0:
+                    message = 'No combined data for this test.'
+                    row_results.append([row_ID] + ['no_CD'] * n_values)
+                else:
+                    message = 'No data for this test.'
+                    row_results.append([row_ID] + ['no_D'] * n_values)
                 if verbose:
                     print(message)
                 if logging:
                     log.append(message)
-                row_results.append([row_ID] + ['no_CD'] * n_values)
 
     # create dataframe from list of results
     results_DF = pd.DataFrame(data = row_results, columns = ['test \ ' + table_col] + values_table)
