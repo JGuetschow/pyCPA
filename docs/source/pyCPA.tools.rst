@@ -6,12 +6,13 @@ pyCPA.tools package
 pyCPA.tools.conversion module
 -----------------------------
 
+This module contains fucntion for conversion of data beweeen metadata hierarchies, e.g. from one sector classification to another.
+
 .. automodule:: pyCPA.tools.conversion
    :members:
    :undoc-members:
    :show-inheritance:
 
-This module contains fucntion for conversion of data beweeen metadata hierarchies, e.g. from one sector classification to another.
 
 
 .. _ref.pycpadataanalysis:

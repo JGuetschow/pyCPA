@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pyCPA.tools.dataAnalysis &mdash; pyCPA 0+untagged.34.gaa789d0.dirty documentation</title>
+  <title>pyCPA.tools.dataAnalysis &mdash; pyCPA 0.1.0+0.g6bfb400.dirty documentation</title>
   
 
   
@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0
+                0.1.0
               </div>
             
           
@@ -342,23 +342,29 @@
 <span class="sd">    -------</span>
 <span class="sd">    </span>
 <span class="sd">    :obj:`pandas.DataFrame`</span>
-<span class="sd">        pandas DataFrame with the table containing information on failed tests </span>
-<span class="sd">        </span>
+<span class="sd">        pandas DataFrame with the table containing information on failed tests. Each cell lists all values of </span>
+<span class="sd">        table\_cell for which the test failed. If all tests pass the cell contains only &quot;-&quot;. Further flags </span>
+<span class="sd">        indicate the availability of data:</span>
+<span class="sd">        - no_D: no data available. neiher for the building parts nor for the aggregate timeseries</span>
+<span class="sd">        - no_CD: no data for the building parts.</span>
+<span class="sd">        - no_ED: no data for the aggregate timeseries (this usually points to a consistency problem)</span>
+<span class="sd">        &quot;Inc&quot; or &quot;Empt&quot; in a cell mean that there is a problem with the test definition. Consult the log file for details. </span>
+<span class="sd">                </span>
 <span class="sd">    </span>
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    </span>
-<span class="sd">    example for columns::</span>
+<span class="sd">    *Example for columns*::</span>
 <span class="sd">        </span>
 <span class="sd">        columns = {</span>
 <span class="sd">            &quot;category&quot;: [&quot;category&quot;, &quot;categoryAgg&quot;], </span>
 <span class="sd">            &quot;categoryName&quot;: [&quot;*&quot;, &quot;categoryNameAgg&quot;], </span>
 <span class="sd">        }</span>
 <span class="sd">        </span>
-<span class="sd">        In this example the categories given in column &quot;category&quot; will be aggregated and tested against the</span>
-<span class="sd">        category given in categoryAgg. categoryNameAgg is the category name of the aggregated data and must </span>
-<span class="sd">        be given for the comparison to work. (alternatively categoryName metadata could be dropped before the</span>
-<span class="sd">        checks are performed)</span>
+<span class="sd">    In this example the categories given in column &quot;category&quot; will be aggregated and tested against the</span>
+<span class="sd">    category given in categoryAgg. categoryNameAgg is the category name of the aggregated data and must </span>
+<span class="sd">    be given for the comparison to work. (alternatively categoryName metadata could be dropped before the</span>
+<span class="sd">    checks are performed)</span>
 <span class="sd">        </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     

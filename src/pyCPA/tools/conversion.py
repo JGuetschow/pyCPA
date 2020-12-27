@@ -62,7 +62,7 @@ def map_data(input_DF, mapping_file, folder, conversion, onlynew: bool = True, a
     Examples
     --------
     
-    conversion dict complex form::
+    *Conversion dict complex form*::
         
         conversion = {
             "category": ["CRFcategory", "IPCCcategory"], 
@@ -70,7 +70,7 @@ def map_data(input_DF, mapping_file, folder, conversion, onlynew: bool = True, a
             "classification": ["CRFclass", "IPCCclass"]
         }
         
-    conversion dict simplified form::
+    *Conversion dict simplified form*::
         
         conversion = {
             'from_code_mapping': 'categoryCode',
@@ -78,7 +78,7 @@ def map_data(input_DF, mapping_file, folder, conversion, onlynew: bool = True, a
             'to_code_mapping': 'CODE1996',
         }
     
-    add\_fields example::
+    *Add\_fields example*::
         
         add_fields = {"type_t": "type"}
     

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pyCPA.tools package &mdash; pyCPA 0+untagged.34.gaa789d0.dirty documentation</title>
+  <title>pyCPA.tools package &mdash; pyCPA 0.1.0+0.g6bfb400.dirty documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0
+                0.1.0
               </div>
             
           
@@ -97,7 +97,7 @@
 <li class="toctree-l1"><a class="reference internal" href="pyCPA.core.html">pyCPA.core package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pyCPA.readData.html">pyCPA.readData package</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">pyCPA.tools package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-pyCPA.tools.conversion">pyCPA.tools.conversion module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pycpa-tools-conversion-module">pyCPA.tools.conversion module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#pycpa-tools-dataanalysis-module">pyCPA.tools.dataAnalysis module</a></li>
 </ul>
 </li>
@@ -174,9 +174,10 @@
             
   <div class="section" id="pycpa-tools-package">
 <h1>pyCPA.tools package<a class="headerlink" href="#pycpa-tools-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="module-pyCPA.tools.conversion">
-<span id="pycpa-tools-conversion-module"></span><span id="ref-pycpaconversion"></span><h2>pyCPA.tools.conversion module<a class="headerlink" href="#module-pyCPA.tools.conversion" title="Permalink to this headline">¶</a></h2>
-<p>Created on Mon Mar 16 14:17:57 2020</p>
+<div class="section" id="pycpa-tools-conversion-module">
+<span id="ref-pycpaconversion"></span><h2>pyCPA.tools.conversion module<a class="headerlink" href="#pycpa-tools-conversion-module" title="Permalink to this headline">¶</a></h2>
+<p>This module contains fucntion for conversion of data beweeen metadata hierarchies, e.g. from one sector classification to another.</p>
+<span class="target" id="module-pyCPA.tools.conversion"></span><p>Created on Mon Mar 16 14:17:57 2020</p>
 <p>&#64;author: Johannes Gütschow, <a class="reference external" href="mailto:mail&#37;&#52;&#48;johannes-guetschow&#46;de">mail<span>&#64;</span>johannes-guetschow<span>&#46;</span>de</a>
 .. highlight:: python</p>
 <dl class="function">
@@ -214,7 +215,7 @@ be integrated into the conversion</li>
 </tbody>
 </table>
 <p class="rubric">Examples</p>
-<p>conversion dict complex form:</p>
+<p><em>Conversion dict complex form</em>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conversion</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;category&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;CRFcategory&quot;</span><span class="p">,</span> <span class="s2">&quot;IPCCcategory&quot;</span><span class="p">],</span>
     <span class="s2">&quot;categoryName&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="s2">&quot;IPCCcategoryName&quot;</span><span class="p">],</span>
@@ -222,7 +223,7 @@ be integrated into the conversion</li>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>conversion dict simplified form:</p>
+<p><em>Conversion dict simplified form</em>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conversion</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;from_code_mapping&#39;</span><span class="p">:</span> <span class="s1">&#39;categoryCode&#39;</span><span class="p">,</span>
     <span class="s1">&#39;column_data&#39;</span><span class="p">:</span> <span class="s1">&#39;category&#39;</span><span class="p">,</span> <span class="c1">#tell it that it&#39;s working on the category column</span>
@@ -230,13 +231,12 @@ be integrated into the conversion</li>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>add_fields example:</p>
+<p><em>Add_fields example</em>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">add_fields</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;type_t&quot;</span><span class="p">:</span> <span class="s2">&quot;type&quot;</span><span class="p">}</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<p>This module contains fucntion for conversion of data beweeen metadata hierarchies, e.g. from one sector classification to another.</p>
 </div>
 <div class="section" id="pycpa-tools-dataanalysis-module">
 <span id="ref-pycpadataanalysis"></span><h2>pyCPA.tools.dataAnalysis module<a class="headerlink" href="#pycpa-tools-dataanalysis-module" title="Permalink to this headline">¶</a></h2>
@@ -287,7 +287,13 @@ Default: default</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">pandas DataFrame with the table containing information on failed tests</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">pandas DataFrame with the table containing information on failed tests. Each cell lists all values of
+table_cell for which the test failed. If all tests pass the cell contains only “-“. Further flags
+indicate the availability of data:
+- no_D: no data available. neiher for the building parts nor for the aggregate timeseries
+- no_CD: no data for the building parts.
+- no_ED: no data for the aggregate timeseries (this usually points to a consistency problem)
+“Inc” or “Empt” in a cell mean that there is a problem with the test definition. Consult the log file for details.</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></p>
@@ -296,18 +302,17 @@ Default: default</li>
 </tbody>
 </table>
 <p class="rubric">Examples</p>
-<p>example for columns:</p>
+<p><em>Example for columns</em>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">columns</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;category&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">,</span> <span class="s2">&quot;categoryAgg&quot;</span><span class="p">],</span>
     <span class="s2">&quot;categoryName&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="s2">&quot;categoryNameAgg&quot;</span><span class="p">],</span>
 <span class="p">}</span>
-
-<span class="n">In</span> <span class="n">this</span> <span class="n">example</span> <span class="n">the</span> <span class="n">categories</span> <span class="n">given</span> <span class="ow">in</span> <span class="n">column</span> <span class="s2">&quot;category&quot;</span> <span class="n">will</span> <span class="n">be</span> <span class="n">aggregated</span> <span class="ow">and</span> <span class="n">tested</span> <span class="n">against</span> <span class="n">the</span>
-<span class="n">category</span> <span class="n">given</span> <span class="ow">in</span> <span class="n">categoryAgg</span><span class="o">.</span> <span class="n">categoryNameAgg</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">category</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">aggregated</span> <span class="n">data</span> <span class="ow">and</span> <span class="n">must</span>
-<span class="n">be</span> <span class="n">given</span> <span class="k">for</span> <span class="n">the</span> <span class="n">comparison</span> <span class="n">to</span> <span class="n">work</span><span class="o">.</span> <span class="p">(</span><span class="n">alternatively</span> <span class="n">categoryName</span> <span class="n">metadata</span> <span class="n">could</span> <span class="n">be</span> <span class="n">dropped</span> <span class="n">before</span> <span class="n">the</span>
-<span class="n">checks</span> <span class="n">are</span> <span class="n">performed</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>In this example the categories given in column “category” will be aggregated and tested against the
+category given in categoryAgg. categoryNameAgg is the category name of the aggregated data and must
+be given for the comparison to work. (alternatively categoryName metadata could be dropped before the
+checks are performed)</p>
 </dd></dl>
 
 <dl class="function">

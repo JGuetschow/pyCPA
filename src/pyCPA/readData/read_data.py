@@ -69,7 +69,7 @@ def read_wide_csv_file(file, folder, col_rename: dict = {}, col_defaults: dict =
     Examples
     --------
     
-    example for meta\_mapping::
+    *Example for meta\_mapping*::
     
         meta_mapping = {
             'pyCPA_col_1': {'col_1_value_1_in': 'col_1_value_1_out',
@@ -80,18 +80,22 @@ def read_wide_csv_file(file, folder, col_rename: dict = {}, col_defaults: dict =
                             },
         }
     
-    example for filter\_keep::
+    *Example for filter\_keep*::
         
             filter_keep = {
                 'f_1': {'variable': ['CO2', 'CH4'], 'region': 'USA'},
                 'f_2': {'variable': 'N2O'}        
-            } # this example filter keeps all CO2 and CH4 data for the USA and N2O data for all countries
+            }
     
-    example for filter\_remove::
+    This example filter keeps all CO2 and CH4 data for the USA and N2O data for all countries
+    
+    *Example for filter\_remove*::
         
         filter_remove = {
             'f_1': {'scenario': 'HISTORY'},
-        } # this filter removes all data with 'HISTORY' as scenario
+        } 
+        
+    This filter removes all data with 'HISTORY' as scenario
         
     """
     
@@ -286,7 +290,7 @@ def read_wide_csv_folder(file_regex, folder, col_rename: dict = {}, col_defaults
     Examples
     --------
     
-    example for meta\_mapping::
+    *Example for meta\_mapping*::
         
         meta_mapping = {
             'pyCPA_col_1': {'col_1_value_1_in': 'col_1_value_1_out',
@@ -297,18 +301,22 @@ def read_wide_csv_folder(file_regex, folder, col_rename: dict = {}, col_defaults
                             },
         }
             
-    example for filter\_keep::
+    *Example for filter\_keep*::
         
         filter_keep = {
             'f_1': {'variable': ['CO2', 'CH4'], 'region': 'USA'},
             'f_2': {'variable': 'N2O'}        
-        } # this example filter keeps all CO2 and CH4 data for the USA and N2O data for all countries
+        } 
+    
+    This example filter keeps all CO2 and CH4 data for the USA and N2O data for all countries
         
-    example for filter\_remove::
+    *Example for filter\_remove*::
         
         filter_remove = {
             'f_1': {'scenario': 'HISTORY'},
-        } # this filter removes all data with 'HISTORY' as scenario
+        } 
+        
+    This filter removes all data with 'HISTORY' as scenario
     
     """
    

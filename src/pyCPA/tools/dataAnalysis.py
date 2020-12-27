@@ -177,23 +177,29 @@ def check_consistency(input_DF, tests, columns, folder_test: str = '', data_filt
     -------
     
     :obj:`pandas.DataFrame`
-        pandas DataFrame with the table containing information on failed tests 
-        
+        pandas DataFrame with the table containing information on failed tests. Each cell lists all values of 
+        table\_cell for which the test failed. If all tests pass the cell contains only "-". Further flags 
+        indicate the availability of data:
+        - no_D: no data available. neiher for the building parts nor for the aggregate timeseries
+        - no_CD: no data for the building parts.
+        - no_ED: no data for the aggregate timeseries (this usually points to a consistency problem)
+        "Inc" or "Empt" in a cell mean that there is a problem with the test definition. Consult the log file for details. 
+                
     
     Examples
     --------
     
-    example for columns::
+    *Example for columns*::
         
         columns = {
             "category": ["category", "categoryAgg"], 
             "categoryName": ["*", "categoryNameAgg"], 
         }
         
-        In this example the categories given in column "category" will be aggregated and tested against the
-        category given in categoryAgg. categoryNameAgg is the category name of the aggregated data and must 
-        be given for the comparison to work. (alternatively categoryName metadata could be dropped before the
-        checks are performed)
+    In this example the categories given in column "category" will be aggregated and tested against the
+    category given in categoryAgg. categoryNameAgg is the category name of the aggregated data and must 
+    be given for the comparison to work. (alternatively categoryName metadata could be dropped before the
+    checks are performed)
         
     """
     

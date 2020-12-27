@@ -39,8 +39,9 @@ def convert_IPCC_code_PRIMAP_to_pyCPA(code) -> str:
     :str:
         string containing the category code in pyCPA format
         
-    Example
-    -------
+    Examples
+    --------
+    
     input: 
         code = 'IPC1A3B34'
     
@@ -411,7 +412,7 @@ def combine_rows(data_frame, mapping, other_cols, cols_to_remove: list = [], inp
     Examples
     --------
     
-    Example for mapping::
+    *Example for mapping*::
         
         mapping = {
             "category": [['1.A', '1.B', '1.C'], '+', '1'],
