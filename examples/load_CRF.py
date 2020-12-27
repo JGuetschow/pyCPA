@@ -86,10 +86,10 @@ CRF_in_IPCC1996 = pyCPA.tools.conversion.map_data(CRF_scm, mapping_file, specifi
                                                   cols_to_remove = cols_to_remove, verbose = False)
 
 # save csv IPCC2006 categories
-CRF_scm_ts = CRF_scm.timeseries().reorder_levels(meta_cols_no_cat_desc)
-CRF_scm_ts.to_csv(os.path.join(data_folder, converted_CRF_file), date_format = 'YYYY')
+CRF_scm_ts = CRF_scm.timeseries(time_axis = "year").reorder_levels(meta_cols_no_cat_desc)
+CRF_scm_ts.to_csv(os.path.join(data_folder, converted_CRF_file))
 
 # save csv IPCC1996 categories
-CRF_in_IPCC1996_ts = CRF_in_IPCC1996.timeseries().reorder_levels(meta_cols)
-CRF_in_IPCC1996_ts.to_csv(os.path.join(data_folder, IPCC1996_CRF_file), date_format = 'YYYY')
+CRF_in_IPCC1996_ts = CRF_in_IPCC1996.timeseries(time_axis = "year").reorder_levels(meta_cols)
+CRF_in_IPCC1996_ts.to_csv(os.path.join(data_folder, IPCC1996_CRF_file), float_format = '%0.3e')
 
