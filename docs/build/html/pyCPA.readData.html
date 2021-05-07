@@ -1,13 +1,13 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html4" lang="en" >
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pyCPA.readData package &mdash; pyCPA 0.1.0+0.g6bfb400.dirty documentation</title>
+  <title>pyCPA.readData package &mdash; pyCPA 0.1.0+2.g13eca0e.dirty documentation</title>
   
 
   
@@ -26,10 +26,9 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -178,46 +177,65 @@
 <p>This module contains functions for data reading. It can read individual files or all files within a given folder. Currently only wide format csv files are suppported. More file formats will be added.</p>
 <span class="target" id="module-pyCPA.readData"></span><p>Created on Fri Apr  3 21:57:09 2020</p>
 <p>&#64;author: Johannes Gütschow, <a class="reference external" href="mailto:mail&#37;&#52;&#48;johannes-guetschow&#46;de">mail<span>&#64;</span>johannes-guetschow<span>&#46;</span>de</a></p>
-<dl class="function">
+<dl class="py function">
+<dt id="pyCPA.readData.read_dataset">
+<code class="sig-prename descclassname"><span class="pre">pyCPA.readData.</span></code><code class="sig-name descname"><span class="pre">read_dataset</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_file</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">scmdata.run.ScmRun</span><a class="reference internal" href="_modules/pyCPA/readData/read_data.html#read_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCPA.readData.read_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function reads a dataset with function and parameters given in the configuration file.
+It is a wrapper function for the different data reading functions.
+The possible functions are currently hard coded for security reasons</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config_folder</strong> (<em>str</em>) – Folder holding the config file.</p></li>
+<li><p><strong>config_file</strong> (<em>str</em>) – A yaml file with allparameters for the data reading including folder and function to use
+For an example see ‘example_read_wide_csv_folder.yaml’ in ‘examples/metadata’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>scmdata.run.Scmrun with the read data</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">scmdata.run.ScmRun</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="pyCPA.readData.read_wide_csv_file">
-<code class="descclassname">pyCPA.readData.</code><code class="descname">read_wide_csv_file</code><span class="sig-paren">(</span><em>file</em>, <em>folder</em>, <em>col_rename: dict = {}</em>, <em>col_defaults: dict = {}</em>, <em>meta_mapping: dict = {}</em>, <em>filter_keep: dict = {}</em>, <em>filter_remove: dict = {}</em><span class="sig-paren">)</span> &#x2192; scmdata.run.ScmRun<a class="reference internal" href="_modules/pyCPA/readData/read_data.html#read_wide_csv_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyCPA.readData.read_wide_csv_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">pyCPA.readData.</span></code><code class="sig-name descname"><span class="pre">read_wide_csv_file</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col_rename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col_defaults</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta_mapping</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_keep</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_remove</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">scmdata.run.ScmRun</span><a class="reference internal" href="_modules/pyCPA/readData/read_data.html#read_wide_csv_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCPA.readData.read_wide_csv_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function reads a csv file and returns the data as an ScmDataFrame</p>
 <p>Columns can be renamed or filled with default vales to match the pyCPA structure.
 The individual files are read using “read_wide_csv_data”</p>
 <p>Currently duplicate datapoint will not be detected</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>file</strong> (<em>str</em>) – String containing the file name</li>
-<li><strong>folder</strong> (<em>str</em>) – String with folder name to read from</li>
-<li><strong>col_rename</strong> (<em>dict</em>) – Dict where the keys are column names in the files to be read and the value is the column file
-in the output dataframe. Use ‘DROP’ as value to remove a column. Default = empty</li>
-<li><strong>col_defaults</strong> (<em>dict</em>) – Dict for default values of columns not given in the csv files. The keys are the column names and
-the values are the values for the columns. Default: empty</li>
-<li><strong>meta_mapping</strong> (<em>dict</em>) – A dict with pyCPA column names as keys. Values are dicts with input values as
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file</strong> (<em>str</em>) – String containing the file name</p></li>
+<li><p><strong>folder</strong> (<em>str</em>) – String with folder name to read from</p></li>
+<li><p><strong>col_rename</strong> (<em>dict</em>) – Dict where the keys are column names in the files to be read and the value is the column file
+in the output dataframe. Use ‘DROP’ as value to remove a column. Default = empty</p></li>
+<li><p><strong>col_defaults</strong> (<em>dict</em>) – Dict for default values of columns not given in the csv files. The keys are the column names and
+the values are the values for the columns. Default: empty</p></li>
+<li><p><strong>meta_mapping</strong> (<em>dict</em>) – A dict with pyCPA column names as keys. Values are dicts with input values as
 keys and output values as values. A standard use case is to map gas names from
-input data to the standardized names used in pyCPA / scmdata. Default: empty</li>
-<li><strong>filter_keep</strong> (<em>dict</em>) – Dict defining filters of data to keep. Filtering is done after metadata mapping,
+input data to the standardized names used in pyCPA / scmdata. Default: empty</p></li>
+<li><p><strong>filter_keep</strong> (<em>dict</em>) – Dict defining filters of data to keep. Filtering is done after metadata mapping,
 so use mapped metadata values to define the filter. Column names are pyCPA columns.
 Each entry in the dict defines an individual filter. The names of the filters have no
-relevance. Default: empty</li>
-<li><strong>filter_remove</strong> (<em>dict</em>) – Dict defining filters of data to remove. Filtering is done after metadata mapping,
+relevance. Default: empty</p></li>
+<li><p><strong>filter_remove</strong> (<em>dict</em>) – Dict defining filters of data to remove. Filtering is done after metadata mapping,
 so use mapped metadata values to define the filter. Column names are pyCPA columns.
 Each entry in the dict defines an individual filter. The names of the filters have no
-relevance. Default: empty</li>
+relevance. Default: empty</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">ScmRun with the read data</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scmdata.run.ScmRun</span></code></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>ScmRun with the read data</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">scmdata.run.ScmRun</span></code></p>
+</dd>
+</dl>
 <p class="rubric">Examples</p>
 <p><em>Example for meta_mapping</em>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">meta_mapping</span> <span class="o">=</span> <span class="p">{</span>
@@ -247,79 +265,71 @@ relevance. Default: empty</li>
 <p>This filter removes all data with ‘HISTORY’ as scenario</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pyCPA.readData.read_wide_csv_file_pd">
-<code class="descclassname">pyCPA.readData.</code><code class="descname">read_wide_csv_file_pd</code><span class="sig-paren">(</span><em>file</em>, <em>folder</em>, <em>col_rename: dict = {}</em>, <em>col_defaults: dict = {}</em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="reference internal" href="_modules/pyCPA/readData/read_data.html#read_wide_csv_file_pd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyCPA.readData.read_wide_csv_file_pd" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">pyCPA.readData.</span></code><code class="sig-name descname"><span class="pre">read_wide_csv_file_pd</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col_rename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col_defaults</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="reference internal" href="_modules/pyCPA/readData/read_data.html#read_wide_csv_file_pd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCPA.readData.read_wide_csv_file_pd" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function reads a csv file and returns the data as a pandas Dataframe. It is used by
 read_wide_csv_folder and can not do the filtering an meta_mapping done by read_wide_csv_file</p>
 <p>Columns can be renamed or filled with default vales to match the pyCPA structure.</p>
 <p>Currently duplicate datapoints will not be detected</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>file</strong> (<em>str</em>) – String containing the file name</li>
-<li><strong>folder</strong> (<em>str</em>) – String with folder name to read from</li>
-<li><strong>col_rename</strong> (<em>dict</em>) – Dict where the keys are column names in the files to be read and the value is the column file
-in the output dataframe. Use ‘DROP’ as value to remove a column. Default = empty</li>
-<li><strong>col_defaults</strong> (<em>dict</em>) – Dict for default values of columns not given in the csv files. The keys are the column names and
-the values are the values for the columns. Default: empty</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file</strong> (<em>str</em>) – String containing the file name</p></li>
+<li><p><strong>folder</strong> (<em>str</em>) – String with folder name to read from</p></li>
+<li><p><strong>col_rename</strong> (<em>dict</em>) – Dict where the keys are column names in the files to be read and the value is the column file
+in the output dataframe. Use ‘DROP’ as value to remove a column. Default = empty</p></li>
+<li><p><strong>col_defaults</strong> (<em>dict</em>) – Dict for default values of columns not given in the csv files. The keys are the column names and
+the values are the values for the columns. Default: empty</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">pandas DataFrame with the read data</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>pandas DataFrame with the read data</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pyCPA.readData.read_wide_csv_folder">
-<code class="descclassname">pyCPA.readData.</code><code class="descname">read_wide_csv_folder</code><span class="sig-paren">(</span><em>file_regex</em>, <em>folder</em>, <em>col_rename: dict = {}</em>, <em>col_defaults: dict = {}</em>, <em>meta_mapping: dict = {}</em>, <em>filter_keep: dict = {}</em>, <em>filter_remove: dict = {}</em><span class="sig-paren">)</span> &#x2192; scmdata.run.ScmRun<a class="reference internal" href="_modules/pyCPA/readData/read_data.html#read_wide_csv_folder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyCPA.readData.read_wide_csv_folder" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">pyCPA.readData.</span></code><code class="sig-name descname"><span class="pre">read_wide_csv_folder</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_regex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col_rename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col_defaults</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta_mapping</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_keep</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_remove</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">scmdata.run.ScmRun</span><a class="reference internal" href="_modules/pyCPA/readData/read_data.html#read_wide_csv_folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCPA.readData.read_wide_csv_folder" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function reads all csv files that match “file_regex” from folder “folder” and returns
 them as a single ScmDataFrame</p>
 <p>Columns can be renamed or filled with default vales to match the pyCPA structure.
 The individual files are read using “read_wide_csv_data”</p>
 <p>Currently duplicate datapoint will not be detected</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>file_regex</strong> (<em>str</em>) – String containing a regular expression that selects the files to read.
-Only files matching this expression will be read.</li>
-<li><strong>folder</strong> (<em>str</em>) – String with folder name to read from</li>
-<li><strong>col_rename</strong> (<em>dict</em>) – Dict where the keys are column names in the files to be read and the value is the column file
-in the output dataframe. Use ‘DROP’ as value to remove a column. Default = empty</li>
-<li><strong>col_defaults</strong> (<em>dict</em>) – Dict for default values of columns not given in the csv files. The keys are the column names and
-the values are the values for the columns. Default: empty</li>
-<li><strong>meta_mapping</strong> (<em>dict</em>) – A dict with pyCPA column names as keys. Values are dicts with input values as
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_regex</strong> (<em>str</em>) – String containing a regular expression that selects the files to read.
+Only files matching this expression will be read.</p></li>
+<li><p><strong>folder</strong> (<em>str</em>) – String with folder name to read from</p></li>
+<li><p><strong>col_rename</strong> (<em>dict</em>) – Dict where the keys are column names in the files to be read and the value is the column file
+in the output dataframe. Use ‘DROP’ as value to remove a column. Default = empty</p></li>
+<li><p><strong>col_defaults</strong> (<em>dict</em>) – Dict for default values of columns not given in the csv files. The keys are the column names and
+the values are the values for the columns. Default: empty</p></li>
+<li><p><strong>meta_mapping</strong> (<em>dict</em>) – A dict with pyCPA column names as keys. Values are dicts with input values as
 keys and output values as values. A standard use case is to map gas names from
-input data to the standardized names used in pyCPA / scmdata. Default: empty</li>
-<li><strong>filter_keep</strong> (<em>dict</em>) – Dict defining filters of data to keep. Filtering is done after metadata mapping,
+input data to the standardized names used in pyCPA / scmdata. Default: empty</p></li>
+<li><p><strong>filter_keep</strong> (<em>dict</em>) – Dict defining filters of data to keep. Filtering is done after metadata mapping,
 so use mapped metadata values to define the filter. Column names are pyCPA columns.
 Each entry in the dict defines an individual filter. The names of the filters have no
-relevance. Default: empty</li>
-<li><strong>filter_remove</strong> (<em>dict</em>) – Dict defining filters of data to remove. Filtering is done after metadata mapping,
+relevance. Default: empty</p></li>
+<li><p><strong>filter_remove</strong> (<em>dict</em>) – Dict defining filters of data to remove. Filtering is done after metadata mapping,
 so use mapped metadata values to define the filter. Column names are pyCPA columns.
 Each entry in the dict defines an individual filter. The names of the filters have no
-relevance. Default: empty</li>
+relevance. Default: empty</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">ScmRun with the read data</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scmdata.run.ScmRun</span></code></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>ScmRun with the read data</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">scmdata.run.ScmRun</span></code></p>
+</dd>
+</dl>
 <p class="rubric">Examples</p>
 <p><em>Example for meta_mapping</em>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">meta_mapping</span> <span class="o">=</span> <span class="p">{</span>
@@ -347,33 +357,6 @@ relevance. Default: empty</li>
 </pre></div>
 </div>
 <p>This filter removes all data with ‘HISTORY’ as scenario</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="pyCPA.readData.read_dataset">
-<code class="descclassname">pyCPA.readData.</code><code class="descname">read_dataset</code><span class="sig-paren">(</span><em>config_folder</em>, <em>config_file</em><span class="sig-paren">)</span> &#x2192; scmdata.run.ScmRun<a class="reference internal" href="_modules/pyCPA/readData/read_data.html#read_dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyCPA.readData.read_dataset" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function reads a dataset with function and parameters given in the configuration file.
-It is a wrapper function for the different data reading functions.
-The possible functions are currently hard coded for security reasons</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>config_folder</strong> (<em>str</em>) – Folder holding the config file.</li>
-<li><strong>config_file</strong> (<em>str</em>) – A yaml file with allparameters for the data reading including folder and function to use
-For an example see ‘example_read_wide_csv_folder.yaml’ in ‘examples/metadata’.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">scmdata.run.Scmrun with the read data</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scmdata.run.ScmRun</span></code></p>
-</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 </div>

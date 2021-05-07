@@ -376,21 +376,24 @@ def combine_rows(data_frame, mapping, other_cols, cols_to_remove: list = [], inp
     with other_cols (a dict) a subset of the dataset can be defined which the function operates on. 
     operator will be used for all but the first values_to_combine (first always has positive sign)
     
-    # currently only add and substract operators are implemented
-    # TODO iplement checks for operator
+    currently only add and substract operators are implemented
+
+    TODO implement checks for operator
+
 
     Parameters
-    ----------    
+    ----------
+
     data_frame : scmdata.run.ScmRun
         data_frame to work on
         
     mapping : dict
-        a dict which has column names as keys. Each entry is a list where the first item is a 
-        list of values for the column (the values to be mapped), the second item is the operator 
+        a dict which has column names as keys. Each entry is a list where the first item is a
+        list of values for the column (the values to be mapped), the second item is the operator
         (or list of operators), and the third item is the target value
                
     other_cols : dict
-        a dict with column: value pairs specifying to only work on a subset of the dataframe 
+        a dict with column: value pairs specifying to only work on a subset of the dataframe
         defined by the column: value pairs
         
     cols_to_remove : list

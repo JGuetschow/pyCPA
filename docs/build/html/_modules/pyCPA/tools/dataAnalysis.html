@@ -1,13 +1,13 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html4" lang="en" >
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pyCPA.tools.dataAnalysis &mdash; pyCPA 0.1.0+0.g6bfb400.dirty documentation</title>
+  <title>pyCPA.tools.dataAnalysis &mdash; pyCPA 0.1.0+2.g13eca0e.dirty documentation</title>
   
 
   
@@ -26,10 +26,9 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -185,15 +184,16 @@
 <div class="viewcode-block" id="check_coverage"><a class="viewcode-back" href="../../../pyCPA.tools.html#pyCPA.tools.dataAnalysis.check_coverage">[docs]</a><span class="k">def</span> <span class="nf">check_coverage</span><span class="p">(</span><span class="n">input_DF</span><span class="p">,</span> <span class="n">data_filter</span><span class="p">,</span> <span class="n">axes_variables</span><span class="p">,</span> <span class="n">folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;\default&#39;</span><span class="p">,</span> 
                    <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;\default&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Create a table showing how many rows exist for a certain combination of axes\_variables. </span>
-<span class="sd">    The axes of the table are defined by axes_variables (e.g. category and entity or country </span>
-<span class="sd">    and source). data\_filter can be used to filter the dataframe before the analysis. </span>
+<span class="sd">    Create a table showing how many rows exist for a certain combination of</span>
+<span class="sd">    axes\_variables. The axes of the table are defined by axes_variables (e.g.</span>
+<span class="sd">    category and entity or country and source). data\_filter can be used to filter</span>
+<span class="sd">    the dataframe before the analysis.</span>
+
 <span class="sd">    Currently year coverage is not analyzed (ToDo).</span>
 <span class="sd">    Resulting data will be saved as a csv file and also returned as a pandas DataFrame</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    </span>
 <span class="sd">    input\_DF : ScmRun</span>
 <span class="sd">        ScmRun data frame with data to be analyzed</span>
 <span class="sd">    </span>
@@ -270,22 +270,32 @@
     <span class="k">return</span> <span class="n">coverage_DF</span></div>
 
 
-<div class="viewcode-block" id="check_consistency"><a class="viewcode-back" href="../../../pyCPA.tools.html#pyCPA.tools.dataAnalysis.check_consistency">[docs]</a><span class="k">def</span> <span class="nf">check_consistency</span><span class="p">(</span><span class="n">input_DF</span><span class="p">,</span> <span class="n">tests</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">folder_test</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">data_filter</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{},</span> 
-                      <span class="n">pass_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.001</span><span class="p">,</span> <span class="n">table_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;variable&#39;</span><span class="p">,</span>
-                      <span class="n">table_row</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;\index&#39;</span><span class="p">,</span> <span class="n">table_cell</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;region&#39;</span><span class="p">,</span> 
-                      <span class="n">folder_output</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;\default&#39;</span><span class="p">,</span> <span class="n">filename_table</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;\default&#39;</span><span class="p">,</span> 
-                      <span class="n">filename_log</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;\default&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<div class="viewcode-block" id="check_consistency"><a class="viewcode-back" href="../../../pyCPA.tools.html#pyCPA.tools.dataAnalysis.check_consistency">[docs]</a><span class="k">def</span> <span class="nf">check_consistency</span><span class="p">(</span>
+        <span class="n">input_DF</span><span class="p">,</span>
+        <span class="n">tests</span><span class="p">,</span>
+        <span class="n">columns</span><span class="p">,</span>
+        <span class="n">folder_test</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="n">data_filter</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{},</span>
+        <span class="n">pass_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.001</span><span class="p">,</span>
+        <span class="n">table_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;variable&#39;</span><span class="p">,</span>
+        <span class="n">table_row</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;\index&#39;</span><span class="p">,</span>
+        <span class="n">table_cell</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;region&#39;</span><span class="p">,</span>
+        <span class="n">folder_output</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;\default&#39;</span><span class="p">,</span>
+        <span class="n">filename_table</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;\default&#39;</span><span class="p">,</span>
+        <span class="n">filename_log</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;\default&#39;</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Testing data consistency. Results are saved to a csv file, a log file is written, and the csv </span>
-<span class="sd">    file contents are also returned as a pandas DataFrame. The rows of the csv file correspond to</span>
-<span class="sd">    the tests while the columns are defined by the values available in the data column given in</span>
-<span class="sd">    table\_col. Each cell contains a list of values from table\_cell for which the test fails.</span>
-<span class="sd">    If several rows in the input_DF correspond to a test, table\_col, and table\_cell value, the</span>
-<span class="sd">    value is displayed if th etest failes for at least on of the rows. </span>
-<span class="sd">    </span>
+<span class="sd">    Testing data consistency. Results are saved to a csv file, a log file is written,</span>
+<span class="sd">    and the csv file contents are also returned as a pandas DataFrame. The rows of</span>
+<span class="sd">    the csv file correspond to the tests while the columns are defined by the values</span>
+<span class="sd">    available in the data column given in table\_col. Each cell contains a list of</span>
+<span class="sd">    values from table\_cell for which the test fails. If several rows in the</span>
+<span class="sd">    input_DF correspond to a test, table\_col, and table\_cell value, the value is</span>
+<span class="sd">    displayed if the test fails for at least on of the rows.</span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    </span>
 <span class="sd">    input\_DF : scmdata.run.ScmRun</span>
 <span class="sd">        ScmDataFrame with data to be analyzed</span>
 <span class="sd">        </span>

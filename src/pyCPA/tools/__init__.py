@@ -11,4 +11,4 @@ Created on Fri Apr  3 21:42:01 2020
 from . import conversion
 from . import dataAnalysis
 
-__all__ = ['conversion', 'dataAnalysis']
+__all__ = ['conversion', 'dataAnalysis.py']

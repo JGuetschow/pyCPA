@@ -20,15 +20,16 @@ import scmdata
 def check_coverage(input_DF, data_filter, axes_variables, folder: str = '\default', 
                    filename: str = '\default') -> pd.DataFrame:
     """
-    Create a table showing how many rows exist for a certain combination of axes\_variables. 
-    The axes of the table are defined by axes_variables (e.g. category and entity or country 
-    and source). data\_filter can be used to filter the dataframe before the analysis. 
+    Create a table showing how many rows exist for a certain combination of
+    axes\_variables. The axes of the table are defined by axes_variables (e.g.
+    category and entity or country and source). data\_filter can be used to filter
+    the dataframe before the analysis.
+
     Currently year coverage is not analyzed (ToDo).
     Resulting data will be saved as a csv file and also returned as a pandas DataFrame
     
     Parameters
     ----------
-    
     input\_DF : ScmRun
         ScmRun data frame with data to be analyzed
     
@@ -105,22 +106,32 @@ def check_coverage(input_DF, data_filter, axes_variables, folder: str = '\defaul
     return coverage_DF
 
 
-def check_consistency(input_DF, tests, columns, folder_test: str = '', data_filter: dict = {}, 
-                      pass_threshold: float = 0.001, table_col: str = 'variable',
-                      table_row: str = '\index', table_cell: str = 'region', 
-                      folder_output: str = '\default', filename_table: str = '\default', 
-                      filename_log: str = '\default', verbose: bool = False) -> pd.DataFrame:
+def check_consistency(
+        input_DF,
+        tests,
+        columns,
+        folder_test: str = '',
+        data_filter: dict = {},
+        pass_threshold: float = 0.001,
+        table_col: str = 'variable',
+        table_row: str = '\index',
+        table_cell: str = 'region',
+        folder_output: str = '\default',
+        filename_table: str = '\default',
+        filename_log: str = '\default',
+        verbose: bool = False
+) -> pd.DataFrame:
     """
-    Testing data consistency. Results are saved to a csv file, a log file is written, and the csv 
-    file contents are also returned as a pandas DataFrame. The rows of the csv file correspond to
-    the tests while the columns are defined by the values available in the data column given in
-    table\_col. Each cell contains a list of values from table\_cell for which the test fails.
-    If several rows in the input_DF correspond to a test, table\_col, and table\_cell value, the
-    value is displayed if th etest failes for at least on of the rows. 
-    
+    Testing data consistency. Results are saved to a csv file, a log file is written,
+    and the csv file contents are also returned as a pandas DataFrame. The rows of
+    the csv file correspond to the tests while the columns are defined by the values
+    available in the data column given in table\_col. Each cell contains a list of
+    values from table\_cell for which the test fails. If several rows in the
+    input_DF correspond to a test, table\_col, and table\_cell value, the value is
+    displayed if the test fails for at least on of the rows.
+
     Parameters
     ----------
-    
     input\_DF : scmdata.run.ScmRun
         ScmDataFrame with data to be analyzed
         

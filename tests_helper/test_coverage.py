@@ -10,7 +10,7 @@ Created on Tue Jun  9 10:32:08 2020
 import pandas as pd
 import scmdata
 import os
-from ..src.pyCPA.tools.data_analysis import check_coverage
+from ..src.pyCPA.tools.dataAnalysis import check_coverage
 
 
 

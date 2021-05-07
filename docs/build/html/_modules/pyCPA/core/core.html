@@ -1,13 +1,13 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html4" lang="en" >
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pyCPA.core.core &mdash; pyCPA 0.1.0+0.g6bfb400.dirty documentation</title>
+  <title>pyCPA.core.core &mdash; pyCPA 0.1.0+2.g13eca0e.dirty documentation</title>
   
 
   
@@ -26,10 +26,9 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -541,21 +540,24 @@
 <span class="sd">    with other_cols (a dict) a subset of the dataset can be defined which the function operates on. </span>
 <span class="sd">    operator will be used for all but the first values_to_combine (first always has positive sign)</span>
 <span class="sd">    </span>
-<span class="sd">    # currently only add and substract operators are implemented</span>
-<span class="sd">    # TODO iplement checks for operator</span>
+<span class="sd">    currently only add and substract operators are implemented</span>
+
+<span class="sd">    TODO implement checks for operator</span>
+
 
 <span class="sd">    Parameters</span>
-<span class="sd">    ----------    </span>
+<span class="sd">    ----------</span>
+
 <span class="sd">    data_frame : scmdata.run.ScmRun</span>
 <span class="sd">        data_frame to work on</span>
 <span class="sd">        </span>
 <span class="sd">    mapping : dict</span>
-<span class="sd">        a dict which has column names as keys. Each entry is a list where the first item is a </span>
-<span class="sd">        list of values for the column (the values to be mapped), the second item is the operator </span>
+<span class="sd">        a dict which has column names as keys. Each entry is a list where the first item is a</span>
+<span class="sd">        list of values for the column (the values to be mapped), the second item is the operator</span>
 <span class="sd">        (or list of operators), and the third item is the target value</span>
 <span class="sd">               </span>
 <span class="sd">    other_cols : dict</span>
-<span class="sd">        a dict with column: value pairs specifying to only work on a subset of the dataframe </span>
+<span class="sd">        a dict with column: value pairs specifying to only work on a subset of the dataframe</span>
 <span class="sd">        defined by the column: value pairs</span>
 <span class="sd">        </span>
 <span class="sd">    cols_to_remove : list</span>

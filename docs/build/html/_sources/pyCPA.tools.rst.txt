@@ -6,7 +6,7 @@ pyCPA.tools package
 pyCPA.tools.conversion module
 -----------------------------
 
-This module contains fucntion for conversion of data beweeen metadata hierarchies, e.g. from one sector classification to another.
+This module contains function for conversion of data between metadata hierarchies, e.g. from one sector classification to another.
 
 .. automodule:: pyCPA.tools.conversion
    :members:

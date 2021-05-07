@@ -1,13 +1,13 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html4" lang="en" >
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pyCPA.core package &mdash; pyCPA 0.1.0+0.g6bfb400.dirty documentation</title>
+  <title>pyCPA.core package &mdash; pyCPA 0.1.0+2.g13eca0e.dirty documentation</title>
   
 
   
@@ -26,10 +26,9 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -178,40 +177,62 @@
 <p>The core module contains the main functions of pyCPA. For modification of data the main fucntion is <cite>pyCPA.core.combine_rows</cite> which can add and subtract data respecting metadata and units. The remaining fucntions in the module are used to bring data in the format specified by scmdta and pyCPA.</p>
 <span class="target" id="module-pyCPA.core"></span><p>Created on Fri Apr  3 21:50:02 2020</p>
 <p>&#64;author: Johannes Gütschow, <a class="reference external" href="mailto:mail&#37;&#52;&#48;johannes-guetschow&#46;de">mail<span>&#64;</span>johannes-guetschow<span>&#46;</span>de</a></p>
-<dl class="function">
+<dl class="py function">
+<dt id="pyCPA.core.add_GWP_information">
+<code class="sig-prename descclassname"><span class="pre">pyCPA.core.</span></code><code class="sig-name descname"><span class="pre">add_GWP_information</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defaultGWP</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCPA/core/core.html#add_GWP_information"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCPA.core.add_GWP_information" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function takes GWP information from the variable name (if present) and uses the default given otherwise.
+The default is given as “AR4”, “SAR”, “AR5” etc (as in the unit names). GWP information is stored in the
+metadata column “unit_context”</p>
+<p>Attention: the function has to be used before “convert_unit_PRIMAP_to_scmdata”</p>
+<p>Currently the fucntion uses a limited set of GWP values (SAR, AR4, AR5) and works on a limited
+set of variables (KYOTOGHG, HFCS, PFCS, FGASES).</p>
+<p>TODO: integrate check for converted units (or integrate this function in the unit conversion)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_frame</strong> (<em>scmdata.run.ScmRun</em>) – data_frame with IPCC category codes in in PRIMAP format (IPCC1996 and IPCC2006 can be converted)</p></li>
+<li><p><strong>defaultGWP</strong> (<em>string</em>) – Default GWP value to be used if no GWP can be inferred from the variable name</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>ScmRun with the converted data</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">scmdata.run.ScmRun</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="pyCPA.core.combine_rows">
-<code class="descclassname">pyCPA.core.</code><code class="descname">combine_rows</code><span class="sig-paren">(</span><em>data_frame</em>, <em>mapping</em>, <em>other_cols</em>, <em>cols_to_remove: list = []</em>, <em>inplace: bool = True</em>, <em>verbose: bool = False</em><span class="sig-paren">)</span> &#x2192; scmdata.run.ScmRun<a class="reference internal" href="_modules/pyCPA/core/core.html#combine_rows"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyCPA.core.combine_rows" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">pyCPA.core.</span></code><code class="sig-name descname"><span class="pre">combine_rows</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">other_cols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cols_to_remove</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inplace</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">scmdata.run.ScmRun</span><a class="reference internal" href="_modules/pyCPA/core/core.html#combine_rows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCPA.core.combine_rows" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function combines rows for given values of a meta data columns where all other values coincide
 with other_cols (a dict) a subset of the dataset can be defined which the function operates on.
 operator will be used for all but the first values_to_combine (first always has positive sign)</p>
-<p># currently only add and substract operators are implemented
-# TODO iplement checks for operator</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>data_frame</strong> (<em>scmdata.run.ScmRun</em>) – data_frame to work on</li>
-<li><strong>mapping</strong> (<em>dict</em>) – a dict which has column names as keys. Each entry is a list where the first item is a
+<p>currently only add and substract operators are implemented</p>
+<p>TODO implement checks for operator</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_frame</strong> (<em>scmdata.run.ScmRun</em>) – data_frame to work on</p></li>
+<li><p><strong>mapping</strong> (<em>dict</em>) – a dict which has column names as keys. Each entry is a list where the first item is a
 list of values for the column (the values to be mapped), the second item is the operator
-(or list of operators), and the third item is the target value</li>
-<li><strong>other_cols</strong> (<em>dict</em>) – a dict with column: value pairs specifying to only work on a subset of the dataframe
-defined by the column: value pairs</li>
-<li><strong>cols_to_remove</strong> (<em>list</em>) – list with column names that should be removed from the result dataframe. Default: empty list</li>
-<li><strong>inplace</strong> (<em>bool</em>) – bool defining if operation takes place on input DF (True) or if newly generated data will be returned
-as an individual DF while the input DF remains unchanged (False). Default: True</li>
-<li><strong>verbose</strong> (<em>bool</em>) – bool. If True a lot of debug information is written to the terminal. Default: False</li>
+(or list of operators), and the third item is the target value</p></li>
+<li><p><strong>other_cols</strong> (<em>dict</em>) – a dict with column: value pairs specifying to only work on a subset of the dataframe
+defined by the column: value pairs</p></li>
+<li><p><strong>cols_to_remove</strong> (<em>list</em>) – list with column names that should be removed from the result dataframe. Default: empty list</p></li>
+<li><p><strong>inplace</strong> (<em>bool</em>) – bool defining if operation takes place on input DF (True) or if newly generated data will be returned
+as an individual DF while the input DF remains unchanged (False). Default: True</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – bool. If True a lot of debug information is written to the terminal. Default: False</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">ScmRun with the mapped data. Only the newly generated data will be returned</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scmdata.run.ScmRun</span></code></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>ScmRun with the mapped data. Only the newly generated data will be returned</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">scmdata.run.ScmRun</span></code></p>
+</dd>
+</dl>
 <p class="rubric">Examples</p>
 <p><em>Example for mapping</em>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span>
@@ -226,60 +247,9 @@ Tey will be applied after each other, so if a time series gets a ‘-‘ operato
 the result will be ‘+’.</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="pyCPA.core.convert_unit_PRIMAP_to_scmdata">
-<code class="descclassname">pyCPA.core.</code><code class="descname">convert_unit_PRIMAP_to_scmdata</code><span class="sig-paren">(</span><em>data_frame</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCPA/core/core.html#convert_unit_PRIMAP_to_scmdata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyCPA.core.convert_unit_PRIMAP_to_scmdata" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function converts the emissions module style units which usually neither carry information about the
-substance nor about the time to pyCPA/openscm units. The function also handles the exeption cases where
-PRIMAP units do contain information about the substance (e.g. GtC).</p>
-<p>The function operates in a ScmRun dataframe which is alteed in place.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data_frame</strong> (<em>scmdata.run.ScmRun</em>) – data_frame with IPCC category codes in in PRIMAP format (IPCC1996 and IPCC2006 can be converted)</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ScmRun with the converted data</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scmdata.run.ScmRun</span></code></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="pyCPA.core.add_GWP_information">
-<code class="descclassname">pyCPA.core.</code><code class="descname">add_GWP_information</code><span class="sig-paren">(</span><em>data_frame</em>, <em>defaultGWP</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCPA/core/core.html#add_GWP_information"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyCPA.core.add_GWP_information" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function takes GWP information from the variable name (if present) and uses the default given otherwise.
-The default is given as “AR4”, “SAR”, “AR5” etc (as in the unit names). GWP information is stored in the
-metadata column “unit_context”</p>
-<p>Attention: the function has to be used before “convert_unit_PRIMAP_to_scmdata”</p>
-<p>Currently the fucntion uses a limited set of GWP values (SAR, AR4, AR5) and works on a limited
-set of variables (KYOTOGHG, HFCS, PFCS, FGASES).</p>
-<p>TODO: integrate check for converted units (or integrate this function in the unit conversion)</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>data_frame</strong> (<em>scmdata.run.ScmRun</em>) – data_frame with IPCC category codes in in PRIMAP format (IPCC1996 and IPCC2006 can be converted)</li>
-<li><strong>defaultGWP</strong> (<em>string</em>) – Default GWP value to be used if no GWP can be inferred from the variable name</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">ScmRun with the converted data</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scmdata.run.ScmRun</span></code></p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
+<dl class="py function">
 <dt id="pyCPA.core.convert_IPCC_categories_PRIMAP_to_pyCPA">
-<code class="descclassname">pyCPA.core.</code><code class="descname">convert_IPCC_categories_PRIMAP_to_pyCPA</code><span class="sig-paren">(</span><em>data_frame</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCPA/core/core.html#convert_IPCC_categories_PRIMAP_to_pyCPA"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyCPA.core.convert_IPCC_categories_PRIMAP_to_pyCPA" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">pyCPA.core.</span></code><code class="sig-name descname"><span class="pre">convert_IPCC_categories_PRIMAP_to_pyCPA</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_frame</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCPA/core/core.html#convert_IPCC_categories_PRIMAP_to_pyCPA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCPA.core.convert_IPCC_categories_PRIMAP_to_pyCPA" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function converts all IPCC emissions category codes in the input data frame
 from the PRIMAP-format to the pyCPA format which is closer to the original
 (but without all the dots)</p>
@@ -289,18 +259,37 @@ The dots are omitted in both farmattings (ToDo maybe change and add them back in
 <p>Codes that are not part of the official hierarchy (starting with IPCM or CATM)
 are not converted but returned without the ‘CAT’ or ‘IPC’ prefix unless the conversion is
 explicitly defined in the code_mapping dict defined in convert_IPCC_code_PRIMAP_to_pyCPA().</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data_frame</strong> (<em>scmdata.run.ScmRun</em>) – data_frame with IPCC category codes in in PRIMAP format (IPCC1996 and IPCC2006 can be converted)</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ScmRun with the converted data</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scmdata.run.ScmRun</span></code></td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data_frame</strong> (<em>scmdata.run.ScmRun</em>) – data_frame with IPCC category codes in in PRIMAP format (IPCC1996 and IPCC2006 can be converted)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>ScmRun with the converted data</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">scmdata.run.ScmRun</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyCPA.core.convert_unit_PRIMAP_to_scmdata">
+<code class="sig-prename descclassname"><span class="pre">pyCPA.core.</span></code><code class="sig-name descname"><span class="pre">convert_unit_PRIMAP_to_scmdata</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_frame</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCPA/core/core.html#convert_unit_PRIMAP_to_scmdata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCPA.core.convert_unit_PRIMAP_to_scmdata" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function converts the emissions module style units which usually neither carry information about the
+substance nor about the time to pyCPA/openscm units. The function also handles the exeption cases where
+PRIMAP units do contain information about the substance (e.g. GtC).</p>
+<p>The function operates in a ScmRun dataframe which is alteed in place.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data_frame</strong> (<em>scmdata.run.ScmRun</em>) – data_frame with IPCC category codes in in PRIMAP format (IPCC1996 and IPCC2006 can be converted)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>ScmRun with the converted data</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">scmdata.run.ScmRun</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>

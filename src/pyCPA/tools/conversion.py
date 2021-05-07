@@ -23,7 +23,6 @@ def map_data(input_DF, mapping_file, folder, conversion, onlynew: bool = True, a
     
     Parameters
     ----------
-    
     input\_DF : scmdata.run.Scmrun
         ScmDataFrame with data to be mapped
     
@@ -81,8 +80,7 @@ def map_data(input_DF, mapping_file, folder, conversion, onlynew: bool = True, a
     *Add\_fields example*::
         
         add_fields = {"type_t": "type"}
-    
-    
+
     """
     
     
